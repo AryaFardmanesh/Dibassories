@@ -104,6 +104,7 @@ This document outlines the **site structure** and the **available actions** for 
 | **Confirm Account** | Approve or reject Seller account requests. | Approve / reject. |
 | **Products** | Display all listed products. | Filter, review, unconfirm or remove. |
 | **Confirm Product** | Review and approve new products before publishing. | Approve / reject. |
+| **Transactions** | View user transactions | View |
 | **Orders** | Manage customer orders. | View and update order details. |
 
 ---
