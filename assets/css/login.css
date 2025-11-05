@@ -59,3 +59,11 @@ body {
 input[type=email]::placeholder {
 	text-align: right;
 }
+
+.tlpr {
+	direction: ltr;
+}
+
+.tlpr::placeholder {
+	text-align: right;
+}
