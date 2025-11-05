@@ -53,7 +53,7 @@
 
 			<div class="footer-text">
 				<span>حساب کاربری ندارید؟</span>
-				<a href="<?= BASE_URL ?>/signup/">یکی ایجاد کنید</a>
+				<a href="<?= BASE_URL ?>/signup/">یکی ایجاد کنید.</a>
 			</div>
 		</form>
 	</div>
