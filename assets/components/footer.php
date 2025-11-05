@@ -13,9 +13,9 @@
 			<h6 class="fw-bold mb-3 text-primary">لینک‌های مفید</h6>
 			<ul class="list-unstyled small">
 				<li><a href="#" class="text-dark text-decoration-none">خانه</a></li>
-				<li><a href="#" class="text-dark text-decoration-none">محصولات</a></li>
 				<li><a href="#" class="text-dark text-decoration-none">درباره ما</a></li>
-				<li><a href="#" class="text-dark text-decoration-none">ورود & ثبت‌نام</a></li>
+				<li><a href="#" class="text-dark text-decoration-none">محصولات</a></li>
+				<li><a href="#" class="text-dark text-decoration-none">ورود</a></li>
 			</ul>
 		</div>
 
