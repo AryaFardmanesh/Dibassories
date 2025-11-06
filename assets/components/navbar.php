@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white navbar-custom shadow-sm mb-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-white navbar-custom shadow-sm">
 	<div class="container">
 		<a class="navbar-brand" href="#">دیبا اکسسوری</a>
 
