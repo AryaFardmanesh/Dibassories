@@ -180,6 +180,25 @@
 		</div>
 	</section>
 
+	<hr />
+
+	<!-- Homepage Contents -->
+	<section class="text-center mt-5 mb-5 container">
+		<div class="mb-5">
+			<h2 class="fw-bold mb-3">محصولات ما</h2>
+			<p class="text-muted mb-0">
+				برای دیدن محصولات بیشتر به <a href="#" class="text-decoration-none fw-semibold">بخش محصولات</a> بروید.
+			</p>
+		</div>
+
+		<div id="aboutus" class="mt-5">
+			<h2 class="fw-bold mb-3">درباره ما</h2>
+			<p class="text-muted px-md-5">
+				این وب‌سایت به عنوان یک پروژه دانشگاهی طراحی شده است و هدف آن پیاده‌سازی یک پلتفرم ساده برای خرید و فروش اکسسوری‌ها است. در این پروژه تلاش شده تا با استفاده از فناوری‌های پایه وب مانند <strong>HTML</strong>، <strong>CSS</strong>، <strong>JavaScript</strong>، <strong>PHP</strong> و <strong>MySQL</strong>، یک سیستم کاربرپسند و کاربردی ایجاد شود که مفاهیم طراحی رابط کاربری، پایگاه داده و تعامل کاربر با سیستم را به‌صورت عملی نشان دهد.
+			</p>
+		</div>
+	</section>
+
 	<?php include __DIR__ . "/assets/components/footer.php"; ?>
 </body>
 </html>
