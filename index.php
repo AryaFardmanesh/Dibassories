@@ -11,6 +11,7 @@
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<title>Homepage</title>
 	<style>
+	/* Header Slider */
 	.carousel-caption h3 {
 		font-size: 1.75rem;
 	}
@@ -31,11 +32,35 @@
 			display: none;
 		}
 	}
+
+	/* Products slider */
+	.product-slider::-webkit-scrollbar {
+		height: 8px;
+	}
+
+	.product-slider::-webkit-scrollbar-thumb {
+		background-color: rgba(0, 0, 0, 0.2);
+		border-radius: 4px;
+	}
+
+	.product-card img {
+		height: 180px;
+		object-fit: cover;
+		border-top-left-radius: 0.5rem;
+		border-top-right-radius: 0.5rem;
+	}
+
+	.product-card:hover {
+		transform: translateY(-5px);
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+	}
 	</style>
 </head>
 <body>
 	<?php include __DIR__ . "/assets/components/navbar.php"; ?>
 
+	<!-- Header Slider -->
 	<div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
 		<!-- Dots control -->
 		<div class="carousel-indicators">
@@ -81,6 +106,79 @@
 			<span class="visually-hidden">بعدی</span>
 		</button>
 	</div>
+
+	<!-- Products Slider -->
+	<section class="container my-5">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h4 class="fw-bold mb-0">محصولات جدید</h4>
+			<a href="#" class="text-decoration-none text-primary small">مشاهده همه</a>
+		</div>
+
+		<div class="product-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
+			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
+				<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top" alt="محصول ۱">
+				<div class="card-body text-center">
+					<h6 class="card-title fw-semibold text-truncate">گردنبند نقره‌ای</h6>
+					<p class="text-muted mb-2">۳۲۰٬۰۰۰ تومان</p>
+					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+				</div>
+			</div>
+
+			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
+				<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top" alt="محصول ۲">
+				<div class="card-body text-center">
+					<h6 class="card-title fw-semibold text-truncate">انگشتر طلایی</h6>
+					<p class="text-muted mb-2">۲۸۰٬۰۰۰ تومان</p>
+					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+				</div>
+			</div>
+
+			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
+				<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top" alt="محصول ۳">
+				<div class="card-body text-center">
+					<h6 class="card-title fw-semibold text-truncate">دستبند چرمی</h6>
+					<p class="text-muted mb-2">۱۹۰٬۰۰۰ تومان</p>
+					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Products Slider (Offers) -->
+	<section class="container my-5">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h4 class="fw-bold mb-0">بیشترین تخفیف ها</h4>
+		</div>
+
+		<div class="product-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
+			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
+				<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top" alt="محصول ۱">
+				<div class="card-body text-center">
+					<h6 class="card-title fw-semibold text-truncate">گردنبند نقره‌ای</h6>
+					<p class="text-muted mb-2">۳۲۰٬۰۰۰ تومان</p>
+					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+				</div>
+			</div>
+
+			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
+				<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top" alt="محصول ۲">
+				<div class="card-body text-center">
+					<h6 class="card-title fw-semibold text-truncate">انگشتر طلایی</h6>
+					<p class="text-muted mb-2">۲۸۰٬۰۰۰ تومان</p>
+					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+				</div>
+			</div>
+
+			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
+				<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top" alt="محصول ۳">
+				<div class="card-body text-center">
+					<h6 class="card-title fw-semibold text-truncate">دستبند چرمی</h6>
+					<p class="text-muted mb-2">۱۹۰٬۰۰۰ تومان</p>
+					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+				</div>
+			</div>
+		</div>
+	</section>
 
 	<?php include __DIR__ . "/assets/components/footer.php"; ?>
 </body>
