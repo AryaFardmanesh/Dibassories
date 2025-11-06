@@ -118,9 +118,60 @@
 
 		<div id="aboutus" class="mt-5">
 			<h2 class="fw-bold mb-3">درباره ما</h2>
-			<p class="text-muted px-md-5">
+			<p class="text-muted px-md-3">
 				این وب‌سایت به عنوان یک پروژه دانشگاهی طراحی شده است و هدف آن پیاده‌سازی یک پلتفرم ساده برای خرید و فروش اکسسوری‌ها است. در این پروژه تلاش شده تا با استفاده از فناوری‌های پایه وب مانند <strong>HTML</strong>، <strong>CSS</strong>، <strong>JavaScript</strong>، <strong>PHP</strong> و <strong>MySQL</strong>، یک سیستم کاربرپسند و کاربردی ایجاد شود که مفاهیم طراحی رابط کاربری، پایگاه داده و تعامل کاربر با سیستم را به‌صورت عملی نشان دهد.
 			</p>
+		</div>
+	</section>
+
+	<!-- Cards -->
+	<section class="container my-5 text-center">
+		<h2 class="fw-bold mb-4">چرا ما را انتخاب کنید؟</h2>
+
+		<div class="row g-4">
+
+			<div class="col-md-4">
+				<div class="card h-100 shadow-sm border-0">
+					<div class="card-body">
+						<div class="mb-3">
+							<i class="bi bi-bag-check fs-1 text-primary"></i>
+						</div>
+						<h5 class="card-title fw-bold mb-3">خرید آسان و سریع</h5>
+						<p class="card-text text-muted">
+							با رابط کاربری ساده و روان، کاربران می‌توانند به راحتی محصولات مورد نظر خود را پیدا کرده و خریداری کنند.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card h-100 shadow-sm border-0">
+					<div class="card-body">
+						<div class="mb-3">
+							<i class="bi bi-gem fs-1 text-success"></i>
+						</div>
+						<h5 class="card-title fw-bold mb-3">محصولات با کیفیت</h5>
+						<p class="card-text text-muted">
+							تمامی اکسسوری‌ها با کیفیت بالا و از فروشندگان معتبر ارائه می‌شوند تا رضایت شما تضمین شود.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Feature 3 -->
+			<div class="col-md-4">
+				<div class="card h-100 shadow-sm border-0">
+					<div class="card-body">
+						<div class="mb-3">
+							<i class="bi bi-shield-check fs-1 text-danger"></i>
+						</div>
+						<h5 class="card-title fw-bold mb-3">امنیت و اعتماد</h5>
+						<p class="card-text text-muted">
+							اطلاعات کاربران با دقت محافظت می‌شود و تمامی تراکنش‌ها در بستری امن انجام می‌گردد.
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 
