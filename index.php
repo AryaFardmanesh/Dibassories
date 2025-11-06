@@ -1,19 +1,86 @@
+<?php include __DIR__ . "/src/config.php"; ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" href="./assets/img/logo/logo-nobg.png" type="image/x-icon" />
-	<link rel="stylesheet" href="./assets/libs/bootstrap.rtl.min.css" />
-	<link rel="stylesheet" href="./assets/fonts/font.patch.css" />
-	<script src="./assets/libs/jquery.min.js"></script>
-	<script src="./assets/libs/bootstrap.bundle.min.js"></script>
+	<link rel="shortcut icon" href="<?= ASSETS_DIR ?>/img/logo/logo-nobg.png" type="image/x-icon" />
+	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/libs/bootstrap.rtl.min.css" />
+	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
+	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
+	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<title>Homepage</title>
+	<style>
+	.carousel-caption h3 {
+		font-size: 1.75rem;
+	}
+
+	.carousel-caption p {
+		font-size: 1rem;
+	}
+
+	@media (max-width: 768px) {
+		.carousel-caption {
+			font-size: 0.9rem;
+			padding: 1rem;
+		}
+		.carousel-caption h3 {
+			font-size: 1.25rem;
+		}
+		.carousel-caption p {
+			display: none;
+		}
+	}
+	</style>
 </head>
 <body>
 	<?php include __DIR__ . "/assets/components/navbar.php"; ?>
 
-	Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum eum est, qui ea voluptatibus dicta esse eveniet nesciunt. Adipisci nesciunt, sed dolorum maiores, id reiciendis quia animi facere soluta repudiandae, odio cupiditate ipsum quos nulla ullam ducimus. Nisi repudiandae ducimus, fugit vel praesentium sequi voluptas illum eaque iusto soluta delectus error quam! Impedit voluptas dignissimos deserunt dolorum cum labore quam similique delectus culpa iure! Aut minima sunt fugiat deleniti fugit, excepturi nam rerum. Fuga voluptate maiores praesentium optio adipisci explicabo corporis totam assumenda commodi impedit nihil nobis blanditiis ab, laboriosam magni deleniti vel, provident, quasi sit doloribus dicta incidunt! Ipsam assumenda vero, natus excepturi porro corrupti tempore necessitatibus delectus quisquam, labore debitis harum eos omnis vitae, autem nostrum. Architecto error natus voluptas, unde id officiis dolore aspernatur quibusdam, dolorem, magni perferendis in asperiores laudantium cum nobis. Repellendus expedita accusamus rem molestiae a ex architecto, maxime error, harum velit pariatur, impedit commodi? Nemo corrupti veniam unde quo consectetur, labore reprehenderit rerum cupiditate quasi esse. Sapiente molestias optio a autem velit? Exercitationem architecto corrupti eos officiis eaque, labore temporibus, nisi, saepe voluptatibus impedit debitis. Iure sunt ex, similique nihil earum fuga quibusdam ut labore omnis sequi id odio temporibus obcaecati, ullam, nam at ad reiciendis dolor adipisci. Illo accusantium nesciunt consequuntur repudiandae nemo repellendus porro non adipisci unde, architecto tempore earum aut tempora, et, magni officiis repellat optio maxime? Illum dolore similique cumque veniam asperiores incidunt aut laboriosam eveniet inventore iste blanditiis, optio, provident dolorem quo natus quidem commodi molestias qui molestiae placeat dolores accusamus earum? Maiores adipisci molestiae, inventore quos illum eligendi praesentium aperiam laboriosam nisi cupiditate delectus beatae enim illo! Culpa sunt, nemo perspiciatis illo impedit quisquam est esse architecto aliquid quis velit animi alias pariatur quas magnam fugiat autem nobis, ex aperiam asperiores sequi ipsa voluptatum sint. Cupiditate sunt voluptates doloribus fugiat reprehenderit, eaque non explicabo itaque praesentium aspernatur totam quibusdam asperiores eligendi deserunt tenetur optio dolores assumenda quos neque tempora obcaecati ipsam recusandae repellendus. Asperiores eos dolorem harum beatae sit, quo modi explicabo. Eos hic est, perferendis, tempora nisi saepe officiis quidem minima necessitatibus adipisci ea nobis ab molestiae possimus quod dicta tempore delectus doloribus sint. Sunt est minus iste nobis ducimus laborum incidunt, autem accusantium eligendi, corporis quibusdam distinctio magni dolore? Neque voluptates cupiditate consequuntur dolores quasi accusantium et est, molestias error ipsam velit voluptate sint aut, nobis id molestiae. Neque, tempore! Facere adipisci hic quae aspernatur excepturi quos rerum illo earum provident dicta, modi nisi laboriosam nostrum? Nobis neque facilis delectus aperiam possimus impedit laborum nostrum perferendis eligendi. Aut officiis commodi cumque illo quam consectetur iure fugiat, ullam delectus porro hic repellat at adipisci, non itaque blanditiis consequuntur vel magnam. Iste nam vel et, illum totam doloremque praesentium ipsum sit earum deleniti possimus perspiciatis perferendis, aliquid ullam excepturi, optio itaque consequuntur sequi explicabo impedit nihil nulla magni facilis aut! Optio voluptatibus deleniti eveniet molestias amet, nostrum voluptas omnis numquam consequuntur ipsum cumque reiciendis non quidem. Amet ea error similique reiciendis laboriosam aliquam ab neque nostrum asperiores.
+	<div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+		<!-- Dots control -->
+		<div class="carousel-indicators">
+			<button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="اسلاید ۱"></button>
+			<button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="اسلاید ۲"></button>
+			<button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="اسلاید ۳"></button>
+		</div>
+
+		<!-- Sliders -->
+		<div class="carousel-inner shadow-lg">
+			<div class="carousel-item active">
+				<img src="<?= ASSETS_DIR ?>/img/sliders/1.jpg" class="d-block w-100" alt="اکسسوری‌های جدید" style="object-fit: cover; height: 550px;">
+				<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+					<h3 class="fw-bold">مجموعه جدید اکسسوری‌ها</h3>
+					<p>جدیدترین مدل‌های گردنبند و دستبند با طراحی خاص و منحصربه‌فرد</p>
+				</div>
+			</div>
+
+			<div class="carousel-item">
+				<img src="<?= ASSETS_DIR ?>/img/sliders/2.jpg" class="d-block w-100" alt="تخفیف ویژه" style="object-fit: cover; height: 550px;">
+				<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+					<h3 class="fw-bold">تخفیف‌های ویژه این هفته</h3>
+					<p>تا ۵۰٪ تخفیف برای خرید‌های آنلاین</p>
+				</div>
+			</div>
+
+			<div class="carousel-item">
+				<img src="<?= ASSETS_DIR ?>/img/sliders/3.jpg" class="d-block w-100" alt="جواهرات خاص" style="object-fit: cover; height: 550px;">
+				<div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+					<h3 class="fw-bold">زیبایی در جزئیات</h3>
+					<p>اکسسوری‌هایی برای هر استایل و سلیقه</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Control buttons -->
+		<button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+			<span class="visually-hidden">قبلی</span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+			<span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+			<span class="visually-hidden">بعدی</span>
+		</button>
+	</div>
 
 	<?php include __DIR__ . "/assets/components/footer.php"; ?>
 </body>
