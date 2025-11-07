@@ -51,7 +51,7 @@
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
 
 	<section class="container my-5">
-		<div class="row g-5 align-items-start">
+		<div class="row align-items-start">
 
 			<div class="col-lg-5 col-md-6 text-center">
 				<div class="border rounded-4 p-3 shadow-sm bg-white">
