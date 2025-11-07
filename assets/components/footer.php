@@ -25,12 +25,12 @@
 			<ul class="list-inline">
 				<li class="list-inline-item">
 					<a href="https://github.com/AryaFardmanesh" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
-						<img src="./assets/img/icons/github.png" width="30" height="30" alt="GitHub Logo">
+						<img src="<?= ASSETS_DIR ?>/img/icons/github.png" width="30" height="30" alt="GitHub Logo">
 					</a>
 				</li>
 				<li class="list-inline-item">
 					<a href="https://t.me/AryaFardmanesh" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
-						<img src="./assets/img/icons/telegram.png" width="38" height="38" alt="Telegram Logo">
+						<img src="<?= ASSETS_DIR ?>/img/icons/telegram.png" width="38" height="38" alt="Telegram Logo">
 					</a>
 				</li>
 			</ul>
