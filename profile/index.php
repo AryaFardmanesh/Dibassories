@@ -91,35 +91,97 @@
 						<h4 class="mb-0">پروفایل کاربری</h4>
 					</div>
 					<div class="card-body p-4">
-						<form action="#" method="POST" class="needs-validation">
+						<form action="#" method="POST" class="needs-validation" novalidate>
 							<div class="row g-3">
 								<div class="col-md-6">
 									<label for="username" class="form-label fw-bold">نام کاربری</label>
-									<input type="text" id="username" name="username" class="form-control" value="arya_fardmanesh" readonly>
+									<input
+										type="text"
+										id="username"
+										name="username"
+										class="form-control"
+										value="arya_fardmanesh"
+										autocomplete="off"
+										readonly
+									>
 								</div>
 								<div class="col-md-6">
 									<label for="email" class="form-label fw-bold">ایمیل</label>
-									<input type="email" id="email" name="email" class="form-control" value="example@email.com" required>
+									<input
+										type="email"
+										id="email"
+										name="email"
+										class="form-control"
+										value="example@email.com"
+										autocomplete="off"
+										required
+									>
 								</div>
 								<div class="col-md-6">
 									<label for="fname" class="form-label fw-bold">نام</label>
-									<input type="text" id="fname" name="fname" class="form-control" value="آریا">
+									<input
+										type="text"
+										id="fname"
+										name="fname"
+										class="form-control"
+										value="آریا"
+										autocomplete="off"
+										min="4"
+										max="32"
+										required
+									>
 								</div>
 								<div class="col-md-6">
 									<label for="lname" class="form-label fw-bold">نام خانوادگی</label>
-									<input type="text" id="lname" name="lname" class="form-control" value="فردمنش">
+									<input
+										type="text"
+										id="lname"
+										name="lname"
+										class="form-control"
+										value="فردمنش"
+										autocomplete="off"
+										min="4"
+										max="32"
+										required
+									>
 								</div>
 								<div class="col-md-6">
 									<label for="phone" class="form-label fw-bold">شماره تلفن</label>
-									<input type="tel" id="phone" name="phone" class="form-control" value="09121234567">
+									<input
+										type="tel"
+										id="phone"
+										name="phone"
+										class="form-control"
+										value="09121234567"
+										autocomplete="off"
+										max="14"
+										required
+									>
 								</div>
 								<div class="col-md-6">
 									<label for="zipcode" class="form-label fw-bold">کد پستی</label>
-									<input type="text" id="zipcode" name="zipcode" class="form-control" value="1234567890">
+									<input
+										type="text"
+										id="zipcode"
+										name="zipcode"
+										class="form-control"
+										value="1234567890"
+										autocomplete="off"
+										max="10"
+										required
+									>
 								</div>
 								<div class="col-12">
 									<label for="address" class="form-label fw-bold">آدرس</label>
-									<textarea id="address" name="address" class="form-control" rows="3">تهران، خیابان ولیعصر، کوچه مثال، پلاک ۱۲</textarea>
+									<textarea
+										id="address"
+										name="address"
+										class="form-control"
+										autocomplete="off"
+										max="10"
+										rows="3"
+										required
+									>تهران، خیابان ولیعصر، کوچه مثال، پلاک ۱۲</textarea>
 								</div>
 							</div>
 							<div class="text-center mt-4">
@@ -252,15 +314,33 @@
 							(در نسخهٔ آزمایشی، از کد تست برای شارژ بدون پرداخت واقعی می‌توان استفاده کرد.)
 						</p>
 
-						<form id="chargeForm" class="row g-3 align-items-end needs-validation">
+						<form id="chargeForm" class="row g-3 align-items-end needs-validation" novalidate>
 							<div class="col-12 col-md-6 mb-auto">
 								<label for="chargeAmount" class="form-label fw-semibold">مبلغ (تومان)</label>
-								<input type="number" class="form-control" id="chargeAmount" name="amount" placeholder="مثلاً ۵۰۰۰۰" min="1000" required>
+								<input
+									type="number"
+									class="form-control"
+									id="chargeAmount"
+									name="amount"
+									placeholder="مثلاً ۵۰۰۰۰"
+									autocomplete="off"
+									min="1000"
+									required
+								>
 							</div>
 
 							<div class="col-12 col-md-6">
 								<label for="testCode" class="form-label fw-semibold">کد تست (اختیاری)</label>
-								<input type="text" id="testCode" class="form-control" placeholder="اگر کد تست دارید وارد کنید">
+								<input
+									type="text"
+									id="testCode"
+									name="testCode"
+									class="form-control"
+									placeholder="اگر کد تست دارید وارد کنید"
+									autocomplete="off"
+									min="6"
+									max="12"
+								>
 								<div class="form-text">
 									این فیلد برای تست است — کاربران می‌توانند کد تست را وارد کنند تا بدون پرداخت واقعی حساب‌شان شارژ شود.
 								</div>
@@ -276,10 +356,20 @@
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body">
 						<h5 class="fw-bold mb-3 text-primary">برداشت وجه از کیف پول</h5>
-						<form class="needs-validation">
+						<form class="needs-validation" novalidate>
 							<div class="mb-3">
 								<label for="withdrawAmount" class="form-label">مبلغ مورد نظر (تومان)</label>
-								<input type="number" class="form-control rounded-3" id="withdrawAmount" placeholder="مثلاً ۵۰۰,۰۰۰">
+								<input
+									type="number"
+									class="form-control rounded-3"
+									id="withdrawAmount"
+									name="withdrawAmount"
+									placeholder="مثلاً ۵۰۰,۰۰۰"
+									autocomplete="off"
+									min="0"
+									max="2450000"
+									required
+								>
 							</div>
 							<div class="text-end">
 								<button type="submit" class="btn btn-success w-100 px-4 rounded-3">درخواست برداشت</button>
@@ -340,7 +430,7 @@
 			</div>
 			<div class="collapse" id="sellerRequestCollapse">
 				<div class="card-body">
-					<form id="sellerRequestForm" action="request_seller.php" method="POST" class="row g-3 needs-validation" autocomplete="off" novalidate>
+					<form id="sellerRequestForm" action="request_seller.php" method="POST" class="row g-3 needs-validation" novalidate>
 
 						<div class="col-12">
 							<p class="small text-muted mb-0">
@@ -352,21 +442,45 @@
 
 						<div class="col-12 col-md-6">
 							<label for="national_id" class="form-label fw-semibold">کد ملی *</label>
-							<input type="text" id="national_id" name="national_id" class="form-control" placeholder="مثال: 0012345678" pattern="\d{10}" required>
+							<input
+								type="text"
+								id="national_id"
+								name="national_id"
+								class="form-control"
+								placeholder="مثال: 0012345678"
+								pattern="\d{10}"
+								required
+							>
 							<div class="form-text">کد ملی ۱۰ رقمی را بدون فاصله وارد کنید.</div>
 							<div class="invalid-feedback">لطفاً یک کد ملی معتبر ۱۰ رقمی وارد کنید.</div>
 						</div>
 
 						<div class="col-12 col-md-6">
 							<label for="card_number" class="form-label fw-semibold">شماره کارت بانکی *</label>
-							<input type="text" id="card_number" name="card_number" class="form-control" placeholder="16 رقم شماره کارت" pattern="\d{16}" required>
+							<input
+								type="text"
+								id="card_number"
+								name="card_number"
+								class="form-control"
+								placeholder="16 رقم شماره کارت"
+								pattern="\d{16}"
+								required
+							>
 							<div class="form-text">شماره کارت ۱۶ رقمی بدون فاصله یا خط وارد شود.</div>
 							<div class="invalid-feedback">شماره کارت باید ۱۶ رقم باشد.</div>
 						</div>
 
 						<div class="col-12">
 							<label for="shaba" class="form-label fw-semibold">شماره شبا (IR...) *</label>
-							<input type="text" id="shaba" name="shaba" class="form-control" placeholder="مثال: IR.........................." pattern="IR[0-9A-Za-z]{24}" required>
+							<input
+								type="text"
+								id="shaba"
+								name="shaba"
+								class="form-control"
+								placeholder="مثال: IR.........................."
+								pattern="IR[0-9A-Za-z]{24}"
+								required
+							>
 							<div class="form-text">
 								شماره شبا بانکی را با پیش‌شماره <code>IR</code> وارد کنید. دقت کنید نام صاحب حساب باید با <strong>نام و نام خانوادگی ثبت‌شده در پروفایل</strong> مطابقت داشته باشد.
 							</div>
@@ -375,13 +489,27 @@
 
 						<div class="col-12 col-md-6">
 							<label for="instagram" class="form-label">آیدی اینستاگرام (اختیاری)</label>
-							<input type="text" id="instagram" name="instagram" class="form-control" placeholder="@your_instagram">
+							<input
+								type="text"
+								id="instagram"
+								name="instagram"
+								class="form-control"
+								placeholder="@your_instagram"
+								max="128"
+							>
 							<div class="form-text">در صورت وجود آیدی صفحهٔ فروشتان را وارد کنید.</div>
 						</div>
 
 						<div class="col-12 col-md-6">
 							<label for="telegram" class="form-label">آیدی تلگرام (اختیاری)</label>
-							<input type="text" id="telegram" name="telegram" class="form-control" placeholder="@your_telegram">
+							<input
+								type="text"
+								id="telegram"
+								name="telegram"
+								class="form-control"
+								placeholder="@your_telegram"
+								max="128"
+							>
 						</div>
 
 						<div class="col-12">
