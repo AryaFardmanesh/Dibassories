@@ -21,6 +21,16 @@
 	.card-body::-webkit-scrollbar-thumb:hover {
 		background-color: #999;
 	}
+	.table img {
+		transition: transform 0.2s ease-in-out;
+	}
+	.table img:hover {
+		transform: scale(1.05);
+	}
+	.card-header a.btn:hover {
+		background-color: #f8f9fa;
+		color: #198754;
+	}
 	</style>
 </head>
 <body>
@@ -198,6 +208,86 @@
 							</div>
 						</form>
 					</div>
+				</div>
+			</div>
+
+			<div class="accordion-item shadow-sm">
+				<h2 class="accordion-header" id="headingAddProduct">
+					<button
+						class="accordion-button collapsed bg-primary text-white"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#collapseOrderHistory"
+						aria-expanded="false"
+						aria-controls="collapseOrderHistory"
+					>
+					تاریخچه سفارش‌های بسته‌شده
+					</button>
+				</h2>
+				<div
+					id="collapseOrderHistory"
+					class="accordion-collapse collapse"
+					aria-labelledby="headingAddProduct"
+					data-bs-parent="#addProductAccordion"
+				>
+					<section class="container-fluid my-5">
+						<div class="table-responsive">
+							<table class="table table-striped table-hover align-middle text-center">
+								<thead class="table-success">
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">تصویر</th>
+										<th scope="col">نام محصول</th>
+										<th scope="col">تعداد</th>
+										<th scope="col">جنس</th>
+										<th scope="col">سایز</th>
+										<th scope="col">رنگ</th>
+										<th scope="col">مبلغ نهایی (تومان)</th>
+										<th scope="col">اغدامات</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- ردیف نمونه -->
+									<tr>
+										<th scope="row">1</th>
+										<td>
+											<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+										</td>
+										<td class="fw-semibold">گردنبند طلایی</td>
+										<td>2</td>
+										<td>استیل</td>
+										<td>متوسط</td>
+										<td>
+											<span class="badge" style="background-color: gold;">طلایی</span>
+										</td>
+										<td class="fw-bold text-success">1,200,000</td>
+										<td>
+											<a href="#" class="btn btn-sm btn-success">باز کردن سفارش</a>
+											<a href="#" class="btn btn-sm btn-danger">حذف سفارش</a>
+										</td>
+									</tr>
+									<tr>
+										<th scope="row">2</th>
+										<td>
+											<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+										</td>
+										<td class="fw-semibold">انگشتر نقره‌ای</td>
+										<td>1</td>
+										<td>نقره</td>
+										<td>کوچک</td>
+										<td>
+											<span class="badge" style="background-color: silver;">نقره‌ای</span>
+										</td>
+										<td class="fw-bold text-success">850,000</td>
+										<td>
+											<a href="#" class="btn btn-sm btn-success">باز کردن سفارش</a>
+											<a href="#" class="btn btn-sm btn-danger">حذف سفارش</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
 				</div>
 			</div>
 		</div>
