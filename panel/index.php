@@ -303,6 +303,67 @@
 					</section>
 				</div>
 			</div>
+
+			<div class="accordion-item shadow-sm">
+				<h2 class="accordion-header" id="headingAddProduct">
+					<button
+						class="accordion-button collapsed bg-primary text-white"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#collapseRemovedProdcuts"
+						aria-expanded="false"
+						aria-controls="collapseRemovedProdcuts"
+					>
+					محصولات حذف شده
+					</button>
+				</h2>
+				<div
+					id="collapseRemovedProdcuts"
+					class="accordion-collapse collapse"
+					aria-labelledby="headingAddProduct"
+					data-bs-parent="#addProductAccordion"
+				>
+					<section class="container-fluid my-5">
+						<div class="table-responsive">
+							<table class="table table-striped table-hover align-middle text-center">
+								<thead class="table-success">
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">تصویر</th>
+										<th scope="col">نام محصول</th>
+										<th scope="col">اغدامات</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- ردیف نمونه -->
+									<tr>
+										<th scope="row">1</th>
+										<td>
+											<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+										</td>
+										<td class="fw-semibold">گردنبند طلایی</td>
+										<td>
+											<a href="#" class="btn btn-sm btn-success">باز گرداندن</a>
+											<a href="#" class="btn btn-sm btn-danger">حذف</a>
+										</td>
+									</tr>
+									<tr>
+										<th scope="row">2</th>
+										<td>
+											<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+										</td>
+										<td class="fw-semibold">گردنبند طلایی</td>
+										<td>
+											<a href="#" class="btn btn-sm btn-success">باز گرداندن</a>
+											<a href="#" class="btn btn-sm btn-danger">حذف</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
 		</div>
 	</section>
 
