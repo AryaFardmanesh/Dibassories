@@ -274,6 +274,9 @@
 						<div class="col-md-7">
 							<h6 class="fw-bold mb-1">گردنبند طلایی</h6>
 							<p class="text-muted small mb-1">تعداد درخواستی: <strong>2 عدد</strong></p>
+							<p class="text-muted small mb-1">رنگ: <strong>طلایی</strong></p>
+							<p class="text-muted small mb-1">جنس: <strong>استیل</strong></p>
+							<p class="text-muted small mb-1">سایز: <strong>M</strong></p>
 							<p class="text-muted small mb-1">قیمت نهایی: <strong>1,200,000 تومان</strong></p>
 							<a href="product/گردنبند-طلایی" class="text-decoration-none text-primary small fw-bold">
 							مشاهده محصول
@@ -302,6 +305,9 @@
 						<div class="col-md-7">
 							<h6 class="fw-bold mb-1">انگشتر نقره‌ای</h6>
 							<p class="text-muted small mb-1">تعداد درخواستی: <strong>1 عدد</strong></p>
+							<p class="text-muted small mb-1">رنگ: <strong>طلایی</strong></p>
+							<p class="text-muted small mb-1">جنس: <strong>استیل</strong></p>
+							<p class="text-muted small mb-1">سایز: <strong>M</strong></p>
 							<p class="text-muted small mb-1">قیمت نهایی: <strong>850,000 تومان</strong></p>
 							<a href="product/انگشتر-نقره‌ای" class="text-decoration-none text-primary small fw-bold">
 							مشاهده محصول
