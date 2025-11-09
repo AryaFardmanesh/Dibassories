@@ -31,6 +31,19 @@
 		background-color: #f8f9fa;
 		color: #198754;
 	}
+	.card {
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+	.card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+	}
+	.card-footer a.btn {
+		transition: all 0.2s ease;
+	}
+	.card-footer a.btn:hover {
+		opacity: 0.85;
+	}
 	</style>
 </head>
 <body>
@@ -417,6 +430,68 @@
 					</div>
 				</div>
 
+			</div>
+		</div>
+	</section>
+
+	<hr />
+
+	<section class="container my-5">
+		<h4 class="mb-4 fw-bold text-center">محصولات من</h4>
+		<div class="row g-4">
+			<!-- کارت محصول -->
+			<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+				<div class="card h-100 shadow-sm border-0">
+					<a href="product.php?id=1" class="text-decoration-none text-dark">
+					<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
+					</a>
+					<div class="card-body">
+						<div class="d-flex justify-content-between align-items-center mb-2">
+							<h6 class="card-title mb-0 fw-bold">گردنبند طلایی</h6>
+							<span class="badge bg-primary">گردنبند</span>
+						</div>
+						<p class="card-text text-muted small mb-2">توضیح کوتاه درباره محصول...</p>
+						<div class="d-flex justify-content-between align-items-center">
+							<span class="fw-bold text-success">960,000 تومان</span>
+							<div>
+								<span class="text-decoration-line-through text-muted small">1,200,000</span>
+								<span class="badge bg-danger ms-1">-20%</span>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+						<a href="product.php?id=1" class="btn btn-outline-primary btn-sm">مشاهده</a>
+						<div class="d-flex gap-2">
+							<a href="edit_product.php?id=1" class="btn btn-warning btn-sm text-white">ویرایش</a>
+							<a href="delete_product.php?id=1" class="btn btn-danger btn-sm">حذف</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+				<div class="card h-100 shadow-sm border-0">
+					<a href="product.php?id=2" class="text-decoration-none text-dark">
+						<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
+					</a>
+					<div class="card-body">
+						<div class="d-flex justify-content-between align-items-center mb-2">
+							<h6 class="card-title mb-0 fw-bold">انگشتر نقره‌ای</h6>
+							<span class="badge bg-primary">انگشتر</span>
+						</div>
+						<p class="card-text text-muted small mb-2">طرح خاص و زیبا مناسب هدیه.</p>
+						<div class="d-flex justify-content-between align-items-center">
+							<span class="fw-bold text-success">850,000 تومان</span>
+						</div>
+					</div>
+					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+						<a href="product.php?id=2" class="btn btn-outline-primary btn-sm">مشاهده</a>
+						<div class="d-flex gap-2">
+							<a href="edit_product.php?id=2" class="btn btn-warning btn-sm text-white">ویرایش</a>
+							<a href="delete_product.php?id=2" class="btn btn-danger btn-sm">حذف</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
