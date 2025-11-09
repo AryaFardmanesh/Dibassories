@@ -11,6 +11,16 @@
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<title>دیبا اکسسوری - پنل</title>
 	<style>
+	.card-body::-webkit-scrollbar {
+		width: 8px;
+	}
+	.card-body::-webkit-scrollbar-thumb {
+		background-color: #ccc;
+		border-radius: 4px;
+	}
+	.card-body::-webkit-scrollbar-thumb:hover {
+		background-color: #999;
+	}
 	</style>
 </head>
 <body>
@@ -246,6 +256,74 @@
 			});
 		} );
 	</script>
+
+	<section class="container-fluid my-5">
+		<div class="card shadow-sm">
+			<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+				<h5 class="mb-0">سفارش‌های ثبت شده</h5>
+				<small class="text-light">مدیریت وضعیت سفارش‌ها</small>
+			</div>
+			<div class="card-body bg-light" style="max-height: 500px; overflow-y: auto;">
+
+				<div class="card mb-3 border-0 shadow-sm">
+					<div class="row g-0 align-items-center p-3">
+						<div class="col-md-2 text-center">
+							<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="img-fluid rounded" alt="محصول" style="max-height: 100px; object-fit: cover;">
+						</div>
+
+						<div class="col-md-7">
+							<h6 class="fw-bold mb-1">گردنبند طلایی</h6>
+							<p class="text-muted small mb-1">تعداد درخواستی: <strong>2 عدد</strong></p>
+							<p class="text-muted small mb-1">قیمت نهایی: <strong>1,200,000 تومان</strong></p>
+							<a href="product/گردنبند-طلایی" class="text-decoration-none text-primary small fw-bold">
+							مشاهده محصول
+							</a>
+						</div>
+
+						<div class="col-md-3">
+							<form method="post" class="d-flex flex-column gap-2">
+								<select name="status" class="form-select form-select-sm">
+									<option value="open">باز</option>
+									<option value="confirmed" selected>تایید</option>
+									<option value="shipping">در حال ارسال</option>
+									<option value="closed">بسته</option>
+								</select>
+								<button type="submit" class="btn btn-sm btn-success">اعمال وضعیت</button>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="card mb-3 border-0 shadow-sm">
+					<div class="row g-0 align-items-center p-3">
+						<div class="col-md-2 text-center">
+							<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="img-fluid rounded" alt="محصول" style="max-height: 100px; object-fit: cover;">
+						</div>
+						<div class="col-md-7">
+							<h6 class="fw-bold mb-1">انگشتر نقره‌ای</h6>
+							<p class="text-muted small mb-1">تعداد درخواستی: <strong>1 عدد</strong></p>
+							<p class="text-muted small mb-1">قیمت نهایی: <strong>850,000 تومان</strong></p>
+							<a href="product/انگشتر-نقره‌ای" class="text-decoration-none text-primary small fw-bold">
+							مشاهده محصول
+							</a>
+						</div>
+						<div class="col-md-3">
+							<form method="post" class="d-flex flex-column gap-2">
+								<select name="status" class="form-select form-select-sm">
+									<option value="open" selected>باز</option>
+									<option value="confirmed">تایید</option>
+									<option value="shipping">در حال ارسال</option>
+									<option value="closed">بسته</option>
+								</select>
+								<button type="submit" class="btn btn-sm btn-success">اعمال وضعیت</button>
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
 
 	<!-- Validating forms -->
 	<script>
