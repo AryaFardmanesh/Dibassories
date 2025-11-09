@@ -184,7 +184,7 @@
 							</div>
 
 							<div class="text-center mt-4">
-								<button type="submit" class="btn btn-primary px-4">افزودن محصول</button>
+								<button type="submit" class="btn btn-primary px-4 w-100">افزودن محصول</button>
 							</div>
 						</form>
 					</div>
@@ -202,10 +202,11 @@
 
 				if ( name !== '' ) {
 					$( '#colorPreview' ).append( `
-						<div class="d-flex align-items-center border rounded-pill px-2 py-1 dbas-prod-colors">
+						<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-colors" id="__color_label_${ colorCount }">
 							<input type="hidden" name="color-${ colorCount }" value="${ name },${ color }" />
 							<span class="me-2" style="width:20px;height:20px;background:${ color };border-radius:50%;display:inline-block;"></span>
 							<small>${ name }</small>
+							<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__color_label_${ colorCount }' ).remove()">x</small>
 						</div>
 					` );
 					$( '#colorName' ).val( '' );
@@ -218,8 +219,11 @@
 
 				if ( mat !== '' ) {
 					$( '#materialPreview' ).append( `
-						<input type="hidden" name="mat-${ matCount }" value="${ mat }" />
-						<span class="badge bg-success px-3 py-2 dbas-prod-mat">${ mat }</span>
+						<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-mat" id="__mat_label_${ matCount }">
+							<input type="hidden" name="mat-${ matCount }" value="${ mat }" />
+							<span>${ mat }</span>
+							<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__mat_label_${ matCount }' ).remove()">x</small>
+						</div>
 					` );
 					$( '#materialName' ).val( '' );
 				}
@@ -227,12 +231,15 @@
 
 			$( '#addSize' ).on( 'click', function() {
 				const size = $( '#sizeValue' ).val().trim();
-				const sizeCount = $( '.dbas-prod-mat' ).length;
+				const sizeCount = $( '.dbas-prod-size' ).length;
 
 				if ( size !== '' ) {
 					$( '#sizePreview' ).append( `
-						<input type="hidden" name="size-${ sizeCount }" value="${ size }" />
-						<span class="badge bg-warning text-dark px-3 py-2 dbas-prod-size">${ size }</span>
+						<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-size" id="__size_label_${ sizeCount }">
+							<input type="hidden" name="size-${ sizeCount }" value="${ size }" />
+							<span>${ size }</span>
+							<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__size_label_${ sizeCount }' ).remove()">x</small>
+						</div>
 					` );
 					$( '#sizeValue' ).val( '' );
 				}
