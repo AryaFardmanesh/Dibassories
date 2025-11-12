@@ -11,6 +11,27 @@
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<title>دیبا اکسسوری - پرداخت</title>
 	<style>
+	.product-card {
+		border-radius: 1rem;
+		transition: all 0.3s ease;
+	}
+	.product-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.1);
+	}
+	.product-card img {
+		height: 180px;
+		object-fit: cover;
+		border-top-left-radius: 1rem;
+		border-top-right-radius: 1rem;
+	}
+	::-webkit-scrollbar {
+		height: 8px;
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: #ccc;
+		border-radius: 10px;
+	}
 	</style>
 </head>
 <body>
