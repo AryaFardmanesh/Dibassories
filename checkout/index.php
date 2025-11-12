@@ -85,6 +85,14 @@
 			</div>
 		</div>
 
+		<div class="card shadow-sm mb-4 border-0 rounded-4">
+			<div class="card-body text-center py-4">
+				<h4 class="fw-bold text-primary mb-2">موجودی کیف پول شما</h4>
+				<h2 class="fw-bolder text-success mb-3">۲,۴۵۰,۰۰۰ <small class="text-muted fs-5">تومان</small></h2>
+				<p class="text-muted">از موجودی خود می‌توانید برای خرید یا برداشت وجه استفاده کنید.</p>
+			</div>
+		</div>
+
 		<div class="card border-0 shadow-sm">
 			<div class="card-body">
 				<h5 class="fw-bold mb-3">اطلاعات ارسال و پرداخت</h5>
@@ -100,6 +108,13 @@
 								autocomplete="off"
 								required
 							>تهران، خیابان ولیعصر، کوچه بهار</textarea>
+						</div>
+						<div class="col-md-6">
+							<label for="payment-method" class="form-label">آدرس</label>
+							<select class="form-select" name="payment-method" id="payment-method">
+								<option value="wallet">پرداخت از کیف پول</option>
+								<option value="online">پرداخت آنلاین</option>
+							</select>
 						</div>
 						<div class="col-md-3">
 							<label for="zipcode" class="form-label">کد پستی</label>
