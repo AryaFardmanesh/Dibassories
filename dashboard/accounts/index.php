@@ -26,7 +26,7 @@
 				<button class="btn btn-outline-primary d-lg-none p-0" aria-controls="appSidebar" aria-expanded="false">
 					<img id="mobileSidebarBtn" src="<?= ASSETS_DIR ?>/img/icons/hamburger-button.png" alt="دکمه نوار کناری" width="25" />
 				</button>
-				<h4 class="mb-0">داشبورد مدیر</h4>
+				<h4 class="mb-0">داشبورد مدیر - حساب کاربران</h4>
 			</div>
 			<div class="text-muted small">سلام، آریا — امروز <span class="show-time"></span></div>
 		</div>
