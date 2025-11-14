@@ -17,25 +17,25 @@ if (isset($setActiveLinkForSidebar)) {
 	</div>
 
 	<nav class="sidebar-nav" role="navigation" aria-label="Dashboard Navigation">
-		<a class="nav-link <?= $activeLink == "docs" ? "active" : null ?>" href="/admin/docs.php">
+		<a class="nav-link <?= $activeLink == "docs" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/">
 			<span class="nav-text">مستندات</span>
 		</a>
-		<a class="nav-link <?= $activeLink == "accounts" ? "active" : null ?>" href="/admin/accounts.php">
+		<a class="nav-link <?= $activeLink == "accounts" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/accounts/">
 			<span class="nav-text">حساب‌های کاربری</span>
 		</a>
-		<a class="nav-link <?= $activeLink == "accounts_confirm" ? "active" : null ?>" href="/admin/accounts_confirm.php">
+		<a class="nav-link <?= $activeLink == "accounts_confirm" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/accounts-confirm/">
 			<span class="nav-text">تأیید حساب‌ها</span>
 		</a>
-		<a class="nav-link <?= $activeLink == "products" ? "active" : null ?>" href="/admin/products.php">
+		<a class="nav-link <?= $activeLink == "products" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/products/">
 			<span class="nav-text">محصولات</span>
 		</a>
-		<a class="nav-link <?= $activeLink == "products_confirm" ? "active" : null ?>" href="/admin/products_confirm.php">
+		<a class="nav-link <?= $activeLink == "products_confirm" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/products-confirm/">
 			<span class="nav-text">تأیید محصولات</span>
 		</a>
-		<a class="nav-link <?= $activeLink == "orders" ? "active" : null ?>" href="/admin/orders.php">
+		<a class="nav-link <?= $activeLink == "orders" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/orders/">
 			<span class="nav-text">سفارشات</span>
 		</a>
-		<a class="nav-link <?= $activeLink == "transactions" ? "active" : null ?>" href="/admin/transactions.php">
+		<a class="nav-link <?= $activeLink == "transactions" ? "active" : null ?>" href="<?= BASE_URL ?>/dashboard/transactions/">
 			<span class="nav-text">تراکنش‌ها</span>
 		</a>
 	</nav>
