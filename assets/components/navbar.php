@@ -9,19 +9,19 @@
 		<div class="collapse navbar-collapse" id="navbarContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link" href="#">خانه</a>
+					<a class="nav-link" href="<?= BASE_URL ?>">خانه</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">محصولات</a>
+					<a class="nav-link" href="<?= BASE_URL ?>/products/">محصولات</a>
 				</li>
 			</ul>
 
 			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link btn btn-outline-primary me-2 right-custom-link d-inline-block" href="#">ورود</a>
+					<a class="nav-link btn btn-outline-primary me-2 right-custom-link d-inline-block" href="<?= BASE_URL ?>/login/">ورود</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link btn btn-outline-primary right-custom-link d-inline-block" href="#">ثبت نام</a>
+					<a class="nav-link btn btn-outline-primary right-custom-link d-inline-block" href="<?= BASE_URL ?>/signup/">ثبت نام</a>
 				</li>
 
 				<!-- <li class="nav-item dropdown">
@@ -29,12 +29,12 @@
 						👤 خوش آمدید
 					</a>
 					<ul class="dropdown-menu dropdown-menu-end">
-						<li><a class="dropdown-item" href="#">پنل</a></li>
+						<li><a class="dropdown-item" href="<?= BASE_URL ?>/panel/">پنل</a></li>
 						<li><hr class="dropdown-divider"></li>
-						<li><a class="dropdown-item" href="#">پنل</a></li>
-						<li><a class="dropdown-item" href="#">داشبورد</a></li>
+						<li><a class="dropdown-item" href="<?= BASE_URL ?>/panel/">پنل</a></li>
+						<li><a class="dropdown-item" href="<?= BASE_URL ?>/dashboard/">داشبورد</a></li>
 						<li><hr class="dropdown-divider"></li>
-						<li><a class="dropdown-item text-danger" href="#">خروج از سایت</a></li>
+						<li><a class="dropdown-item text-danger" href="<?= BASE_URL ?>/logout/">خروج از سایت</a></li>
 					</ul>
 				</li> -->
 			</ul>
