@@ -500,7 +500,7 @@
 	<section class="container my-5">
 		<h4 class="mb-4 fw-bold text-center">محصولات من</h4>
 		<div class="row g-4">
-			<!-- کارت محصول -->
+
 			<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
 				<div class="card h-100 shadow-sm border-0">
 					<a href="product.php?id=1" class="text-decoration-none text-dark">
