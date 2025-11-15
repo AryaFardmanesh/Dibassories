@@ -213,6 +213,11 @@
 				</div>
 				<div class="card-body">
 					<h6 class="card-title fw-bold mb-1 text-truncate">گردنبند طلا زنانه مدل A</h6>
+					<div class="d-flex justify-content-center align-items-center my-2">
+						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
+						<span class="form-control form-control-sm mx-2 text-center">1</span>
+						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
+					</div>
 					<div class="d-flex justify-content-between align-items-center">
 						<div>
 							<span class="text-muted text-decoration-line-through small">۴۵۰,۰۰۰</span>
@@ -233,6 +238,11 @@
 				</div>
 				<div class="card-body">
 					<h6 class="card-title fw-bold mb-1 text-truncate">انگشتر استیل مردانه</h6>
+					<div class="d-flex justify-content-center align-items-center my-2">
+						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
+						<span class="form-control form-control-sm mx-2 text-center">1</span>
+						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
+					</div>
 					<div class="d-flex justify-content-between align-items-center">
 						<div>
 							<span class="fw-bold text-dark">۱۸۰,۰۰۰</span>
@@ -251,6 +261,11 @@
 				</div>
 				<div class="card-body">
 					<h6 class="card-title fw-bold mb-1 text-truncate">گوشواره کلاسیک</h6>
+					<div class="d-flex justify-content-center align-items-center my-2">
+						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
+						<span class="form-control form-control-sm mx-2 text-center">1</span>
+						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
+					</div>
 					<div class="d-flex justify-content-between align-items-center">
 						<div>
 							<span class="text-muted text-decoration-line-through small">۲۷۰,۰۰۰</span>
