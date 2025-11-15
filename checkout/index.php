@@ -110,7 +110,7 @@
 							>تهران، خیابان ولیعصر، کوچه بهار</textarea>
 						</div>
 						<div class="col-md-6">
-							<label for="payment-method" class="form-label">آدرس</label>
+							<label for="payment-method" class="form-label">روش پرداخت</label>
 							<select class="form-select" name="payment-method" id="payment-method">
 								<option value="wallet">پرداخت از کیف پول</option>
 								<option value="online">پرداخت آنلاین</option>
