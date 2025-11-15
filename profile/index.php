@@ -393,6 +393,38 @@
 					</div>
 				</div>
 
+				<div class="card shadow-sm mb-4 border-0 rounded-4">
+					<div class="card-body">
+						<h5 class="fw-bold mb-3 text-primary">تاریخچه سفارشات</h5>
+						<div class="table-responsive">
+							<table class="table align-middle text-center">
+								<thead class="table-light">
+									<tr>
+										<th>تصویر</th>
+										<th>تعداد</th>
+										<th>مبلغ (تومان)</th>
+										<th>تاریخ</th>
+										<th>وضعیت</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<a href="#" class="text-decoration-none">
+												<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="rounded shadow-sm" width="40" height="40" alt="Product image" />
+											</a>
+										</td>
+										<td>1</td>
+										<td>۴۵۰,۰۰۰</td>
+										<td>۱۴۰۳/۰۸/۱۵</td>
+										<td><span class="badge bg-success">در حال ارسال</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
 				<div class="card shadow-sm border-0 rounded-4">
 					<div class="card-body">
 						<h5 class="fw-bold mb-3 text-primary">تاریخچه تراکنش‌ها</h5>
