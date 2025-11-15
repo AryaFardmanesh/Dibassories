@@ -505,7 +505,6 @@
 				<div class="card h-100 shadow-sm border-0">
 					<a href="product.php?id=1" class="text-decoration-none text-dark">
 						<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
-						<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 2</span>
 					</a>
 					<div class="card-body">
 						<div class="d-flex justify-content-between align-items-center mb-2">
@@ -528,6 +527,11 @@
 							<a href="delete_product.php?id=1" class="btn btn-danger btn-sm">حذف</a>
 						</div>
 					</div>
+					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center gap-2">
+						<a href="#" class="btn btn-warning btn-sm text-white w-100">+</a>
+						<span class="btn btn-dark btn-sm w-100 pe-none">تعداد: 2</span>
+						<a href="#" class="btn btn-danger btn-sm w-100">-</a>
+					</div>
 				</div>
 			</div>
 
@@ -535,7 +539,6 @@
 				<div class="card h-100 shadow-sm border-0">
 					<a href="product.php?id=2" class="text-decoration-none text-dark">
 						<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
-						<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 2</span>
 					</a>
 					<div class="card-body">
 						<div class="d-flex justify-content-between align-items-center mb-2">
@@ -553,6 +556,11 @@
 							<a href="edit_product.php?id=2" class="btn btn-warning btn-sm text-white">ویرایش</a>
 							<a href="delete_product.php?id=2" class="btn btn-danger btn-sm">حذف</a>
 						</div>
+					</div>
+					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center gap-2">
+						<a href="#" class="btn btn-warning btn-sm text-white w-100">+</a>
+						<span class="btn btn-dark btn-sm w-100 pe-none">تعداد: 2</span>
+						<a href="#" class="btn btn-danger btn-sm w-100">-</a>
 					</div>
 				</div>
 			</div>
