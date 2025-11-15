@@ -155,6 +155,9 @@ Stores all placed orders (one order per product).
 | product | varchar(32) | NOT NULL | References `products.id` |
 | count | int | NOT NULL | Quantity purchased |
 | total | decimal(12,2) | NOT NULL | Total price at purchase time |
+| phone | varchar(12) | UNIQUE, NOT NULL | Phone number |
+| address | varchar(512) | NOT NULL | Full address |
+| zipcode | varchar(16) | NOT NULL | Postal code |
 | status | tinyint | DEFAULT 5 | Order status (see Status section) |
 | created_at | datetime | DEFAULT current_timestamp | Creation time |
 
