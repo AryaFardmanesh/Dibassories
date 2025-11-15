@@ -442,6 +442,9 @@
 							<p class="text-muted small mb-1">جنس: <strong>استیل</strong></p>
 							<p class="text-muted small mb-1">سایز: <strong>M</strong></p>
 							<p class="text-muted small mb-1">قیمت نهایی: <strong>1,200,000 تومان</strong></p>
+							<p class="text-muted small mb-1">آدرس: <strong>تهران، خیابان ولیعصر، کوچه بهار</strong></p>
+							<p class="text-muted small mb-1">کد پستی: <strong>1234567890</strong></p>
+							<p class="text-muted small mb-1">شماره تماس: <strong>09123456789</strong></p>
 							<a href="product/گردنبند-طلایی" class="text-decoration-none text-primary small fw-bold">
 							مشاهده محصول
 							</a>
@@ -473,6 +476,9 @@
 							<p class="text-muted small mb-1">جنس: <strong>استیل</strong></p>
 							<p class="text-muted small mb-1">سایز: <strong>M</strong></p>
 							<p class="text-muted small mb-1">قیمت نهایی: <strong>850,000 تومان</strong></p>
+							<p class="text-muted small mb-1">آدرس: <strong>تهران، خیابان ولیعصر، کوچه بهار</strong></p>
+							<p class="text-muted small mb-1">کد پستی: <strong>1234567890</strong></p>
+							<p class="text-muted small mb-1">شماره تماس: <strong>09123456789</strong></p>
 							<a href="product/انگشتر-نقره‌ای" class="text-decoration-none text-primary small fw-bold">
 							مشاهده محصول
 							</a>
