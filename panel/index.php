@@ -504,7 +504,8 @@
 			<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
 				<div class="card h-100 shadow-sm border-0">
 					<a href="product.php?id=1" class="text-decoration-none text-dark">
-					<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
+						<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
+						<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 2</span>
 					</a>
 					<div class="card-body">
 						<div class="d-flex justify-content-between align-items-center mb-2">
@@ -534,6 +535,7 @@
 				<div class="card h-100 shadow-sm border-0">
 					<a href="product.php?id=2" class="text-decoration-none text-dark">
 						<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
+						<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 2</span>
 					</a>
 					<div class="card-body">
 						<div class="d-flex justify-content-between align-items-center mb-2">
