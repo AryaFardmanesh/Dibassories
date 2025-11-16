@@ -58,7 +58,7 @@ Stores pending confirmations for new accounts.
 | Column | Type | Attributes | Description |
 |--------|------|-------------|--------------|
 | id | varchar(32) | **PRIMARY KEY** | Confirmation ID |
-| user | varchar(32) | UNIQUE, INDEX, NOT NULL | References `accounts.id` |
+| user | varchar(32) | INDEX, NOT NULL | References `accounts.id` |
 | created_at | datetime | DEFAULT current_timestamp | Creation time |
 
 ---
