@@ -41,8 +41,8 @@ Stores all user information, including authentication and contact data.
 | pangirno | varchar(16) | UNIQUE, NOT NULL | National ID |
 | address | varchar(512) | NOT NULL | Full address |
 | zipcode | varchar(16) | NOT NULL | Postal code |
-| card_number | varchar(16) | NOT NULL | Bank card number |
-| card_terminal | varchar(32) | NOT NULL | Sheba's number |
+| card_number | varchar(16) | DEFAULT NULL | Bank card number |
+| card_terminal | varchar(32) | DEFAULT NULL | Sheba's number |
 | wallet_balance | decimal(12,2) | DEFAULT 0 | User’s wallet balance |
 | instagram | varchar(128) | DEFAULT NULL | Optional Instagram link |
 | telegram | varchar(128) | DEFAULT NULL | Optional Telegram link |
