@@ -32,7 +32,7 @@ Stores all user information, including authentication and contact data.
 | Column | Type | Attributes | Description |
 |--------|------|-------------|--------------|
 | id | varchar(32) | **PRIMARY KEY** | Unique account identifier |
-| username | varchar(64) | UNIQUE, INDEX, NOT NULL | Login username |
+| username | varchar(64) | UNIQUE, NOT NULL | Login username |
 | password | varchar(64) | NOT NULL | Hashed password |
 | email | varchar(320) | UNIQUE, NOT NULL | User email address |
 | fname | varchar(32) | NOT NULL | First name |
