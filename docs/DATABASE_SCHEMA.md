@@ -122,7 +122,7 @@ Stores the active cart items for each user.
 | Column | Type | Attributes | Description |
 |--------|------|-------------|--------------|
 | id | varchar(32) | **PRIMARY KEY** | Cart ID |
-| owner | varchar(32) | UNIQUE, INDEX, NOT NULL | References `accounts.id` |
+| owner | varchar(32) | INDEX, NOT NULL | References `accounts.id` |
 | product | varchar(32) | NOT NULL | References `products.id` |
 | product_color | varchar(32) | NOT NULL | References `products_color.id` |
 | product_size | varchar(32) | NOT NULL | References `products_size.id` |
