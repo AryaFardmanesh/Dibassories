@@ -71,4 +71,17 @@ function convertProductTypesToString(int $types): string {
 	}
 }
 
+function convertTransactionTypeToString(int $types): string {
+	switch ($types) {
+		case TRANSACTION_TYPE_BUY:
+			return "خرید";
+		case TRANSACTION_TYPE_CHARGE:
+			return "شارژ";
+		case TRANSACTION_TYPE_EXCHANGE:
+			return "برداشت";
+		default:
+			return "نامشخص";
+	}
+}
+
 ?>
