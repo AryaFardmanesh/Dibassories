@@ -58,4 +58,17 @@ function convertStatusToString(int $status): string {
 	}
 }
 
+function convertProductTypesToString(int $types): string {
+	switch ($types) {
+		case PRODUCT_TYPE_RING:
+			return "حلقه";
+		case PRODUCT_TYPE_NECKLACE:
+			return "گردنبند";
+		case PRODUCT_TYPE_EARRING:
+			return "گوشواره";
+		default:
+			return "نامشخص";
+	}
+}
+
 ?>
