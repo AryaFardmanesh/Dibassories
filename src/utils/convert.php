@@ -1,5 +1,7 @@
 <?php
 
+include_once __DIR__ . "/../config.php";
+
 function convertPriceToReadableFormat(int $amount): string {
 	$amount = "" . $amount;
 	$amount = strrev($amount);
