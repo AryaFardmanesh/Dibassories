@@ -26,4 +26,7 @@ define('TRANSACTION_TYPE_BUY', 0);
 define('TRANSACTION_TYPE_CHARGE', 1);
 define('TRANSACTION_TYPE_EXCHANGE', 2);
 
+// Cookies data
+define('COOKIE_JWT_NAME', 'DIBAS_TK');
+
 ?>
