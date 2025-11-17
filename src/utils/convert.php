@@ -20,4 +20,17 @@ function convertPriceToReadableFormat(int $amount): string {
 	return $result;
 }
 
+function convertRolesToString(int $role): string {
+	switch ( $role ) {
+		case ROLE_CUSTOMER:
+			return "مشتری";
+		case ROLE_SELLER:
+			return "فروشنده";
+		case ROLE_ADMIN:
+			return "مدیر";
+		default:
+			return "نامشخص";
+	}
+}
+
 ?>
