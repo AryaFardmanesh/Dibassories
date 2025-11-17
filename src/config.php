@@ -28,5 +28,6 @@ define('TRANSACTION_TYPE_EXCHANGE', 2);
 
 // Cookies data
 define('COOKIE_JWT_NAME', 'DIBAS_TK');
+define('COOKIE_EXP_TIME', (86400 * 30) /* 86400 = 1 Day - 30 Days */);
 
 ?>
