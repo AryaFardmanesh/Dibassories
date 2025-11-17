@@ -21,13 +21,38 @@ function convertPriceToReadableFormat(int $amount): string {
 }
 
 function convertRolesToString(int $role): string {
-	switch ( $role ) {
+	switch ($role) {
 		case ROLE_CUSTOMER:
 			return "مشتری";
 		case ROLE_SELLER:
 			return "فروشنده";
 		case ROLE_ADMIN:
 			return "مدیر";
+		default:
+			return "نامشخص";
+	}
+}
+
+function convertStatusToString(int $status): string {
+	switch ($status) {
+		case STATUS_OK:
+			return "تایید";
+		case STATUS_SUSPENDED:
+			return "معلغ";
+		case STATUS_REMOVED:
+			return "حذف";
+		case STATUS_NOT_PAID:
+			return "پرداخت نشده";
+		case STATUS_PAID:
+			return "پرداخت شده";
+		case STATUS_OPENED:
+			return "باز";
+		case STATUS_CONFIRM:
+			return "تایید";
+		case STATUS_SEND:
+			return "ارسال شده";
+		case STATUS_CLOSED:
+			return "بسته";
 		default:
 			return "نامشخص";
 	}
