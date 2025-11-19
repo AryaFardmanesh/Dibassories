@@ -30,4 +30,13 @@ define('TRANSACTION_TYPE_EXCHANGE', 2);
 define('COOKIE_JWT_NAME', 'DIBAS_TK');
 define('COOKIE_EXP_TIME', (86400 * 30) /* 86400 = 1 Day - 30 Days */);
 
+// Uploader Config
+define('LIMIT_FILE_SIZE', 2000000);
+
+define('FILE_STATUS_NOT_FOUND', 1);
+define('FILE_STATUS_ALREADY_EXISTS', 2);
+define('FILE_STATUS_LARGE_SIZE', 3);
+define('FILE_STATUS_INVALID_SUFFIX', 4);
+define('FILE_STATUS_FAILED', 5);
+
 ?>
