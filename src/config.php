@@ -3,6 +3,12 @@
 define('BASE_URL', '/Dibassories');
 define('ASSETS_DIR', BASE_URL . '/assets');
 
+// Database config
+define('DB_SERVERNAME', 'localhost');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_NAME', 'dibassories');
+
 // Database enumerations
 define('ROLE_CUSTOMER', 10);
 define('ROLE_SELLER', 20);
