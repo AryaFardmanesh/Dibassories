@@ -19,28 +19,6 @@ The layers include:
 
 ---
 
-## Models Structure
-
-Two types of models are used in the system to simplify data handling:
-
-### 1. Raw Model  
-This model corresponds directly to a single row in a database table.  
-When created, it only contains the fields of that specific table record.
-
-### 2. Extended Model  
-This model is designed for convenience when more complete user information is needed.  
-In addition to the user’s main data, it also includes related information such as:
-
-- shopping cart
-- products in the cart
-- transactions
-- orders  
-- and other linked data
-
-This means an extended model returns **all data associated with the user**, not just the base table.
-
----
-
 ## User Login System
 
 To identify a logged-in user across requests, the backend uses **JWT-based authentication**.
