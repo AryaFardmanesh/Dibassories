@@ -7,4 +7,8 @@ function testInput(string $data): string {
 	return $data;	
 }
 
+function testEmail(string $email): bool {
+	return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
 ?>

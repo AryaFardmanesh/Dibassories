@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `dibas_products` (
   `type` tinyint(4) NOT NULL,
   `name` varchar(128) NOT NULL,
   `description` text NOT NULL,
-  `image` varchar(2048) NOT NULL,
+  `image` varchar(512) NOT NULL,
   `count` int(11) NOT NULL,
   `price` decimal(12,2) NOT NULL,
   `offer` tinyint(4) DEFAULT NULL,

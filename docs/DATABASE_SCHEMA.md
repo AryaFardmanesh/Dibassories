@@ -73,7 +73,7 @@ Contains product details listed by sellers.
 | type | tinyint | INDEX, NOT NULL | Product type (see Product Types) |
 | name | varchar(128) | NOT NULL | Product name |
 | description | varchar(512) | NOT NULL | Product description |
-| image | varchar(2048) | NOT NULL | Product image URL |
+| image | varchar(512) | NOT NULL | Product image URL |
 | count | int | NOT NULL | Quantity available |
 | price | decimal(12,2) | NOT NULL | Base price |
 | offer | tinyint | DEFAULT NULL | Optional discount indicator |
@@ -153,6 +153,9 @@ Stores all placed orders (one order per product).
 | owner | varchar(32) | INDEX, NOT NULL | References `accounts.id` (buyer) |
 | provider | varchar(32) | INDEX, NOT NULL | References `accounts.id` (seller) |
 | product | varchar(32) | NOT NULL | References `products.id` |
+| product_color | varchar(32) | NOT NULL | References `product_color.id` |
+| product_material | varchar(32) | NOT NULL | References `product_material.id` |
+| product_size | varchar(32) | NOT NULL | References `product_size.id` |
 | count | int | NOT NULL | Quantity purchased |
 | total | decimal(12,2) | NOT NULL | Total price at purchase time |
 | phone | varchar(12) | NOT NULL | Phone number |
