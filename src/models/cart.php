@@ -23,7 +23,7 @@ class ShoppingCartModel extends BaseModel {
 			return false;
 		}
 		if (!ModelTest::inRange(32, 32, $this->owner)) {
-			$this->setError("شناسه صاحب سبد خرید باید بین 32 کاراکتر باشد.");
+			$this->setError("شناسه صاحب سبد خرید باید 32 کاراکتر باشد.");
 			return false;
 		}
 		if (!ModelTest::inRange(32, 32, $this->product)) {
