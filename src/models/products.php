@@ -105,4 +105,31 @@ class ProductMaterialModel extends BaseModel {
 	}
 }
 
+class ProductSizeModel extends BaseModel {
+	public function __construct(
+		public string $id,
+		public string $product,
+		public string $size
+	) {
+		$this->validate();
+	}
+
+	final public function validate(): bool {
+		if (!ModelTest::inRange(32, 32, $this->id)) {
+			$this->setError("شناسه محصول باید 32 کاراکتری باشد.");
+			return false;
+		}
+		if (!ModelTest::inRange(32, 32, $this->product)) {
+			$this->setError("شناسه محصول باید 32 کاراکتر باشد.");
+			return false;
+		}
+		if (!ModelTest::inRange(1, 32, $this->size)) {
+			$this->setError("سایز محصول باید بین 3 تا 32 کاراکتر باشد.");
+			return false;
+		}
+
+		return true;
+	}
+}
+
 ?>
