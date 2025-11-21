@@ -73,7 +73,7 @@ Contains product details listed by sellers.
 | type | tinyint | INDEX, NOT NULL | Product type (see Product Types) |
 | name | varchar(128) | NOT NULL | Product name |
 | description | varchar(512) | NOT NULL | Product description |
-| image | varchar(2048) | NOT NULL | Product image URL |
+| image | varchar(512) | NOT NULL | Product image URL |
 | count | int | NOT NULL | Quantity available |
 | price | decimal(12,2) | NOT NULL | Base price |
 | offer | tinyint | DEFAULT NULL | Optional discount indicator |
