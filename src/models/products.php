@@ -46,4 +46,36 @@ class ProductModel extends BaseModel {
 	}
 }
 
+class ProductColorModel extends BaseModel {
+	public function __construct(
+		public string $id,
+		public string $product,
+		public string $name,
+		public string $hex
+	) {
+		$this->validate();
+	}
+
+	final public function validate(): bool {
+		if (!ModelTest::inRange(32, 32, $this->id)) {
+			$this->setError("شناسه محصول باید 32 کاراکتری باشد.");
+			return false;
+		}
+		if (!ModelTest::inRange(32, 32, $this->product)) {
+			$this->setError("شناسه محصول باید 32 کاراکتر باشد.");
+			return false;
+		}
+		if (!ModelTest::inRange(3, 32, $this->name)) {
+			$this->setError("نام رنگ باید بین 3 تا 32 کاراکتر باشد.");
+			return false;
+		}
+		if (!ModelTest::inRange(6, 6, $this->hex)) {
+			$this->setError("کدهگز باید 6 کاراکتر باشد.");
+			return false;
+		}
+
+		return true;
+	}
+}
+
 ?>
