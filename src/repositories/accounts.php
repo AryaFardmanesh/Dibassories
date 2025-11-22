@@ -1,5 +1,7 @@
 <?php
 
+use function PHPSTORM_META\type;
+
 include_once __DIR__ . "/repository.php";
 include_once __DIR__ . "/../models/accounts.php";
 include_once __DIR__ . "/../utils/uuid.php";
@@ -142,7 +144,42 @@ class AccountRepository extends BaseRepository {
 	}
 
 	final public static function removeById(string $id): bool {
-		throw new \Exception("Not implemented yet.");
+		if (!Database::connect()) {
+			AccountRepository::setError(
+				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
+				Database::getError()
+			);
+		}
+
+		$result = Database::query(
+			"SELECT `status` FROM `dibas_accounts`
+			WHERE `dibas_accounts`.`id` = '$id';"
+		);
+		$row = $result->fetch();
+
+		if ($row === FALSE) {
+			Database::close();
+			return false;
+		}
+
+		$status = (int)$row["status"];
+
+		if ($status === STATUS_REMOVED) {
+			$deleteResult = (bool)Database::query(
+				"DELETE FROM `dibas_accounts` WHERE `dibas_accounts`.`id` = '$id';"
+			);
+			Database::close();
+			return $deleteResult;
+		}else {
+			$removedStatusCode = STATUS_REMOVED;
+			$removeResult = (bool)Database::query(
+				"UPDATE `dibas_accounts`
+				SET `status` = $removedStatusCode
+				WHERE `dibas_accounts`.`id` = '$id';"
+			);
+			Database::close();
+			return $removeResult;
+		}
 	}
 
 	final public static function removeByUsername(string $id): bool {
@@ -195,19 +232,5 @@ class AccountRepository extends BaseRepository {
 		throw new \Exception("Not implemented yet.");
 	}
 }
-
-AccountRepository::create(
-	"admin12346",
-	"admin1234",
-	"admin6@gmail.com",
-	"Arya",
-	"Fardmanesh",
-	"09024708906",
-	"1057867912013124",
-	"Theran, Iran",
-	"1057867912013128"
-);
-
-echo "ERROR: " . AccountRepository::getError();
 
 ?>
