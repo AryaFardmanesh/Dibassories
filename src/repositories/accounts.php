@@ -19,8 +19,8 @@ class AccountRepository extends BaseRepository {
 	): ?AccountModel {
 		if (!Database::connect()) {
 			AccountRepository::setError(
-				Database::getError() . "<br />" .
-				"خطایی در برقراری با پایگاه داده به وجود آمده است."
+				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
+				Database::getError()
 			);
 		}
 
@@ -195,5 +195,19 @@ class AccountRepository extends BaseRepository {
 		throw new \Exception("Not implemented yet.");
 	}
 }
+
+AccountRepository::create(
+	"admin12346",
+	"admin1234",
+	"admin6@gmail.com",
+	"Arya",
+	"Fardmanesh",
+	"09024708906",
+	"1057867912013124",
+	"Theran, Iran",
+	"1057867912013128"
+);
+
+echo "ERROR: " . AccountRepository::getError();
 
 ?>
