@@ -186,8 +186,8 @@ class AccountRepository extends BaseRepository {
 		return AccountRepository::remove("id", $id);
 	}
 
-	final public static function removeByUsername(string $id): bool {
-		throw new \Exception("Not implemented yet.");
+	final public static function removeByUsername(string $username): bool {
+		return AccountRepository::remove("username", $username);
 	}
 
 	final public static function removeFromRequest(string $id): bool {
