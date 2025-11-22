@@ -231,21 +231,23 @@ class AccountRepository extends BaseRepository {
 			Database::query(
 				"DELETE FROM `dibas_accounts_confirm` WHERE `dibas_accounts_confirm`.`user` = '$id';"
 			);
-			$deleteResult = (bool)Database::query(
+			Database::query(
 				"DELETE FROM `dibas_accounts` WHERE `dibas_accounts`.`$field` = '$value';"
 			);
-			Database::close();
-			return $deleteResult;
+			goto success;
 		}else {
 			$removedStatusCode = STATUS_REMOVED;
-			$removeResult = (bool)Database::query(
+			Database::query(
 				"UPDATE `dibas_accounts`
 				SET `status` = $removedStatusCode
 				WHERE `dibas_accounts`.`$field` = '$value';"
 			);
-			Database::close();
-			return $removeResult;
+			goto success;
 		}
+
+		success:
+			Database::close();
+			return true;
 
 		failed:
 			Database::close();
@@ -260,8 +262,17 @@ class AccountRepository extends BaseRepository {
 		return AccountRepository::remove("username", $username);
 	}
 
-	final public static function removeFromRequest(string $id): bool {
-		throw new \Exception("Not implemented yet.");
+	final public static function removeSellerRequest(string $id): bool {
+		if (!AccountRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_accounts_confirm` WHERE `dibas_accounts_confirm`.`user` = '$id';"
+		);
+		Database::close();
+		return true;
 	}
 
 	final public static function update(AccountModel $model): AccountModel {
@@ -306,23 +317,5 @@ class AccountRepository extends BaseRepository {
 		throw new \Exception("Not implemented yet.");
 	}
 }
-
-// AccountRepository::create(
-// 	"admin12346",
-// 	"admin1234",
-// 	"admin6@gmail.com",
-// 	"Arya",
-// 	"Fardmanesh",
-// 	"09024708906",
-// 	"1057867912013124",
-// 	"Theran, Iran",
-// 	"1057867912013128"
-// );
-
-// echo AccountRepository::removeByUsername("admin12346") === true ? "True" : "False";
-// echo AccountRepository::requestForSeller("69216da7946ed69216da7946ef69216d") === true ? "True" : "False";
-// echo "<br />";
-
-echo "ERROR: " . AccountRepository::getError();
 
 ?>
