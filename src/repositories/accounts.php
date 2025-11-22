@@ -142,11 +142,7 @@ class AccountRepository extends BaseRepository {
 	}
 
 	final public static function requestForSeller(string $id): bool {
-		if (!Database::connect()) {
-			AccountRepository::setError(
-				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
-				Database::getError()
-			);
+		if (!AccountRepository::dbConnect()) {
 			goto failed;
 		}
 
@@ -214,11 +210,7 @@ class AccountRepository extends BaseRepository {
 	}
 
 	private static function remove(string $field, string $value): bool {
-		if (!Database::connect()) {
-			AccountRepository::setError(
-				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
-				Database::getError()
-			);
+		if (!AccountRepository::dbConnect()) {
 			goto failed;
 		}
 
@@ -314,5 +306,23 @@ class AccountRepository extends BaseRepository {
 		throw new \Exception("Not implemented yet.");
 	}
 }
+
+// AccountRepository::create(
+// 	"admin12346",
+// 	"admin1234",
+// 	"admin6@gmail.com",
+// 	"Arya",
+// 	"Fardmanesh",
+// 	"09024708906",
+// 	"1057867912013124",
+// 	"Theran, Iran",
+// 	"1057867912013128"
+// );
+
+// echo AccountRepository::removeByUsername("admin12346") === true ? "True" : "False";
+// echo AccountRepository::requestForSeller("69216da7946ed69216da7946ef69216d") === true ? "True" : "False";
+// echo "<br />";
+
+echo "ERROR: " . AccountRepository::getError();
 
 ?>
