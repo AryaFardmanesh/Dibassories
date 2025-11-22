@@ -143,6 +143,77 @@ class AccountRepository extends BaseRepository {
 		return $model;
 	}
 
+	final public static function requestForSeller(string $id): bool {
+		if (!Database::connect()) {
+			AccountRepository::setError(
+				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
+				Database::getError()
+			);
+		}
+
+		// Check user was not have request
+		$result = Database::query(
+			"SELECT `id` FROM `dibas_accounts_confirm`
+			WHERE `dibas_accounts_confirm`.`user` = '$id';"
+		);
+		$row = $result->fetch();
+
+		if ($row !== FALSE) {
+			AccountRepository::setError("کاربری با شناسه تعیین شده قبلا این درخواست را ثبت کرده است.");
+			goto failed;
+		}
+
+		// Check user exists
+		$result = Database::query(
+			"SELECT `role`, `status` FROM `dibas_accounts`
+			WHERE `dibas_accounts`.`id` = '$id';"
+		);
+		$row = $result->fetch();
+
+		if ($row === FALSE) {
+			AccountRepository::setError("کاربری با شناسه تعیین شده یافت نشد.");
+			goto failed;
+		}
+
+		// Check role and status
+		$role = (int)$row["role"];
+		$status = (int)$row["status"];
+
+		if ($role !== ROLE_CUSTOMER) {
+			AccountRepository::setError("کاربر باید نقش مشتری را داشته باشد تا بتواند به فروشنده ارتقا یابد.");
+			goto failed;
+		}
+
+		if ($status !== STATUS_OK) {
+			AccountRepository::setError("کاربر در وضعیت مسدود یا حذف است.");
+			goto failed;
+		}
+
+		// Insert new requset for user
+		$reqId = uuid();
+		Database::query("INSERT INTO `dibas_accounts_confirm` (
+			`id`,
+			`user`,
+			`created_at`
+		) VALUES (
+			'$reqId',
+			'$id',
+			CURRENT_TIMESTAMP()
+		)");
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
 	private static function remove(string $field, string $value): bool {
 		if (!Database::connect()) {
 			AccountRepository::setError(
