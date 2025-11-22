@@ -24,6 +24,7 @@ class AccountRepository extends BaseRepository {
 				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
 				Database::getError()
 			);
+			goto failed;
 		}
 
 		$model = new AccountModel(
@@ -41,8 +42,7 @@ class AccountRepository extends BaseRepository {
 
 		if ($model->hasError()) {
 			AccountRepository::setError($model->getError());
-			Database::close();
-			return null;
+			goto failed;
 		}
 
 		// Extract model data
@@ -88,8 +88,7 @@ class AccountRepository extends BaseRepository {
 			}
 
 			AccountRepository::setError("این $field قبلا ثبت شده است.");
-			Database::close();
-			return null;
+			goto failed;
 		}
 
 		// Insert new record
@@ -135,12 +134,15 @@ class AccountRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			AccountRepository::setError(Database::getError());
-			Database::close();
-			return null;
+			goto failed;
 		}
 
 		Database::close();
 		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
 	final public static function requestForSeller(string $id): bool {
@@ -149,6 +151,7 @@ class AccountRepository extends BaseRepository {
 				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
 				Database::getError()
 			);
+			goto failed;
 		}
 
 		// Check user was not have request
@@ -220,6 +223,7 @@ class AccountRepository extends BaseRepository {
 				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
 				Database::getError()
 			);
+			goto failed;
 		}
 
 		$result = Database::query(
@@ -229,8 +233,7 @@ class AccountRepository extends BaseRepository {
 		$row = $result->fetch();
 
 		if ($row === FALSE) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		$status = (int)$row["status"];
@@ -251,6 +254,10 @@ class AccountRepository extends BaseRepository {
 			Database::close();
 			return $removeResult;
 		}
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function removeById(string $id): bool {
