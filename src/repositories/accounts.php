@@ -143,7 +143,7 @@ class AccountRepository extends BaseRepository {
 		return $model;
 	}
 
-	final public static function removeById(string $id): bool {
+	private static function remove(string $field, string $value): bool {
 		if (!Database::connect()) {
 			AccountRepository::setError(
 				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
@@ -153,7 +153,7 @@ class AccountRepository extends BaseRepository {
 
 		$result = Database::query(
 			"SELECT `status` FROM `dibas_accounts`
-			WHERE `dibas_accounts`.`id` = '$id';"
+			WHERE `dibas_accounts`.`$field` = '$value';"
 		);
 		$row = $result->fetch();
 
@@ -166,7 +166,7 @@ class AccountRepository extends BaseRepository {
 
 		if ($status === STATUS_REMOVED) {
 			$deleteResult = (bool)Database::query(
-				"DELETE FROM `dibas_accounts` WHERE `dibas_accounts`.`id` = '$id';"
+				"DELETE FROM `dibas_accounts` WHERE `dibas_accounts`.`$field` = '$value';"
 			);
 			Database::close();
 			return $deleteResult;
@@ -175,11 +175,15 @@ class AccountRepository extends BaseRepository {
 			$removeResult = (bool)Database::query(
 				"UPDATE `dibas_accounts`
 				SET `status` = $removedStatusCode
-				WHERE `dibas_accounts`.`id` = '$id';"
+				WHERE `dibas_accounts`.`$field` = '$value';"
 			);
 			Database::close();
 			return $removeResult;
 		}
+	}
+
+	final public static function removeById(string $id): bool {
+		return AccountRepository::remove("id", $id);
 	}
 
 	final public static function removeByUsername(string $id): bool {
