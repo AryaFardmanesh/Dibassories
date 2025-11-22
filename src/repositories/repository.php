@@ -1,20 +1,22 @@
 <?php
 
-abstract class BaseRepository {
-	private string|null $error = null;
+include_once __DIR__ . "/../utils/database.php";
 
-	final public function hasError(): bool {
-		return $this->error !== null;
+abstract class BaseRepository {
+	static private string|null $error = null;
+
+	final static public function hasError(): bool {
+		return BaseRepository::$error !== null;
 	}
 
-	final public function getError(): string|null {
-		$error = $this->error;
-		$this->error = null;
+	final static public function getError(): string|null {
+		$error = BaseRepository::$error;
+		BaseRepository::$error = null;
 		return $error;
 	}
 
-	final public function setError(string $err): void {
-		$this->error = $err;
+	final static public function setError(string $err): void {
+		BaseRepository::$error = $err;
 	}
 }
 
