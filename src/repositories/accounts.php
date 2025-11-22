@@ -19,11 +19,7 @@ class AccountRepository extends BaseRepository {
 		string $address,
 		string $zipcode
 	): ?AccountModel {
-		if (!Database::connect()) {
-			AccountRepository::setError(
-				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
-				Database::getError()
-			);
+		if (!AccountRepository::dbConnect()) {
 			goto failed;
 		}
 
@@ -227,7 +223,7 @@ class AccountRepository extends BaseRepository {
 		}
 
 		$result = Database::query(
-			"SELECT `status` FROM `dibas_accounts`
+			"SELECT `id`, `status` FROM `dibas_accounts`
 			WHERE `dibas_accounts`.`$field` = '$value';"
 		);
 		$row = $result->fetch();
@@ -236,9 +232,13 @@ class AccountRepository extends BaseRepository {
 			goto failed;
 		}
 
+		$id = $row["id"];
 		$status = (int)$row["status"];
 
 		if ($status === STATUS_REMOVED) {
+			Database::query(
+				"DELETE FROM `dibas_accounts_confirm` WHERE `dibas_accounts_confirm`.`user` = '$id';"
+			);
 			$deleteResult = (bool)Database::query(
 				"DELETE FROM `dibas_accounts` WHERE `dibas_accounts`.`$field` = '$value';"
 			);
