@@ -18,6 +18,18 @@ abstract class BaseRepository {
 	final static public function setError(string $err): void {
 		BaseRepository::$error = $err;
 	}
+
+	final static protected function dbConnect(): bool {
+		if (!Database::connect()) {
+			AccountRepository::setError(
+				"خطایی در برقراری با پایگاه داده به وجود آمده است." . "<br />" .
+				Database::getError()
+			);
+			return false;
+		}
+
+		return true;
+	}
 }
 
 ?>
