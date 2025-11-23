@@ -15,7 +15,7 @@ abstract class BaseRepository {
 		return $error;
 	}
 
-	final static public function setError(string $err): void {
+	final static protected function setError(string $err): void {
 		BaseRepository::$error = $err;
 	}
 
