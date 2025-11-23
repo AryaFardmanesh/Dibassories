@@ -13,7 +13,7 @@ abstract class BaseModel {
 		return $error;
 	}
 
-	final public function setError(string $err): void {
+	final protected function setError(string $err): void {
 		$this->error = $err;
 	}
 
