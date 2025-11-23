@@ -395,8 +395,55 @@ class AccountRepository extends BaseRepository {
 		return true;
 	}
 
+	private static function find(string $field, string $value): AccountModel|null {
+		if (!AccountRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_accounts` WHERE `dibas_accounts`.`$field` = '$value';"
+		)->fetch();
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new AccountModel(
+			$row["id"],
+			$row["username"],
+			$row["password"],
+			$row["email"],
+			$row["fname"],
+			$row["lname"],
+			$row["phone"],
+			$row["pangirno"],
+			$row["address"],
+			$row["zipcode"],
+			$row["card_number"] === "NULL" ? null : $row["card_number"],
+			$row["card_terminal"] === "NULL" ? null : $row["card_terminal"],
+			$row["wallet_balance"],
+			$row["instagram"] === "NULL" ? null : $row["instagram"],
+			$row["telegram"] === "NULL" ? null : $row["telegram"],
+			$row["role"],
+			$row["status"],
+			new DateTimeImmutable($row["created_at"])
+		);
+
+		if ($model->hasError()) {
+			AccountRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
+	}
+
 	final public static function findById(string $id): AccountModel|null {
-		throw new \Exception("Not implemented yet.");
+		return AccountRepository::find("id", $id);
 	}
 
 	final public static function findByUsername(string $username): AccountModel|null {
