@@ -275,8 +275,92 @@ class AccountRepository extends BaseRepository {
 		return true;
 	}
 
-	final public static function update(AccountModel $model): AccountModel {
-		throw new \Exception("Not implemented yet.");
+	final public static function update(AccountModel $model): ?AccountModel {
+		if ($model->hasError()) {
+			AccountRepository::setError($model->getError());
+			goto failed;
+		}
+
+		if (!AccountRepository::dbConnect()) {
+			goto failed;
+		}
+
+		// Extract model data
+		$id = $model->id;
+		$username = $model->username;
+		$password = $model->password;
+		$email = $model->email;
+		$fname = $model->fname;
+		$lname = $model->lname;
+		$phone = $model->phone;
+		$pangirno = $model->pangirno;
+		$address = $model->address;
+		$zipcode = $model->zipcode;
+		$card_number = dbFlatData($model->card_number);
+		$card_terminal = dbFlatData($model->card_terminal);
+		$wallet_balance = $model->wallet_balance;
+		$instagram = dbFlatData($model->instagram);
+		$telegram = dbFlatData($model->telegram);
+		$role = $model->role;
+		$status = $model->status;
+
+		// Check for duplicate data
+		$result = Database::query(
+			"SELECT `id`, `username`, `email`, `phone`, `pangirno` FROM `dibas_accounts`
+			WHERE `dibas_accounts`.`username` = '$username'
+			OR `dibas_accounts`.`email` = '$email'
+			OR `dibas_accounts`.`phone` = '$phone'
+			OR `dibas_accounts`.`pangirno` = '$pangirno';"
+		);
+		$result_data = $result->fetchAll();
+
+		foreach ($result_data as $row) {
+			if ($row["id"] !== $id) {
+				$field = "_";
+
+				if ($row["username"] === $username) {
+					$field = "نام کاربری";
+				}elseif ($row["email"] === $email) {
+					$field = "ایمیل";
+				}elseif ($row["phone"] === $phone) {
+					$field = "شماره تلفن همراه";
+				}elseif ($row["pangirno"] === $pangirno) {
+					$field = "کد ملی";
+				}
+
+				AccountRepository::setError("این $field قبلا ثبت شده است.");
+				goto failed;
+			}
+		}
+
+		// Update
+		Database::query(
+			"UPDATE `dibas_accounts`
+			SET
+				`username` = '$username',
+				`password` = '$password',
+				`email` = '$email',
+				`fname` = '$fname',
+				`lname` = '$lname',
+				`phone` = '$phone',
+				`pangirno` = '$pangirno',
+				`address` = '$address',
+				`zipcode` = '$zipcode',
+				`card_number` = '$card_number',
+				`card_terminal` = '$card_terminal',
+				`wallet_balance` = '$wallet_balance',
+				`instagram` = '$instagram',
+				`telegram` = '$telegram',
+				`role` = '$role',
+				`status` = '$status'
+			WHERE `dibas_accounts`.`id` = '$id';"
+		);
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
 	final public static function updateRole(string $id, int $newRole): AccountModel {
