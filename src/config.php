@@ -45,4 +45,7 @@ define('FILE_STATUS_LARGE_SIZE', 3);
 define('FILE_STATUS_INVALID_SUFFIX', 4);
 define('FILE_STATUS_FAILED', 5);
 
+// Pagination Config
+define('PAGINATION_LIMIT', 10);
+
 ?>
