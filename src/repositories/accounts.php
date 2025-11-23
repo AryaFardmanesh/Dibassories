@@ -346,13 +346,13 @@ class AccountRepository extends BaseRepository {
 				`pangirno` = '$pangirno',
 				`address` = '$address',
 				`zipcode` = '$zipcode',
-				`card_number` = '$card_number',
-				`card_terminal` = '$card_terminal',
-				`wallet_balance` = '$wallet_balance',
-				`instagram` = '$instagram',
-				`telegram` = '$telegram',
-				`role` = '$role',
-				`status` = '$status'
+				`card_number` = $card_number,
+				`card_terminal` = $card_terminal,
+				`wallet_balance` = $wallet_balance,
+				`instagram` = $instagram,
+				`telegram` = $telegram,
+				`role` = $role,
+				`status` = $status
 			WHERE `dibas_accounts`.`id` = '$id';"
 		);
 		Database::close();
@@ -363,12 +363,36 @@ class AccountRepository extends BaseRepository {
 			return null;
 	}
 
-	final public static function updateRole(string $id, int $newRole): AccountModel {
-		throw new \Exception("Not implemented yet.");
+	final public static function updateRole(string $id, int $newRole): bool {
+		if (!AccountRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"UPDATE `dibas_accounts`
+			SET
+				`role` = '$newRole'
+			WHERE `dibas_accounts`.`id` = '$id';"
+		);
+		Database::close();
+		return true;
 	}
 
-	final public static function updateStatus(string $id, int $newStatus): AccountModel {
-		throw new \Exception("Not implemented yet.");
+	final public static function updateStatus(string $id, int $newStatus): bool {
+		if (!AccountRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"UPDATE `dibas_accounts`
+			SET
+				`status` = '$newStatus'
+			WHERE `dibas_accounts`.`id` = '$id';"
+		);
+		Database::close();
+		return true;
 	}
 
 	final public static function findById(string $id): AccountModel|null {
