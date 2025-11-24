@@ -124,7 +124,7 @@ class AccountRepository extends BaseRepository {
 			$role,
 			$status,
 			CURRENT_TIMESTAMP()
-		)");
+		);");
 
 		if (Database::hasError()) {
 			AccountRepository::setError(Database::getError());
@@ -192,7 +192,7 @@ class AccountRepository extends BaseRepository {
 			'$reqId',
 			'$id',
 			CURRENT_TIMESTAMP()
-		)");
+		);");
 
 		if (Database::hasError()) {
 			AccountRepository::setError(Database::getError());
