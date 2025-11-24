@@ -166,7 +166,43 @@ class ProductRepository extends BaseRepository {
 	}
 
 	final public static function remove(string $id): bool {
-		throw new \Exception("Not yet implemented.");
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT `status` FROM `dibas_products`
+			WHERE `dibas_products`.`id` = '$id';"
+		)->fetch();
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$status = $row["status"];
+
+		if ($status === STATUS_REMOVED) {
+			Database::query(
+				"DELETE FROM `dibas_products` WHERE `dibas_products`.`id` = '$id';
+				DELETE FROM `dibas_products_color` WHERE `dibas_products_color`.`product` = '$id';
+				DELETE FROM `dibas_products_material` WHERE `dibas_products_material`.`product` = '$id';
+				DELETE FROM `dibas_products_size` WHERE `dibas_products_size`.`product` = '$id';"
+			);
+		}else {
+			$removedStatusCode = STATUS_REMOVED;
+			Database::query(
+				"UPDATE `dibas_products`
+				SET `status` = $removedStatusCode
+				WHERE `dibas_products`.`id` = '$id';"
+			);
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function removeColor(string $id): bool {
