@@ -205,16 +205,30 @@ class ProductRepository extends BaseRepository {
 			return false;
 	}
 
+	private static function removeAssoc(string $table, string $field, string $value): bool {
+		if (!ProductRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_products_$table` WHERE `dibas_products_$table`.`$field` = '$value';"
+		);
+
+		Database::close();
+		return true;
+	}
+
 	final public static function removeColor(string $id): bool {
-		throw new \Exception("Not yet implemented.");
+		return ProductRepository::removeAssoc("color", "id", $id);
 	}
 
 	final public static function removeMaterial(string $id): bool {
-		throw new \Exception("Not yet implemented.");
+		return ProductRepository::removeAssoc("material", "id", $id);
 	}
 
 	final public static function removeSize(string $id): bool {
-		throw new \Exception("Not yet implemented.");
+		return ProductRepository::removeAssoc("size", "id", $id);
 	}
 
 	final public static function update(ProductModel $model): bool {
