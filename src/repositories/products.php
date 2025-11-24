@@ -49,6 +49,30 @@ class ProductRepository extends BaseRepository {
 	final public static function updateSizes(array $sizes): bool {
 		throw new \Exception("Not yet implemented.");
 	}
+
+	final private static function find(string $field, string $value): ?ProductModel {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function findById(string $id): ?ProductModel {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function findBySlug(string $slug): ?ProductModel {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function findColors(string $id): array {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function findMaterials(string $id): array {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function findSizes(string $id): array {
+		throw new \Exception("Not yet implemented.");
+	}
 }
 
 ?>
