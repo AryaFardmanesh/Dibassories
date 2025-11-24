@@ -27,6 +27,18 @@ class ProductRepository extends BaseRepository {
 		throw new \Exception("Not yet implemented.");
 	}
 
+	final public static function removeColor(string $id): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function removeMaterial(string $id): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function removeSize(string $id): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
 	final public static function update(ProductModel $model): bool {
 		throw new \Exception("Not yet implemented.");
 	}
