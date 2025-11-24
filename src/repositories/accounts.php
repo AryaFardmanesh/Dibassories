@@ -445,7 +445,7 @@ class AccountRepository extends BaseRepository {
 	}
 
 	final public static function findByUsername(string $username): AccountModel|null {
-		throw new \Exception("Not implemented yet.");
+		return AccountRepository::find("username", $username);
 	}
 
 	final public static function filter(
