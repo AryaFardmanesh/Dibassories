@@ -451,8 +451,8 @@ class AccountRepository extends BaseRepository {
 	}
 
 	final public static function filter(
-		int|null $page = 1,
-		int| null $limit = PAGINATION_LIMIT,
+		int $page = 1,
+		int $limit = PAGINATION_LIMIT,
 		bool|null $cardSeted = null,
 		int|null $role = null,
 		int|null $status = null
@@ -534,6 +534,7 @@ class AccountRepository extends BaseRepository {
 	}
 
 	final public static function getPageCount(
+		int $limit = PAGINATION_LIMIT,
 		bool|null $cardSeted = null,
 		int|null $role = null,
 		int|null $status = null
@@ -580,15 +581,63 @@ class AccountRepository extends BaseRepository {
 
 		out:
 			Database::close();
+			if ($count < $limit) $count = 1;
+			else $count = (int)ceil($count / $limit);
 			return $count;
 	}
 
-	final public static function filterConfirmRequest(int|null $page = 1): array {
-		throw new \Exception("Not implemented yet.");
+	final public static function filterConfirmRequest(int $page = 1, int $limit = PAGINATION_LIMIT): array {
+		$models = [];
+
+		if (!AccountRepository::dbConnect()) {
+			goto out;
+		}
+
+		$offset = ($page - 1) * $limit;
+		$rows = Database::query(
+			"SELECT * FROM `dibas_accounts_confirm`
+			ORDER BY `dibas_accounts_confirm`.`created_at`
+			LIMIT $limit OFFSET $offset;"
+		)->fetchAll();
+
+		foreach ($rows as $row) {
+			$model = new AccountConfirmModel(
+				$row["id"],
+				$row["user"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				AccountRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
 	}
 
-	final public static function getPageCountForRequest(): int {
-		throw new \Exception("Not implemented yet.");
+	final public static function getPageCountForRequest(int $limit = PAGINATION_LIMIT): int {
+		$count = 0;
+
+		if (!AccountRepository::dbConnect()) {
+			goto out;
+		}
+
+		$count = Database::query(
+			"SELECT COUNT(*) AS 'total'
+			FROM `dibas_accounts`;"
+		);
+		$count = (int)$count->fetch()["total"];
+
+		out:
+			Database::close();
+			if ($count < $limit) $count = 1;
+			else $count = (int)ceil($count / $limit);
+			return $count;
 	}
 }
 
