@@ -48,4 +48,10 @@ define('FILE_STATUS_FAILED', 5);
 // Pagination Config
 define('PAGINATION_LIMIT', 10);
 
+// Sort Config
+define('SORT_NEWEST', 0);
+define('SORT_CHEAPEST', 2);
+define('SORT_EXPENSIVE', 2);
+define('SORT_MOST_OFFER', 3);
+
 ?>
