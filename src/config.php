@@ -54,4 +54,8 @@ define('SORT_CHEAPEST', 2);
 define('SORT_EXPENSIVE', 2);
 define('SORT_MOST_OFFER', 3);
 
+// Search Price Config
+define('DEFAULT_MIN_PRICE', 0);
+define('DEFAULT_MAX_PRICE', PHP_INT_MAX);
+
 ?>
