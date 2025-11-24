@@ -533,8 +533,54 @@ class AccountRepository extends BaseRepository {
 			return $models;
 	}
 
-	final public static function getPageCount(): int {
-		throw new \Exception("Not implemented yet.");
+	final public static function getPageCount(
+		bool|null $cardSeted = null,
+		int|null $role = null,
+		int|null $status = null
+	): int {
+		$count = 0;
+
+		if (!AccountRepository::dbConnect()) {
+			goto out;
+		}
+
+		$sqlCondition = [];
+		$sqlConditionStr = "";
+
+		if ($cardSeted) {
+			array_push($sqlCondition, "`dibas_accounts`.`card_number` != NULL");
+		}
+		if ($role !== null) {
+			array_push($sqlCondition, "`dibas_accounts`.`role` = $role");
+		}
+		if ($status !== null) {
+			array_push($sqlCondition, "`dibas_accounts`.`status` = $status");
+		}
+
+		$sqlConditionCount = count($sqlCondition);
+		if ($sqlConditionCount) {
+			$sqlConditionStr = "WHERE ";
+		}
+
+		for ($i = 0; $i < $sqlConditionCount; $i++) {
+			$sqlConditionStr .= $sqlCondition[$i];
+
+			if ($i + 1 < $sqlConditionCount) {
+				$sqlConditionStr .= " AND ";
+			}
+		}
+
+		$count = Database::query(
+			"SELECT COUNT(*) AS 'total'
+			FROM `dibas_accounts`
+			$sqlConditionStr
+			;"
+		);
+		$count = (int)$count->fetch()["total"];
+
+		out:
+			Database::close();
+			return $count;
 	}
 
 	final public static function filterConfirmRequest(int|null $page = 1): array {
