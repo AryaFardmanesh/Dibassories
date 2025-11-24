@@ -310,16 +310,56 @@ class ProductRepository extends BaseRepository {
 		return true;
 	}
 
-	final public static function updateColors(array $colors): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateColor(string $id, string $name, string $hex): bool {
+		if (!ProductRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"UPDATE `dibas_products_color`
+			SET
+				`color_name` = '$name',
+				`color_hex` = '$hex'
+			WHERE `dibas_products_color`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
-	final public static function updateMaterials(array $materials): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateMaterial(string $id, string $value): bool {
+		if (!ProductRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"UPDATE `dibas_products_material`
+			SET
+				`material` = '$value'
+			WHERE `dibas_products_material`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
-	final public static function updateSizes(array $sizes): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateSize(string $id, string $value): bool {
+		if (!ProductRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"UPDATE `dibas_products_size`
+			SET
+				`size` = '$value'
+			WHERE `dibas_products_size`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
 	private static function find(string $field, string $value): ?ProductModel {
