@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `dibas_products_color` (
   `id` varchar(32) NOT NULL,
   `product` varchar(32) NOT NULL,
   `color_name` varchar(32) NOT NULL,
-  `color_hex` text NOT NULL
+  `color_hex` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
