@@ -34,6 +34,10 @@ class ProductRepository extends BaseRepository {
 		throw new \Exception("Not yet implemented.");
 	}
 
+	final public static function updateStatus(int $newStatus): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
 	final public static function updateColors(array $colors): bool {
 		throw new \Exception("Not yet implemented.");
 	}
