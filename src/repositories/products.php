@@ -605,8 +605,54 @@ class ProductRepository extends BaseRepository {
 		int|null $type = null,
 		int|null $minPrice = null,
 		int|null $maxPrice = null
-	): array {
-		throw new \Exception("Not yet implemented.");
+	): int {
+		$count = 0;
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$sqlCondition = [];
+		$sqlConditionStr = "";
+
+		if ($name !== null) {
+			array_push($sqlCondition, "`dibas_products`.`name` LIKE '$name'");
+		}
+		if ($type !== null) {
+			array_push($sqlCondition, "`dibas_products`.`type` = $type");
+		}
+		if ($minPrice !== null && $maxPrice !== null) {
+			array_push($sqlCondition, "`dibas_products`.`price` BETWEEN $minPrice AND $maxPrice");
+		}elseif ($minPrice !== null) {
+			array_push($sqlCondition, "`dibas_products`.`price` > $minPrice");
+		}elseif ($maxPrice !== null) {
+			array_push($sqlCondition, "`dibas_products`.`price` < $maxPrice");
+		}
+
+		$sqlConditionCount = count($sqlCondition);
+		if ($sqlConditionCount) {
+			$sqlConditionStr = "WHERE ";
+		}
+
+		for ($i = 0; $i < $sqlConditionCount; $i++) {
+			$sqlConditionStr .= $sqlCondition[$i];
+
+			if ($i + 1 < $sqlConditionCount) {
+				$sqlConditionStr .= " AND ";
+			}
+		}
+
+		$count = Database::query(
+			"SELECT COUNT(*) as 'total' FROM `dibas_products`
+			$sqlConditionStr;"
+		);
+		$count = (int)$count->fetch()["total"];
+
+		out:
+			Database::close();
+			if ($count < $limit) $count = 1;
+			else $count = (int)ceil($count / $limit);
+			return $count;
 	}
 }
 
