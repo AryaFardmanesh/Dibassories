@@ -363,15 +363,51 @@ class ProductRepository extends BaseRepository {
 	}
 
 	private static function find(string $field, string $value): ?ProductModel {
-		throw new \Exception("Not yet implemented.");
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products` WHERE `dibas_products`.`$field` = '$value';"
+		)->fetch();
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new ProductModel(
+			$row["id"],
+			$row["owner"],
+			(int)$row["type"],
+			$row["name"],
+			$row["description"],
+			str_getcsv($row["image"], "|"),
+			(int)$row["count"],
+			(int)$row["price"],
+			(int)$row["offer"],
+			(int)$row["status"],
+			new DateTimeImmutable($row["created_at"])
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
 	final public static function findById(string $id): ?ProductModel {
-		throw new \Exception("Not yet implemented.");
+		return ProductRepository::find("id", $id);
 	}
 
 	final public static function findBySlug(string $slug): ?ProductModel {
-		throw new \Exception("Not yet implemented.");
+		return ProductRepository::find("name", $slug);
 	}
 
 	final public static function findColors(string $id): array {
