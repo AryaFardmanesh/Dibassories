@@ -6,7 +6,7 @@ include_once __DIR__ . "/../utils/uuid.php";
 include_once __DIR__ . "/../utils/sanitizer.php";
 
 class ProductRepository extends BaseRepository {
-	public static function create(
+	final public static function create(
 		string $owner,
 		int $type,
 		array $colors,
@@ -19,6 +19,10 @@ class ProductRepository extends BaseRepository {
 		int $price,
 		int $offer
 	): ProductModel {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function remove(string $id): bool {
 		throw new \Exception("Not yet implemented.");
 	}
 }
