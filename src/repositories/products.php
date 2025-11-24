@@ -513,7 +513,90 @@ class ProductRepository extends BaseRepository {
 		int|null $minPrice = null,
 		int|null $maxPrice = null
 	): array {
-		throw new \Exception("Not yet implemented.");
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$offset = ($page - 1) * $limit;
+		$sqlCondition = [];
+		$sqlConditionStr = "";
+
+		if ($name !== null) {
+			array_push($sqlCondition, "`dibas_products`.`name` LIKE '$name'");
+		}
+		if ($type !== null) {
+			array_push($sqlCondition, "`dibas_products`.`type` = $type");
+		}
+		if ($minPrice !== null && $maxPrice !== null) {
+			array_push($sqlCondition, "`dibas_products`.`price` BETWEEN $minPrice AND $maxPrice");
+		}elseif ($minPrice !== null) {
+			array_push($sqlCondition, "`dibas_products`.`price` > $minPrice");
+		}elseif ($maxPrice !== null) {
+			array_push($sqlCondition, "`dibas_products`.`price` < $maxPrice");
+		}
+
+		$sqlConditionCount = count($sqlCondition);
+		if ($sqlConditionCount) {
+			$sqlConditionStr = "WHERE ";
+		}
+
+		for ($i = 0; $i < $sqlConditionCount; $i++) {
+			$sqlConditionStr .= $sqlCondition[$i];
+
+			if ($i + 1 < $sqlConditionCount) {
+				$sqlConditionStr .= " AND ";
+			}
+		}
+
+		$sortField = "created_at";
+		$arrow = "DESC";
+
+		if ($sort === SORT_CHEAPEST) {
+			$sortField = "price";
+			$arrow = "ASC";
+		}elseif ($sort === SORT_EXPENSIVE) {
+			$sortField = "price";
+			$arrow = "DESC";
+		}elseif ($sort === SORT_MOST_OFFER) {
+			$sortField = "offer";
+			$arrow = "DESC";
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_products`
+			$sqlConditionStr
+			ORDER BY `dibas_products`.`$sortField` $arrow
+			LIMIT $limit OFFSET $offset;"
+		)->fetchAll();
+
+		foreach ($rows as $row) {
+			$model = new ProductModel(
+				$row["id"],
+				$row["owner"],
+				(int)$row["type"],
+				$row["name"],
+				$row["description"],
+				str_getcsv($row["image"], "|"),
+				(int)$row["count"],
+				(int)$row["price"],
+				(int)$row["offer"],
+				(int)$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
 	}
 
 	final public static function getPageCount(
