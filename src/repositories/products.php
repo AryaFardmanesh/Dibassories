@@ -12,15 +12,157 @@ class ProductRepository extends BaseRepository {
 		int $type,
 		array $colors,
 		array $materials,
-		array $size,
+		array $sizes,
 		string $name,
 		string $description,
 		array $images,
 		int $count,
 		int $price,
 		int $offer
-	): ProductModel {
-		throw new \Exception("Not yet implemented.");
+	): ?ProductModel {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$model = new ProductModel(
+			uuid(),
+			$owner,
+			$type,
+			$name,
+			$description,
+			$images,
+			$count,
+			$price,
+			$offer
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto failed;
+		}
+
+		// Extract model data
+		$id = $model->id;
+		$owner = $model->owner;
+		$type = $model->type;
+		$name = $model->name;
+		$description = $model->description;
+		$image = join("|", $model->image);
+		$count = $model->count;
+		$price = $model->price;
+		$offer = $model->offer;
+		$status = $model->status;
+
+		// Insert new record
+		Database::query(
+			"INSERT INTO `dibas_products` (
+				`id`,
+				`owner`,
+				`type`,
+				`name`,
+				`description`,
+				`image`,
+				`count`,
+				`price`,
+				`offer`,
+				`status`,
+				`created_at`
+			) VALUES (
+				'$id',
+				'$owner',
+				$type,
+				'$name',
+				'$description',
+				'$image',
+				$count,
+				$price,
+				$offer,
+				$status,
+				CURRENT_TIMESTAMP()
+			);"
+		);
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		// Insert new record for color
+		foreach ($colors as $color) {
+			$idColor = uuid();
+			$colorName = $color[0];
+			$colorHex = $color[1];
+
+			Database::query(
+				"INSERT INTO `dibas_products_color` (
+					`id`,
+					`product`,
+					`color_name`,
+					`color_hex`
+				) VALUES (
+					'$idColor',
+					'$id',
+					'$colorName',
+					'$colorHex'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		// Insert new record for material
+		foreach ($materials as $material) {
+			$idMaterial = uuid();
+
+			Database::query(
+				"INSERT INTO `dibas_products_material` (
+					`id`,
+					`product`,
+					`material`
+				) VALUES (
+					'$idMaterial',
+					'$id',
+					'$material'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		// Insert new record for size
+		foreach ($sizes as $size) {
+			$idSize = uuid();
+
+			Database::query(
+				"INSERT INTO `dibas_products_size` (
+					`id`,
+					`product`,
+					`size`
+				) VALUES (
+					'$idSize',
+					'$id',
+					'$size'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
 	final public static function remove(string $id): bool {
