@@ -1,5 +1,6 @@
 <?php
 
+include_once __DIR__ . "/../config.php";
 include_once __DIR__ . "/repository.php";
 include_once __DIR__ . "/../models/products.php";
 include_once __DIR__ . "/../utils/uuid.php";
@@ -71,6 +72,28 @@ class ProductRepository extends BaseRepository {
 	}
 
 	final public static function findSizes(string $id): array {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function filter(
+		int $page = 1,
+		int $limit = PAGINATION_LIMIT,
+		int $sort = SORT_NEWEST,
+		string|null $name = null,
+		int|null $type = null,
+		int|null $minPrice = null,
+		int|null $maxPrice = null
+	): array {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function getPageCount(
+		int $limit = PAGINATION_LIMIT,
+		string|null $name = null,
+		int|null $type = null,
+		int|null $minPrice = null,
+		int|null $maxPrice = null
+	): array {
 		throw new \Exception("Not yet implemented.");
 	}
 }
