@@ -411,15 +411,97 @@ class ProductRepository extends BaseRepository {
 	}
 
 	final public static function findColors(string $id): array {
-		throw new \Exception("Not yet implemented.");
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_products_color` WHERE `dibas_products_color`.`product` = '$id';"
+		)->fetchAll();
+
+		foreach ($rows as $row) {
+			$model = new ProductColorModel(
+				$row["id"],
+				$row["product"],
+				$row["color_name"],
+				$row["color_hex"]
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
 	}
 
 	final public static function findMaterials(string $id): array {
-		throw new \Exception("Not yet implemented.");
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_products_material` WHERE `dibas_products_material`.`product` = '$id';"
+		)->fetchAll();
+
+		foreach ($rows as $row) {
+			$model = new ProductMaterialModel(
+				$row["id"],
+				$row["product"],
+				$row["material"]
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
 	}
 
 	final public static function findSizes(string $id): array {
-		throw new \Exception("Not yet implemented.");
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_products_size` WHERE `dibas_products_size`.`product` = '$id';"
+		)->fetchAll();
+
+		foreach ($rows as $row) {
+			$model = new ProductSizeModel(
+				$row["id"],
+				$row["product"],
+				$row["size"]
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
 	}
 
 	final public static function filter(
