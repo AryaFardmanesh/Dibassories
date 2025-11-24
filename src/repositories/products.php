@@ -63,7 +63,7 @@ class ProductRepository extends BaseRepository {
 		throw new \Exception("Not yet implemented.");
 	}
 
-	final private static function find(string $field, string $value): ?ProductModel {
+	private static function find(string $field, string $value): ?ProductModel {
 		throw new \Exception("Not yet implemented.");
 	}
 
