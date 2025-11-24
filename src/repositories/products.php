@@ -9,13 +9,16 @@ class ProductRepository extends BaseRepository {
 	public static function create(
 		string $owner,
 		int $type,
+		array $colors,
+		array $materials,
+		array $size,
 		string $name,
 		string $description,
 		array $images,
 		int $count,
 		int $price,
 		int $offer
-	): void {
+	): ProductModel {
 		throw new \Exception("Not yet implemented.");
 	}
 }
