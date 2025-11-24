@@ -231,16 +231,83 @@ class ProductRepository extends BaseRepository {
 		return ProductRepository::removeAssoc("size", "id", $id);
 	}
 
-	final public static function update(ProductModel $model): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function update(ProductModel $model): ?ProductModel {
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto failed;
+		}
+
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		// Extract model data
+		$id = $model->id;
+		$type = $model->type;
+		$name = $model->name;
+		$description = $model->description;
+		$image = join("|", $model->image);
+		$count = $model->count;
+		$price = $model->price;
+		$offer = $model->offer;
+		$status = $model->status;
+
+		// Update the record
+		Database::query(
+			"UPDATE `dibas_products`
+			SET
+				`type` = '$type',
+				`name` = '$name',
+				`description` = '$description',
+				`image` = '$image',
+				`count` = $count,
+				`price` = $price,
+				`offer` = $offer,
+				`status` = $status
+			WHERE `dibas_products`.`id` = '$id';"
+		);
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
-	final public static function updateCount(int|string $newCount): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateCount(string $id, int|string $newCount): bool {
+		if (!ProductRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		// Update the record
+		Database::query(
+			"UPDATE `dibas_products`
+			SET
+				`count` = $newCount
+			WHERE `dibas_products`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
-	final public static function updateStatus(int $newStatus): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateStatus(string $id, int $newStatus): bool {
+		if (!ProductRepository::dbConnect()) {
+			Database::close();
+			return false;
+		}
+
+		// Update the record
+		Database::query(
+			"UPDATE `dibas_products`
+			SET
+				`status` = $newStatus
+			WHERE `dibas_products`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
 	final public static function updateColors(array $colors): bool {
