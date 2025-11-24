@@ -452,12 +452,85 @@ class AccountRepository extends BaseRepository {
 
 	final public static function filter(
 		int|null $page = 1,
+		int| null $limit = PAGINATION_LIMIT,
 		bool|null $cardSeted = null,
 		int|null $role = null,
 		int|null $status = null
 
 	): array {
-		throw new \Exception("Not implemented yet.");
+		$models = [];
+
+		if (!AccountRepository::dbConnect()) {
+			goto out;
+		}
+
+		$offset = ($page - 1) * $limit;
+		$sqlCondition = [];
+		$sqlConditionStr = "";
+
+		if ($cardSeted) {
+			array_push($sqlCondition, "`dibas_accounts`.`card_number` != NULL");
+		}
+		if ($role !== null) {
+			array_push($sqlCondition, "`dibas_accounts`.`role` = $role");
+		}
+		if ($status !== null) {
+			array_push($sqlCondition, "`dibas_accounts`.`status` = $status");
+		}
+
+		$sqlConditionCount = count($sqlCondition);
+		if ($sqlConditionCount) {
+			$sqlConditionStr = "WHERE ";
+		}
+
+		for ($i = 0; $i < $sqlConditionCount; $i++) {
+			$sqlConditionStr .= $sqlCondition[$i];
+
+			if ($i + 1 < $sqlConditionCount) {
+				$sqlConditionStr .= " AND ";
+			}
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_accounts`
+			$sqlConditionStr
+			ORDER BY `dibas_accounts`.`created_at`
+			LIMIT $limit OFFSET $offset;"
+		)->fetchAll();
+
+		foreach ($rows as $row) {
+			$model = new AccountModel(
+				$row["id"],
+				$row["username"],
+				$row["password"],
+				$row["email"],
+				$row["fname"],
+				$row["lname"],
+				$row["phone"],
+				$row["pangirno"],
+				$row["address"],
+				$row["zipcode"],
+				$row["card_number"] === "NULL" ? null : $row["card_number"],
+				$row["card_terminal"] === "NULL" ? null : $row["card_terminal"],
+				$row["wallet_balance"],
+				$row["instagram"] === "NULL" ? null : $row["instagram"],
+				$row["telegram"] === "NULL" ? null : $row["telegram"],
+				$row["role"],
+				$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				AccountRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
 	}
 
 	final public static function getPageCount(): int {
