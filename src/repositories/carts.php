@@ -70,11 +70,50 @@ class ShoppingCartRepository extends BaseRepository {
 	}
 
 	final public static function remove(string $owner, string $productId): bool {
-		throw new \Exception("Not yet implemented.");
+		if (!ShoppingCartRepository::dbConnect()) {
+			goto failed;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_shopping_carts`
+			WHERE `dibas_shopping_carts`.`owner` = '$owner'
+			AND `dibas_shopping_carts`.`product` = '$productId';"
+		);
+
+		if (Database::hasError()) {
+			ShoppingCartRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function removeAll(string $owner): bool {
-		throw new \Exception("Not yet implemented.");
+		if (!ShoppingCartRepository::dbConnect()) {
+			goto failed;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_shopping_carts`
+			WHERE `dibas_shopping_carts`.`owner` = '$owner';"
+		);
+
+		if (Database::hasError()) {
+			ShoppingCartRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function update(
