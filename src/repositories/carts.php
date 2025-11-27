@@ -77,6 +77,33 @@ class ShoppingCartRepository extends BaseRepository {
 		throw new \Exception("Not yet implemented.");
 	}
 
+	final public static function update(
+		string $id,
+		string $product,
+		string $color,
+		string $size,
+		string $material,
+		int $count
+	): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function updateColor(string $id, string $color): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function updateSize(string $id, string $color): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function updateMaterial(string $id, string $color): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
+	final public static function updateCount(string $id, int $count): bool {
+		throw new \Exception("Not yet implemented.");
+	}
+
 	final public static function find(string $owner): array {
 		throw new \Exception("Not yet implemented.");
 	}
