@@ -28,6 +28,7 @@ for (const file of files) {
 	fileCount++;
 }
 
-console.log(`Char Count: ${charCount}`);
-console.log(`Line Count: ${lineCount}`);
-console.log(`File Count: ${fileCount}`);
+console.log(`Simple Cloc Analize (Just for PHP):`);
+console.log(`\tChar Count: ${charCount}`);
+console.log(`\tLine Count: ${lineCount}`);
+console.log(`\tFile Count: ${fileCount}`);
