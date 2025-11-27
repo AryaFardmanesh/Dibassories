@@ -149,6 +149,12 @@ class AccountRepository extends BaseRepository {
 			"SELECT `id` FROM `dibas_accounts_confirm`
 			WHERE `dibas_accounts_confirm`.`user` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		$row = $result->fetch();
 
 		if ($row !== FALSE) {
@@ -161,6 +167,12 @@ class AccountRepository extends BaseRepository {
 			"SELECT `role`, `status` FROM `dibas_accounts`
 			WHERE `dibas_accounts`.`id` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		$row = $result->fetch();
 
 		if ($row === FALSE) {
@@ -216,6 +228,12 @@ class AccountRepository extends BaseRepository {
 			"SELECT `id`, `status` FROM `dibas_accounts`
 			WHERE `dibas_accounts`.`$field` = '$value';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		$row = $result->fetch();
 
 		if ($row === FALSE) {
@@ -244,6 +262,10 @@ class AccountRepository extends BaseRepository {
 		}
 
 		success:
+			if (Database::hasError()) {
+				AccountRepository::setError(Database::getError());
+				goto failed;
+			}
 			Database::close();
 			return true;
 
@@ -262,15 +284,24 @@ class AccountRepository extends BaseRepository {
 
 	final public static function removeSellerRequest(string $id): bool {
 		if (!AccountRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
 			"DELETE FROM `dibas_accounts_confirm` WHERE `dibas_accounts_confirm`.`user` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function update(AccountModel $model): ?AccountModel {
@@ -310,6 +341,12 @@ class AccountRepository extends BaseRepository {
 			OR `dibas_accounts`.`phone` = '$phone'
 			OR `dibas_accounts`.`pangirno` = '$pangirno';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		$result_data = $result->fetchAll();
 
 		foreach ($result_data as $row) {
@@ -353,6 +390,12 @@ class AccountRepository extends BaseRepository {
 				`status` = $status
 			WHERE `dibas_accounts`.`id` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return $model;
 
@@ -373,6 +416,12 @@ class AccountRepository extends BaseRepository {
 				`role` = '$newRole'
 			WHERE `dibas_accounts`.`id` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
 	}
@@ -389,6 +438,12 @@ class AccountRepository extends BaseRepository {
 				`status` = '$newStatus'
 			WHERE `dibas_accounts`.`id` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
 	}
@@ -401,6 +456,11 @@ class AccountRepository extends BaseRepository {
 		$row = Database::query(
 			"SELECT * FROM `dibas_accounts` WHERE `dibas_accounts`.`$field` = '$value';"
 		)->fetch();
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto failed;
+		}
 
 		if ($row === FALSE) {
 			goto failed;
@@ -496,6 +556,11 @@ class AccountRepository extends BaseRepository {
 			LIMIT $limit OFFSET $offset;"
 		)->fetchAll();
 
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new AccountModel(
 				$row["id"],
@@ -575,6 +640,12 @@ class AccountRepository extends BaseRepository {
 			$sqlConditionStr
 			;"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto out;
+		}
+
 		$count = (int)$count->fetch()["total"];
 
 		out:
@@ -597,6 +668,11 @@ class AccountRepository extends BaseRepository {
 			ORDER BY `dibas_accounts_confirm`.`created_at`
 			LIMIT $limit OFFSET $offset;"
 		)->fetchAll();
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto out;
+		}
 
 		foreach ($rows as $row) {
 			$model = new AccountConfirmModel(
@@ -629,6 +705,12 @@ class AccountRepository extends BaseRepository {
 			"SELECT COUNT(*) AS 'total'
 			FROM `dibas_accounts`;"
 		);
+
+		if (Database::hasError()) {
+			AccountRepository::setError(Database::getError());
+			goto out;
+		}
+
 		$count = (int)$count->fetch()["total"];
 
 		out:
