@@ -175,6 +175,11 @@ class ProductRepository extends BaseRepository {
 			WHERE `dibas_products`.`id` = '$id';"
 		)->fetch();
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		if ($row === FALSE) {
 			goto failed;
 		}
@@ -190,11 +195,17 @@ class ProductRepository extends BaseRepository {
 			);
 		}else {
 			$removedStatusCode = STATUS_REMOVED;
+
 			Database::query(
 				"UPDATE `dibas_products`
 				SET `status` = $removedStatusCode
 				WHERE `dibas_products`.`id` = '$id';"
 			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
 		}
 
 		Database::close();
@@ -207,16 +218,24 @@ class ProductRepository extends BaseRepository {
 
 	private static function removeAssoc(string $table, string $field, string $value): bool {
 		if (!ProductRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
 			"DELETE FROM `dibas_products_$table` WHERE `dibas_products_$table`.`$field` = '$value';"
 		);
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function removeColor(string $id): bool {
@@ -266,6 +285,12 @@ class ProductRepository extends BaseRepository {
 				`status` = $status
 			WHERE `dibas_products`.`id` = '$id';"
 		);
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return $model;
 
@@ -276,8 +301,7 @@ class ProductRepository extends BaseRepository {
 
 	final public static function updateCount(string $id, int|string $newCount): bool {
 		if (!ProductRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		// Update the record
@@ -288,14 +312,22 @@ class ProductRepository extends BaseRepository {
 			WHERE `dibas_products`.`id` = '$id';"
 		);
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateStatus(string $id, int $newStatus): bool {
 		if (!ProductRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		// Update the record
@@ -306,14 +338,22 @@ class ProductRepository extends BaseRepository {
 			WHERE `dibas_products`.`id` = '$id';"
 		);
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateColor(string $id, string $name, string $hex): bool {
 		if (!ProductRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -324,14 +364,22 @@ class ProductRepository extends BaseRepository {
 			WHERE `dibas_products_color`.`id` = '$id';"
 		);
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateMaterial(string $id, string $value): bool {
 		if (!ProductRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -341,14 +389,22 @@ class ProductRepository extends BaseRepository {
 			WHERE `dibas_products_material`.`id` = '$id';"
 		);
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateSize(string $id, string $value): bool {
 		if (!ProductRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -358,8 +414,17 @@ class ProductRepository extends BaseRepository {
 			WHERE `dibas_products_size`.`id` = '$id';"
 		);
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	private static function find(string $field, string $value): ?ProductModel {
@@ -370,6 +435,11 @@ class ProductRepository extends BaseRepository {
 		$row = Database::query(
 			"SELECT * FROM `dibas_products` WHERE `dibas_products`.`$field` = '$value';"
 		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
 
 		if ($row === FALSE) {
 			goto failed;
@@ -421,6 +491,11 @@ class ProductRepository extends BaseRepository {
 			"SELECT * FROM `dibas_products_color` WHERE `dibas_products_color`.`product` = '$id';"
 		)->fetchAll();
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new ProductColorModel(
 				$row["id"],
@@ -453,6 +528,11 @@ class ProductRepository extends BaseRepository {
 			"SELECT * FROM `dibas_products_material` WHERE `dibas_products_material`.`product` = '$id';"
 		)->fetchAll();
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new ProductMaterialModel(
 				$row["id"],
@@ -483,6 +563,11 @@ class ProductRepository extends BaseRepository {
 		$rows = Database::query(
 			"SELECT * FROM `dibas_products_size` WHERE `dibas_products_size`.`product` = '$id';"
 		)->fetchAll();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
 
 		foreach ($rows as $row) {
 			$model = new ProductSizeModel(
@@ -571,6 +656,11 @@ class ProductRepository extends BaseRepository {
 			LIMIT $limit OFFSET $offset;"
 		)->fetchAll();
 
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new ProductModel(
 				$row["id"],
@@ -647,6 +737,11 @@ class ProductRepository extends BaseRepository {
 			$sqlConditionStr;"
 		);
 		$count = (int)$count->fetch()["total"];
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
 
 		out:
 			Database::close();
