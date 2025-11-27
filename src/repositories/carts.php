@@ -124,23 +124,75 @@ class ShoppingCartRepository extends BaseRepository {
 		string $material,
 		int $count
 	): bool {
-		throw new \Exception("Not yet implemented.");
+		if (!ShoppingCartRepository::dbConnect()) {
+			goto failed;
+		}
+
+		Database::query(
+			"UPDATE `dibas_shopping_carts`
+			SET
+				`product` = '$product',
+				`product_color` = '$color',
+				`product_size` = '$size',
+				`product_material` = '$material',
+				`count` = $count
+			WHERE `dibas_shopping_carts`.`id` = '$id';"
+		);
+
+		if (Database::hasError()) {
+			ShoppingCartRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
+	private static function updateAssoc(string $id, string $field, string|int $value): bool {
+		if (!ShoppingCartRepository::dbConnect()) {
+			goto failed;
+		}
+
+		Database::query(
+			"UPDATE `dibas_shopping_carts`
+			SET
+				`$field` = '$value'
+			WHERE `dibas_shopping_carts`.`id` = '$id';"
+		);
+
+		if (Database::hasError()) {
+			ShoppingCartRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateColor(string $id, string $color): bool {
-		throw new \Exception("Not yet implemented.");
+		return ShoppingCartRepository::updateAssoc($id, "product_color", $color);
 	}
 
-	final public static function updateSize(string $id, string $color): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateSize(string $id, string $size): bool {
+		return ShoppingCartRepository::updateAssoc($id, "product_size", $size);
+
 	}
 
-	final public static function updateMaterial(string $id, string $color): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateMaterial(string $id, string $material): bool {
+		return ShoppingCartRepository::updateAssoc($id, "product_material", $material);
+
 	}
 
 	final public static function updateCount(string $id, int $count): bool {
-		throw new \Exception("Not yet implemented.");
+		return ShoppingCartRepository::updateAssoc($id, "count", $count);
 	}
 
 	final public static function find(string $owner): array {
