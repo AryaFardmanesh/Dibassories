@@ -12,8 +12,8 @@ class TransactionRepository extends BaseRepository {
 		int $type,
 		int $status
 	): TransactionModel|null {
-		if (!OrderRepository::dbConnect()) {
-			OrderRepository::setError(Database::getError());
+		if (!TransactionRepository::dbConnect()) {
+			TransactionRepository::setError(Database::getError());
 			goto failed;
 		}
 
@@ -26,7 +26,7 @@ class TransactionRepository extends BaseRepository {
 		);
 
 		if ($model->hasError()) {
-			OrderRepository::setError($model->getError());
+			TransactionRepository::setError($model->getError());
 			goto failed;
 		}
 
@@ -51,7 +51,7 @@ class TransactionRepository extends BaseRepository {
 		);
 
 		if (Database::hasError()) {
-			OrderRepository::setError(Database::getError());
+			TransactionRepository::setError(Database::getError());
 			goto failed;
 		}
 
@@ -115,7 +115,11 @@ class TransactionRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			TransactionRepository::setError(Database::getError());
-			goto out;
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
 		}
 
 		$model = new TransactionModel(
@@ -129,7 +133,7 @@ class TransactionRepository extends BaseRepository {
 
 		if ($model->hasError()) {
 			TransactionRepository::setError($model->getError());
-			goto out;
+			goto failed;
 		}
 
 		Database::close();
