@@ -193,6 +193,84 @@ class OrderRepository extends BaseRepository {
 	final public static function findForProvider(string $provider): array {
 		return OrderRepository::findAssoc("provider", $provider);
 	}
+
+	
+	final public static function findAll(int $page = 1, $limit = PAGINATION_LIMIT): array {
+		$models = [];
+
+		if (!OrderRepository::dbConnect()) {
+			goto out;
+		}
+
+		$offset = ($page - 1) * $limit;
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_orders`
+			ORDER BY `dibas_orders`.`created_at`
+			LIMIT $limit OFFSET $offset;"
+		)->fetchAll();
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto out;
+		}
+
+		foreach ($rows as $row) {
+			$model = new OrderModel(
+				$row["id"],
+				$row["owner"],
+				$row["provider"],
+				$row["product"],
+				$row["product_color"],
+				$row["product_material"],
+				$row["product_size"],
+				(int)$row["count"],
+				(int)$row["total"],
+				$row["phone"],
+				$row["address"],
+				$row["zipcode"],
+				(int)$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				OrderRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
+	}
+
+	final public static function getPageCount($limit = PAGINATION_LIMIT): int {
+		$count = 0;
+
+		if (!OrderRepository::dbConnect()) {
+			goto out;
+		}
+
+		$count = Database::query(
+			"SELECT COUNT(*) AS 'total'
+			FROM `dibas_orders`;"
+		);
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto out;
+		}
+
+		$count = (int)$count->fetch()["total"];
+
+		out:
+			Database::close();
+			if ($count < $limit) $count = 1;
+			else $count = (int)ceil($count / $limit);
+			return $count;
+	}
 }
 
 ?>
