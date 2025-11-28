@@ -68,7 +68,42 @@ class CartSessionModelRepository extends BaseRepository {
 	}
 	
 	final public static function find(string $owner): CartSessionModel|null {
-		throw new \Exception("Not implemented yet.");
+		if (!CartSessionModelRepository::dbConnect()) {
+			CartSessionModelRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_cart_sessions` WHERE `dibas_cart_sessions`.`owner` = '$owner';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			CartSessionModelRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new CartSessionModel(
+			$row["id"],
+			$row["owner"],
+			(int)$row["status"],
+			new DateTimeImmutable($row["created_at"])
+		);
+
+		if ($model->hasError()) {
+			CartSessionModelRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 }
 
