@@ -5,10 +5,10 @@ include_once __DIR__ . "/repository.php";
 include_once __DIR__ . "/../models/sessions.php";
 include_once __DIR__ . "/../utils/uuid.php";
 
-class CartSessionModelRepository extends BaseRepository {
+class CartSessionRepository extends BaseRepository {
 	final public static function create(string $owner): CartSessionModel|null {
-		if (!CartSessionModelRepository::dbConnect()) {
-			CartSessionModelRepository::setError(Database::getError());
+		if (!CartSessionRepository::dbConnect()) {
+			CartSessionRepository::setError(Database::getError());
 			goto failed;
 		}
 
@@ -18,7 +18,7 @@ class CartSessionModelRepository extends BaseRepository {
 		);
 
 		if ($model->hasError()) {
-			CartSessionModelRepository::setError($model->getError());
+			CartSessionRepository::setError($model->getError());
 			goto failed;
 		}
 
@@ -40,7 +40,7 @@ class CartSessionModelRepository extends BaseRepository {
 		);
 
 		if (Database::hasError()) {
-			CartSessionModelRepository::setError(Database::getError());
+			CartSessionRepository::setError(Database::getError());
 			goto failed;
 		}
 
@@ -53,8 +53,8 @@ class CartSessionModelRepository extends BaseRepository {
 	}
 
 	final public static function remove(string $owner): bool {
-		if (!CartSessionModelRepository::dbConnect()) {
-			CartSessionModelRepository::setError(Database::getError());
+		if (!CartSessionRepository::dbConnect()) {
+			CartSessionRepository::setError(Database::getError());
 			Database::close();
 			return false;
 		}
@@ -68,8 +68,8 @@ class CartSessionModelRepository extends BaseRepository {
 	}
 	
 	final public static function find(string $owner): CartSessionModel|null {
-		if (!CartSessionModelRepository::dbConnect()) {
-			CartSessionModelRepository::setError(Database::getError());
+		if (!CartSessionRepository::dbConnect()) {
+			CartSessionRepository::setError(Database::getError());
 			goto failed;
 		}
 
@@ -78,7 +78,7 @@ class CartSessionModelRepository extends BaseRepository {
 		)->fetch();
 
 		if (Database::hasError()) {
-			CartSessionModelRepository::setError(Database::getError());
+			CartSessionRepository::setError(Database::getError());
 			goto failed;
 		}
 
@@ -94,7 +94,7 @@ class CartSessionModelRepository extends BaseRepository {
 		);
 
 		if ($model->hasError()) {
-			CartSessionModelRepository::setError($model->getError());
+			CartSessionRepository::setError($model->getError());
 			goto failed;
 		}
 
