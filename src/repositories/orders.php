@@ -109,8 +109,29 @@ class OrderRepository extends BaseRepository {
 		return true;
 	}
 
-	final public static function updateStatus(): bool {
-		throw new \Exception("Not yet implemented.");
+	final public static function updateStatus(string $id, int $newStatus): bool {
+		if (!OrderRepository::dbConnect()) {
+			goto failed;
+		}
+
+		Database::query(
+			"UPDATE `dibas_orders`
+			SET
+				`status` = '$newStatus'
+			WHERE `dibas_orders`.`id` = '$id';"
+		);
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function find(): array {
