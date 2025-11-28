@@ -194,7 +194,6 @@ class OrderRepository extends BaseRepository {
 		return OrderRepository::findAssoc("provider", $provider);
 	}
 
-	
 	final public static function findAll(int $page = 1, $limit = PAGINATION_LIMIT): array {
 		$models = [];
 
