@@ -53,7 +53,18 @@ class CartSessionModelRepository extends BaseRepository {
 	}
 
 	final public static function remove(string $owner): bool {
-		throw new \Exception("Not implemented yet.");
+		if (!CartSessionModelRepository::dbConnect()) {
+			CartSessionModelRepository::setError(Database::getError());
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_cart_sessions` WHERE `dibas_cart_sessions`.`owner` = '$owner';"
+		);
+
+		Database::close();
+		return true;
 	}
 	
 	final public static function find(string $owner): CartSessionModel|null {
