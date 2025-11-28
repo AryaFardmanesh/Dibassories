@@ -94,8 +94,19 @@ class OrderRepository extends BaseRepository {
 			return null;
 	}
 
-	final public static function remove(): OrderModel|null {
-		throw new \Exception("Not yet implemented.");
+	final public static function remove(string $id): bool {
+		if (!OrderRepository::dbConnect()) {
+			OrderRepository::setError(Database::getError());
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_orders` WHERE `dibas_orders`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
 	final public static function updateStatus(): bool {
