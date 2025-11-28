@@ -19,8 +19,29 @@ class TransactionRepository extends BaseRepository {
 		throw new \Exception("Not implemented yet.");
 	}
 
-	final public static function updateStatus(string $id): TransactionModel|null {
-		throw new \Exception("Not implemented yet.");
+	final public static function updateStatus(string $id, int $newStatus): bool {
+		if (!OrderRepository::dbConnect()) {
+			goto failed;
+		}
+
+		Database::query(
+			"UPDATE `dibas_transactions`
+			SET
+				`status` = '$newStatus'
+			WHERE `dibas_transactions`.`id` = '$id';"
+		);
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function find(string $id): TransactionModel|null {
