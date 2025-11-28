@@ -12,7 +12,55 @@ class TransactionRepository extends BaseRepository {
 		int $type,
 		int $status
 	): TransactionModel|null {
-		throw new \Exception("Not implemented yet.");
+		if (!OrderRepository::dbConnect()) {
+			OrderRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		$model = new TransactionModel(
+			uuid(),
+			$wallet,
+			$amount,
+			$type,
+			$status
+		);
+
+		if ($model->hasError()) {
+			OrderRepository::setError($model->getError());
+			goto failed;
+		}
+
+		$id = $model->id;
+
+		Database::query(
+			"INSERT INTO `dibas_transactions` (
+				`id`,
+				`wallet`,
+				`amount`,
+				`type`,
+				`status`,
+				`created_at`
+			) VALUES (
+				'$id',
+				'$wallet',
+				$amount,
+				$type,
+				$status,
+				CURRENT_TIMESTAMP()
+			);"
+		);
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
 	final public static function remove(string $id): bool {
