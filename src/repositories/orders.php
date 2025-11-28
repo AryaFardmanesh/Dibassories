@@ -134,8 +134,64 @@ class OrderRepository extends BaseRepository {
 			return false;
 	}
 
-	final public static function find(): array {
-		throw new \Exception("Not yet implemented.");
+	private static function findAssoc(string $field, string $value): array {
+		$models = [];
+
+		if (!OrderRepository::dbConnect()) {
+			OrderRepository::setError(Database::getError());
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_orders` WHERE `dibas_orders`.`$field` = '$value';"
+		)->fetchAll();
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto out;
+		}
+
+		if ($rows === FALSE) {
+			goto out;
+		}
+
+		foreach ($rows as $row) {
+			$model = new OrderModel(
+				$row["id"],
+				$row["owner"],
+				$row["provider"],
+				$row["product"],
+				$row["product_color"],
+				$row["product_material"],
+				$row["product_size"],
+				(int)$row["count"],
+				(int)$row["total"],
+				$row["phone"],
+				$row["address"],
+				$row["zipcode"],
+				(int)$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				OrderRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
+	}
+
+	final public static function findForOwner(string $owner): array {
+		return OrderRepository::findAssoc("owner", $owner);
+	}
+
+	final public static function findForProvider(string $provider): array {
+		return OrderRepository::findAssoc("provider", $provider);
 	}
 }
 
