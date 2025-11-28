@@ -496,6 +496,10 @@ class ProductRepository extends BaseRepository {
 			goto out;
 		}
 
+		if ($rows === FALSE) {
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new ProductColorModel(
 				$row["id"],
@@ -533,6 +537,10 @@ class ProductRepository extends BaseRepository {
 			goto out;
 		}
 
+		if ($rows === FALSE) {
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new ProductMaterialModel(
 				$row["id"],
@@ -566,6 +574,10 @@ class ProductRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		if ($rows === FALSE) {
 			goto out;
 		}
 
@@ -658,6 +670,10 @@ class ProductRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		if ($rows === FALSE) {
 			goto out;
 		}
 

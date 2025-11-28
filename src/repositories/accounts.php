@@ -349,6 +349,10 @@ class AccountRepository extends BaseRepository {
 
 		$result_data = $result->fetchAll();
 
+		if ($result_data === FALSE) {
+			goto failed;
+		}
+
 		foreach ($result_data as $row) {
 			if ($row["id"] !== $id) {
 				$field = "_";
@@ -561,6 +565,10 @@ class AccountRepository extends BaseRepository {
 			goto out;
 		}
 
+		if ($rows === FALSE) {
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new AccountModel(
 				$row["id"],
@@ -672,6 +680,10 @@ class AccountRepository extends BaseRepository {
 		if (Database::hasError()) {
 			AccountRepository::setError(Database::getError());
 			goto out;
+		}
+
+		if ($rows === FALSE) {
+			goto failed;
 		}
 
 		foreach ($rows as $row) {

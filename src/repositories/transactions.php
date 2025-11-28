@@ -165,6 +165,10 @@ class TransactionRepository extends BaseRepository {
 			goto out;
 		}
 
+		if ($rows === FALSE) {
+			goto out;
+		}
+
 		foreach ($rows as $row) {
 			$model = new TransactionModel(
 				$row["id"],

@@ -214,6 +214,10 @@ class OrderRepository extends BaseRepository {
 			goto out;
 		}
 
+		if ($rows === FALSE) {
+			goto failed;
+		}
+
 		foreach ($rows as $row) {
 			$model = new OrderModel(
 				$row["id"],

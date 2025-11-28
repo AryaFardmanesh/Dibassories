@@ -211,6 +211,10 @@ class ShoppingCartRepository extends BaseRepository {
 			goto failed;
 		}
 
+		if ($rows === FALSE) {
+			goto failed;
+		}
+
 		foreach ($rows as $row) {
 			$model = new ShoppingCartModel(
 				$row["id"],
