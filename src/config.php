@@ -45,4 +45,17 @@ define('FILE_STATUS_LARGE_SIZE', 3);
 define('FILE_STATUS_INVALID_SUFFIX', 4);
 define('FILE_STATUS_FAILED', 5);
 
+// Pagination Config
+define('PAGINATION_LIMIT', 10);
+
+// Sort Config
+define('SORT_NEWEST', 0);
+define('SORT_CHEAPEST', 2);
+define('SORT_EXPENSIVE', 2);
+define('SORT_MOST_OFFER', 3);
+
+// Search Price Config
+define('DEFAULT_MIN_PRICE', 0);
+define('DEFAULT_MAX_PRICE', PHP_INT_MAX);
+
 ?>

@@ -18,6 +18,10 @@ class Database {
 	}
 
 	final public static function connect(): bool {
+		if (Database::$connection !== null) {
+			return true;
+		}
+
 		$servername = DB_SERVERNAME;
 		$dbname = DB_NAME;
 
