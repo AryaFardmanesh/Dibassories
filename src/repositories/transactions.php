@@ -15,12 +15,23 @@ class TransactionRepository extends BaseRepository {
 		throw new \Exception("Not implemented yet.");
 	}
 
-	final public static function remove(string $id): TransactionModel|null {
-		throw new \Exception("Not implemented yet.");
+	final public static function remove(string $id): bool {
+		if (!TransactionRepository::dbConnect()) {
+			TransactionRepository::setError(Database::getError());
+			Database::close();
+			return false;
+		}
+
+		Database::query(
+			"DELETE FROM `dibas_transactions` WHERE `dibas_transactions`.`id` = '$id';"
+		);
+
+		Database::close();
+		return true;
 	}
 
 	final public static function updateStatus(string $id, int $newStatus): bool {
-		if (!OrderRepository::dbConnect()) {
+		if (!TransactionRepository::dbConnect()) {
 			goto failed;
 		}
 
@@ -32,7 +43,7 @@ class TransactionRepository extends BaseRepository {
 		);
 
 		if (Database::hasError()) {
-			OrderRepository::setError(Database::getError());
+			TransactionRepository::setError(Database::getError());
 			goto failed;
 		}
 
