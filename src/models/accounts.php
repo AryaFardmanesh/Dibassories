@@ -36,8 +36,8 @@ class AccountModel extends BaseModel {
 			$this->setError("نام کاربری باید بین 6 تا 32 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(6, 32, $this->password)) {
-			$this->setError("رمز عبور باید بین 6 تا 32 کاراکتر باشد.");
+		if (!ModelTest::inRange(60, 60, $this->password)) {
+			$this->setError("رمز عبور رمز نگاری نشده است.");
 			return false;
 		}
 		if (!ModelTest::inRange(11, 320, $this->email)) {
