@@ -16,7 +16,7 @@ class AccountService extends BaseService {
 
 		$data = JWT::decode($token)["body"];
 		$id = $data["id"];
-		$exp = strtotime($data["exp"]["date"]);
+		$exp = $data["exp"];
 		$now = strtotime("today midnight");
 
 		if ($now >= $exp) {
@@ -53,6 +53,14 @@ class AccountService extends BaseService {
 			AccountService::setError("شما مجوز ورود ندارید.");
 			return false;
 		}
+
+		$exp = (string)((int)strtotime("today") + COOKIE_EXP_TIME);
+		$tokenData = [
+			"id" => $model->id,
+			"exp" => $exp,
+		];
+		$token = JWT::encode($tokenData);
+		Cookie::set(COOKIE_JWT_NAME, $token);
 
 		return true;
 	}
