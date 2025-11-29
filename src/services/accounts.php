@@ -31,7 +31,30 @@ class AccountService extends BaseService {
 	}
 
 	final public static function login(string $username, string $password): bool {
-		throw new \Exception("Not implemented yet.");
+		$model = AccountRepository::findByUsername($username);
+
+		if (AccountRepository::hasError()) {
+			AccountService::setError(AccountRepository::getError());
+			return false;
+		}
+
+		if ($model === null) {
+			AccountService::setError("این نام کاربر وجود ندارد.");
+			return false;
+		}
+
+		if (!password_verify($model->password, $password)) {
+			AccountService::setError("نام کاربری یا رمز عبور اشتباه است.");
+			return false;
+		}
+
+		$status = $model->status;
+		if ($status === STATUS_SUSPENDED || $status === STATUS_REMOVED) {
+			AccountService::setError("شما مجوز ورود ندارید.");
+			return false;
+		}
+
+		return true;
 	}
 
 	final public static function signup(
