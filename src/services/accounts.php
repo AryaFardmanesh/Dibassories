@@ -43,7 +43,7 @@ class AccountService extends BaseService {
 			return false;
 		}
 
-		if (!password_verify($model->password, $password)) {
+		if (!password_verify($password, $model->password)) {
 			AccountService::setError("نام کاربری یا رمز عبور اشتباه است.");
 			return false;
 		}
@@ -72,10 +72,46 @@ class AccountService extends BaseService {
 		string $email,
 		string $fname,
 		string $lname,
+		string $phone,
 		string $address,
 		string $zipcode
 	): bool {
-		throw new \Exception("Not implemented yet.");
+		if ($password !== $passwordConfirm) {
+			AccountService::setError("تکرار رمز عبور اشتباه است.");
+			return false;
+		}
+
+		$password = password_hash($password, PASSWORD_BCRYPT);
+
+		$model = AccountRepository::create(
+			$username,
+			$password,
+			$email,
+			$fname,
+			$lname,
+			$phone,
+			$address,
+			$zipcode
+		);
+
+		if (AccountRepository::hasError()) {
+			AccountService::setError(AccountRepository::getError());
+			return false;
+		}
+
+		if ($model === null) {
+			return false;
+		}
+
+		$exp = (string)((int)strtotime("today") + COOKIE_EXP_TIME);
+		$tokenData = [
+			"id" => $model->id,
+			"exp" => $exp,
+		];
+		$token = JWT::encode($tokenData);
+		Cookie::set(COOKIE_JWT_NAME, $token);
+
+		return true;
 	}
 
 	final public static function sellerRequest(
