@@ -12,7 +12,7 @@ class AccountModel extends BaseModel {
 		public string $fname,
 		public string $lname,
 		public string $phone,
-		public string $pangirno,
+		public string|null $pangirno,
 		public string $address,
 		public string $zipcode,
 		public string|null $card_number = null,
