@@ -56,7 +56,7 @@ class AccountModel extends BaseModel {
 			$this->setError("شماره تلفن همراه باید بین 11 تا 12 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(16, 16, $this->pangirno)) {
+		if (!ModelTest::inRange(16, 16, $this->pangirno, true)) {
 			$this->setError("کد ملی باید 16 رقمی باشد.");
 			return false;
 		}
