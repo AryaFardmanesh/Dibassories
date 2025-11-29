@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `dibas_accounts` (
   `fname` varchar(32) NOT NULL,
   `lname` varchar(32) NOT NULL,
   `phone` varchar(12) NOT NULL,
-  `pangirno` varchar(12) NOT NULL,
+  `pangirno` varchar(12) DEFAULT NULL,
   `address` varchar(512) NOT NULL,
   `zipcode` varchar(16) NOT NULL,
   `card_number` varchar(16) DEFAULT NULL,
