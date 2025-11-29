@@ -410,8 +410,7 @@ class AccountRepository extends BaseRepository {
 
 	final public static function updateRole(string $id, int $newRole): bool {
 		if (!AccountRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -428,12 +427,15 @@ class AccountRepository extends BaseRepository {
 
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateStatus(string $id, int $newStatus): bool {
 		if (!AccountRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -450,6 +452,10 @@ class AccountRepository extends BaseRepository {
 
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	private static function find(string $field, string $value): AccountModel|null {
@@ -683,7 +689,7 @@ class AccountRepository extends BaseRepository {
 		}
 
 		if ($rows === FALSE) {
-			goto failed;
+			goto out;
 		}
 
 		foreach ($rows as $row) {
