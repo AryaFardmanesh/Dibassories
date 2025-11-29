@@ -132,4 +132,13 @@ class ProductSizeModel extends BaseModel {
 	}
 }
 
+class ProductDetailModel {
+	public function __construct(
+		readonly public ProductModel $product,
+		readonly public array $colors,
+		readonly public array $materials,
+		readonly public array $sizes
+	) {}
+}
+
 ?>
