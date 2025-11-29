@@ -122,7 +122,41 @@ class AccountService extends BaseService {
 		string|null $instagram,
 		string|null $telegram
 	): bool {
-		throw new \Exception("Not implemented yet.");
+		$model = AccountRepository::findById($id);
+
+		if (AccountRepository::hasError()) {
+			AccountService::setError(AccountRepository::getError());
+			return false;
+		}
+
+		if ($model === null) {
+			return false;
+		}
+
+		$model->pangirno = $pangirno;
+		$model->card_number = $card_number;
+		$model->card_terminal = $card_terminal;
+		$model->instagram = $instagram;
+		$model->telegram = $telegram;
+
+		if (!$model->validate()) {
+			AccountService::setError($model->getError());
+			return false;
+		}
+
+		AccountRepository::update($model);
+		if (AccountRepository::hasError()) {
+			AccountService::setError(AccountRepository::getError());
+			return false;
+		}
+
+		AccountRepository::requestForSeller($id);
+		if (AccountRepository::hasError()) {
+			AccountService::setError(AccountRepository::getError());
+			return false;
+		}
+
+		return true;
 	}
 }
 
