@@ -31,17 +31,17 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 
-	if ($account->username) $account->username = $username;
-	if ($account->email) $account->email = $email;
-	if ($account->fname) $account->fname = $fname;
-	if ($account->lname) $account->lname = $lname;
-	if ($account->phone) $account->phone = $phone;
-	if ($account->zipcode) $account->zipcode = $zipcode;
-	if ($account->address) $account->address = $address;
-	if ($account->card_number) $account->card_number = $card_number;
-	if ($account->card_terminal) $account->card_terminal = $card_terminal;
-	if ($account->instagram) $account->instagram = $instagram;
-	if ($account->telegram) $account->telegram = $telegram;
+	if ($username) $account->username = $username;
+	if ($email) $account->email = $email;
+	if ($fname) $account->fname = $fname;
+	if ($lname) $account->lname = $lname;
+	if ($phone) $account->phone = $phone;
+	if ($zipcode) $account->zipcode = $zipcode;
+	if ($address) $account->address = $address;
+	if ($card_number) $account->card_number = $card_number;
+	if ($card_terminal) $account->card_terminal = $card_terminal;
+	if ($instagram) $account->instagram = $instagram;
+	if ($telegram) $account->telegram = $telegram;
 
 	AccountRepository::update($account);
 
