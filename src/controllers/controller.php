@@ -3,9 +3,9 @@
 include_once __DIR__ . "/../config.php";
 
 class Controller {
-	final public static function getRequest(string $name, array $req = $_GET): string|null {
-		if (isset($req[$name])) {
-			return $req[$name];
+	final public static function getRequest(string $name): string|null {
+		if (isset($_GET[$name])) {
+			return $_GET[$name];
 		}
 
 		return null;
