@@ -60,6 +60,7 @@ define('DEFAULT_MIN_PRICE', 0);
 define('DEFAULT_MAX_PRICE', PHP_INT_MAX);
 
 // Controller Config
+define('CONTROLLER_REQ_NAME', 'req');
 define('CONTROLLER_REDIRECT_URL', BASE_URL . "/");
 
 /*
