@@ -50,7 +50,12 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_ACCOUNT_BLOCK) {
-	// ...
+	AccountRepository::updateStatus($user, STATUS_SUSPENDED);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_UPGRADE) {
 	// ...
 }elseif ($req === CONTROLLER_ACCOUNT_DOWNGRADE) {
