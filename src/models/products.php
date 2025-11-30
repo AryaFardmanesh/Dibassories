@@ -139,6 +139,10 @@ class ProductDetailModel extends BaseModel {
 		readonly public array $materials,
 		readonly public array $sizes
 	) {}
+
+	final public function validate(): bool{
+		throw new \Exception('This model does not require validation.');
+	}
 }
 
 ?>
