@@ -13,7 +13,6 @@ class AccountRepository extends BaseRepository {
 		string $fname,
 		string $lname,
 		string $phone,
-		string $pangirno,
 		string $address,
 		string $zipcode
 	): ?AccountModel {
@@ -29,7 +28,7 @@ class AccountRepository extends BaseRepository {
 			$fname,
 			$lname,
 			$phone,
-			$pangirno,
+			NULL,
 			$address,
 			$zipcode
 		);
@@ -47,7 +46,7 @@ class AccountRepository extends BaseRepository {
 		$fname = $model->fname;
 		$lname = $model->lname;
 		$phone = $model->phone;
-		$pangirno = $model->pangirno;
+		$pangirno = dbFlatData($model->pangirno);
 		$address = $model->address;
 		$zipcode = $model->zipcode;
 		$card_number = dbFlatData($model->card_number);
@@ -63,8 +62,7 @@ class AccountRepository extends BaseRepository {
 			"SELECT `username`, `email`, `phone`, `pangirno` FROM `dibas_accounts`
 			WHERE `dibas_accounts`.`username` = '$username'
 			OR `dibas_accounts`.`email` = '$email'
-			OR `dibas_accounts`.`phone` = '$phone'
-			OR `dibas_accounts`.`pangirno` = '$pangirno';"
+			OR `dibas_accounts`.`phone` = '$phone';"
 		);
 		$result_data = $result->fetch();
 
@@ -77,8 +75,6 @@ class AccountRepository extends BaseRepository {
 				$field = "ایمیل";
 			}elseif ($result_data["phone"] === $phone) {
 				$field = "شماره تلفن همراه";
-			}elseif ($result_data["pangirno"] === $pangirno) {
-				$field = "کد ملی";
 			}
 
 			AccountRepository::setError("این $field قبلا ثبت شده است.");
@@ -113,7 +109,7 @@ class AccountRepository extends BaseRepository {
 			'$fname',
 			'$lname',
 			'$phone',
-			'$pangirno',
+			$pangirno,
 			'$address',
 			'$zipcode',
 			$card_number,
@@ -410,8 +406,7 @@ class AccountRepository extends BaseRepository {
 
 	final public static function updateRole(string $id, int $newRole): bool {
 		if (!AccountRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -428,12 +423,15 @@ class AccountRepository extends BaseRepository {
 
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	final public static function updateStatus(string $id, int $newStatus): bool {
 		if (!AccountRepository::dbConnect()) {
-			Database::close();
-			return false;
+			goto failed;
 		}
 
 		Database::query(
@@ -450,6 +448,10 @@ class AccountRepository extends BaseRepository {
 
 		Database::close();
 		return true;
+
+		failed:
+			Database::close();
+			return false;
 	}
 
 	private static function find(string $field, string $value): AccountModel|null {
@@ -683,7 +685,7 @@ class AccountRepository extends BaseRepository {
 		}
 
 		if ($rows === FALSE) {
-			goto failed;
+			goto out;
 		}
 
 		foreach ($rows as $row) {

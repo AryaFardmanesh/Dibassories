@@ -132,4 +132,17 @@ class ProductSizeModel extends BaseModel {
 	}
 }
 
+class ProductDetailModel extends BaseModel {
+	public function __construct(
+		readonly public ProductModel $product,
+		readonly public array $colors,
+		readonly public array $materials,
+		readonly public array $sizes
+	) {}
+
+	final public function validate(): bool{
+		throw new \Exception('This model does not require validation.');
+	}
+}
+
 ?>

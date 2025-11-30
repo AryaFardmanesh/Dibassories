@@ -12,7 +12,7 @@ class AccountModel extends BaseModel {
 		public string $fname,
 		public string $lname,
 		public string $phone,
-		public string $pangirno,
+		public string|null $pangirno,
 		public string $address,
 		public string $zipcode,
 		public string|null $card_number = null,
@@ -36,8 +36,8 @@ class AccountModel extends BaseModel {
 			$this->setError("نام کاربری باید بین 6 تا 32 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(6, 32, $this->password)) {
-			$this->setError("رمز عبور باید بین 6 تا 32 کاراکتر باشد.");
+		if (!ModelTest::inRange(60, 60, $this->password)) {
+			$this->setError("رمز عبور رمز نگاری نشده است.");
 			return false;
 		}
 		if (!ModelTest::inRange(11, 320, $this->email)) {
@@ -56,7 +56,7 @@ class AccountModel extends BaseModel {
 			$this->setError("شماره تلفن همراه باید بین 11 تا 12 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(16, 16, $this->pangirno)) {
+		if (!ModelTest::inRange(16, 16, $this->pangirno, true)) {
 			$this->setError("کد ملی باید 16 رقمی باشد.");
 			return false;
 		}
