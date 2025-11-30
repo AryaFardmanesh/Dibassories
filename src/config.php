@@ -62,6 +62,11 @@ define('DEFAULT_MAX_PRICE', PHP_INT_MAX);
 // Controller Config
 define('CONTROLLER_REDIRECT_URL', BASE_URL . "/");
 
+/*
+	Numbers must start at one because incorrect
+	data will be converted to zero and will cause
+	an error if the code is 0.
+*/
 define('CONTROLLER_ACCOUNT_UPDATE', 1);
 define('CONTROLLER_ACCOUNT_BLOCK', 2);
 define('CONTROLLER_ACCOUNT_UPGRADE', 3);
