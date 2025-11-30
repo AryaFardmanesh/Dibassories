@@ -6,7 +6,40 @@ include_once __DIR__ . "/../config.php";
 
 class ProductService extends BaseService {
 	final public static function find(string $id): ProductDetailModel|null {
-		throw new \Exception("Not implemented yet.");
+		$productModel = ProductRepository::findById($id);
+
+		if (ProductRepository::hasError()) {
+			ProductService::setError(ProductRepository::getError());
+			return null;
+		}
+
+		if ($productModel === null) {
+			ProductService::setError("این شناسه محصول وجود ندارد.");
+			return null;
+		}
+
+		$colorModel = ProductRepository::findColors($id);
+		$materialModel = ProductRepository::findMaterials($id);
+		$sizeModel = ProductRepository::findSizes($id);
+
+		if (ProductRepository::hasError()) {
+			ProductService::setError(ProductRepository::getError());
+			return null;
+		}
+
+		if ($colorModel === null || $materialModel === null || $sizeModel === null) {
+			ProductService::setError("وابستگی های مصحول یافت نشد.");
+			return null;
+		}
+
+		$model = new ProductDetailModel(
+			$productModel,
+			$colorModel,
+			$materialModel,
+			$sizeModel
+		);
+
+		return $model;
 	}
 
 	final public static function findAll(
