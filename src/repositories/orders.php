@@ -215,7 +215,7 @@ class OrderRepository extends BaseRepository {
 		}
 
 		if ($rows === FALSE) {
-			goto failed;
+			goto out;
 		}
 
 		foreach ($rows as $row) {
