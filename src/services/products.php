@@ -50,7 +50,48 @@ class ProductService extends BaseService {
 		int|null $minPrice = null,
 		int|null $maxPrice = null
 	): array {
-		throw new \Exception("Not implemented yet.");
+		$models = ProductRepository::filter(
+			$page,
+			PAGINATION_LIMIT,
+			$sort,
+			$name,
+			$type,
+			$minPrice,
+			$maxPrice
+		);
+
+		if (ProductRepository::hasError()) {
+			ProductService::setError(ProductRepository::getError());
+			return [];
+		}
+
+		$result = [];
+		foreach ($models as $model) {
+			$colorModel = ProductRepository::findColors($model->id);
+			$materialModel = ProductRepository::findMaterials($model->id);
+			$sizeModel = ProductRepository::findSizes($model->id);
+
+			if (ProductRepository::hasError()) {
+				ProductService::setError(ProductRepository::getError());
+				return [];
+			}
+
+			if ($colorModel === null || $materialModel === null || $sizeModel === null) {
+				ProductService::setError("وابستگی های مصحول یافت نشد.");
+				return [];
+			}
+
+			$product = new ProductDetailModel(
+				$model,
+				$colorModel,
+				$materialModel,
+				$sizeModel
+			);
+
+			array_push($result, $product);
+		}
+
+		return $result;
 	}
 }
 
