@@ -10,6 +10,15 @@ class Controller {
 
 		return null;
 	}
+
+	final public static function redirect(string|null $path): never {
+		if ($path === null) {
+			$path = CONTROLLER_REDIRECT_URL;
+		}
+
+		header("location: $path");
+		die;
+	}
 }
 
 ?>
