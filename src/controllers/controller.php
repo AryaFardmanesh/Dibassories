@@ -20,9 +20,13 @@ class Controller {
 		Controller::$error = $err;
 	}
 
-	final public static function getRequest(string $name): string|null {
+	final public static function getRequest(string $name, bool $mandatory = false): string|null {
 		if (isset($_GET[$name])) {
 			return testInput($_GET[$name]);
+		}
+
+		if ($mandatory) {
+			Controller::setError("نمیتوان فیلد $name خالی باشد.");
 		}
 
 		return null;
