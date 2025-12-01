@@ -2,7 +2,7 @@
 
 include_once __DIR__ . "/../config.php";
 
-function uploadFile(string $name, string $address): string|int {
+function uploadFile(string $name, string $address, bool $removeOldFile = false, string $oldPath = ""): string|int {
 	if (!isset($_FILES[$name])) {
 		return FILE_STATUS_NOT_FOUND;
 	}
@@ -25,6 +25,10 @@ function uploadFile(string $name, string $address): string|int {
 
 	if (!move_uploaded_file($file["tmp_name"], $address . $newFilename)) {
 		return FILE_STATUS_FAILED;
+	}
+
+	if ($removeOldFile && file_exists($oldPath)) {
+		unlink($oldPath);
 	}
 
 	return $newFilename;
