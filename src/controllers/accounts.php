@@ -5,6 +5,17 @@ include_once __DIR__ . "/../repositories/accounts.php";
 
 $req = (int)Controller::getRequest(CONTROLLER_REQ_NAME);
 $user = Controller::getRequest("user");
+$account = AccountRepository::findById($user);
+
+if (AccountRepository::hasError()) {
+	Controller::setError(AccountRepository::getError());
+	goto out;
+}
+
+if ($account === null) {
+	Controller::setError("کاربر یافت نشد.");
+	goto out;
+}
 
 if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 	$username = Controller::getRequest("username");
@@ -18,18 +29,6 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 	$card_terminal = Controller::getRequest("card_terminal");
 	$instagram = Controller::getRequest("instagram");
 	$telegram = Controller::getRequest("telegram");
-
-	$account = AccountRepository::findById($user);
-
-	if (AccountRepository::hasError()) {
-		Controller::setError(AccountRepository::getError());
-		goto out;
-	}
-
-	if ($account === null) {
-		Controller::setError("کاربر یافت نشد.");
-		goto out;
-	}
 
 	if ($username) $account->username = $username;
 	if ($email) $account->email = $email;
@@ -57,7 +56,25 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_ACCOUNT_UPGRADE) {
-	// ...
+	$role = Controller::getRequest("role");
+	if ($role === null) goto out;
+
+	$newRole = $account->role;
+	switch ($account->role) {
+		case ROLE_CUSTOMER:
+			$newRole = ROLE_SELLER;
+			break;
+		case ROLE_SELLER:
+			$newRole = ROLE_ADMIN;
+			break;
+	}
+
+	AccountRepository::updateRole($user, $newRole);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_DOWNGRADE) {
 	// ...
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_REQUEST) {
