@@ -27,6 +27,7 @@ class Controller {
 
 		if ($mandatory) {
 			Controller::setError("نمیتوان فیلد $name خالی باشد.");
+			Controller::redirect(Controller::getRequest("redirect"));
 		}
 
 		return null;
