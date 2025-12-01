@@ -1,8 +1,11 @@
 <?php
 
+use function PHPSTORM_META\type;
+
 include_once __DIR__ . "/controller.php";
 include_once __DIR__ . "/../repositories/products.php";
 include_once __DIR__ . "/../repositories/accounts.php";
+include_once __DIR__ . "/../utils/upload.php";
 
 $req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
 $owner = Controller::getRequest("owner", true);
@@ -32,10 +35,41 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	$count = (int)Controller::getRequest("count", true);
 	$price = (int)Controller::getRequest("price", true);
 	$offer = (int)Controller::getRequest("offer", true);
-	$images = Controller::fetchSerialized("image", 4);
 	$colors = Controller::fetchSerialized("color", CONTROLLER_PRODUCT_LIMIT_COLOR_COUNT, true, ",");
 	$materials = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_MATERIAL_COUNT);
 	$sizes = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
+
+	$imageMain = uploadFile("image_main", PRODUCT_IMAGE_DIR);
+	$image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR);
+	$image3 = uploadFile("image_3", PRODUCT_IMAGE_DIR);
+	$image4 = uploadFile("image_4", PRODUCT_IMAGE_DIR);
+
+	$images = [];
+
+	if (gettype($imageMain) === "string") {
+		array_push($images, $imageMain);
+	}elseif ($imageMain !== FILE_STATUS_NOT_FOUND) {
+		Controller::setError("تصویر شاخص با موفقیت آپلود نشد.");
+		goto out;
+	}
+	if (gettype($image2) === "string") {
+		array_push($images, $image2);
+	}elseif ($image2 !== FILE_STATUS_NOT_FOUND) {
+		Controller::setError("تصویر دوم با موفقیت آپلود نشد.");
+		goto out;
+	}
+	if (gettype($image3) === "string") {
+		array_push($images, $image3);
+	}elseif ($image3 !== FILE_STATUS_NOT_FOUND) {
+		Controller::setError("تصویر سوم با موفقیت آپلود نشد.");
+		goto out;
+	}
+	if (gettype($image4) === "string") {
+		array_push($images, $image4);
+	}elseif ($image4 !== FILE_STATUS_NOT_FOUND) {
+		Controller::setError("تصویر چهارم با موفقیت آپلود نشد.");
+		goto out;
+	}
 
 	ProductRepository::create(
 		$owner,
