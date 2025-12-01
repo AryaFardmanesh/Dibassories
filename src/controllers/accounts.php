@@ -3,7 +3,7 @@
 include_once __DIR__ . "/controller.php";
 include_once __DIR__ . "/../repositories/accounts.php";
 
-$req = Controller::getRequest(CONTROLLER_REQ_NAME, true);
+$req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
 $user = Controller::getRequest("user", true);
 
 $account = AccountRepository::findById($user);
