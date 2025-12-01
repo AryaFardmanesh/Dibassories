@@ -3,7 +3,7 @@
 include_once __DIR__ . "/controller.php";
 include_once __DIR__ . "/../repositories/accounts.php";
 
-$req = (int)Controller::getRequest(CONTROLLER_REQ_NAME);
+$req = Controller::getRequest(CONTROLLER_REQ_NAME);
 $user = Controller::getRequest("user");
 
 if ($req === null || $user === null) {
