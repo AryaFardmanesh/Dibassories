@@ -90,11 +90,33 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_REQUEST) {
-	// ...
+	AccountRepository::requestForSeller($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_ACCEPT) {
-	// ...
+	AccountRepository::updateRole($user, ROLE_SELLER);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+
+	AccountRepository::removeSellerRequest($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_REJECT) {
-	// ...
+	AccountRepository::removeSellerRequest($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }
 
 out:
