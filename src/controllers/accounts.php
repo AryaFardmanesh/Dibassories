@@ -60,6 +60,13 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		Controller::setError(AccountRepository::getError());
 		goto out;
 	}
+}elseif ($req === CONTROLLER_ACCOUNT_REMOVE) {
+	AccountRepository::removeById($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_UPGRADE) {
 	$newRole = $account->role;
 	switch ($account->role) {
