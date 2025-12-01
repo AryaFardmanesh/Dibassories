@@ -56,9 +56,6 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_ACCOUNT_UPGRADE) {
-	$role = Controller::getRequest("role");
-	if ($role === null) goto out;
-
 	$newRole = $account->role;
 	switch ($account->role) {
 		case ROLE_CUSTOMER:
@@ -76,7 +73,22 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_ACCOUNT_DOWNGRADE) {
-	// ...
+	$newRole = $account->role;
+	switch ($account->role) {
+		case ROLE_ADMIN:
+			$newRole = ROLE_SELLER;
+			break;
+		case ROLE_SELLER:
+			$newRole = ROLE_CUSTOMER;
+			break;
+	}
+
+	AccountRepository::updateRole($user, $newRole);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_REQUEST) {
 	// ...
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_ACCEPT) {
