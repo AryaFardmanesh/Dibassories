@@ -1,13 +1,5 @@
 <?php
 
-# Suspend Product
-# Remove Product
-# Restore Product
-# Accept Product
-# Reject Product
-# Increment Product Count
-# Decrement Product Count
-
 include_once __DIR__ . "/controller.php";
 include_once __DIR__ . "/../repositories/products.php";
 include_once __DIR__ . "/../repositories/accounts.php";
