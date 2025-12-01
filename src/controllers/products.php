@@ -72,7 +72,7 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 			break;
 		}
 
-		array_push($materials, $color);
+		array_push($materials, $material);
 	}
 
 	for ($i = 0; $i < CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT; $i++) {
@@ -82,7 +82,7 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 			break;
 		}
 
-		array_push($sizes, $color);
+		array_push($sizes, $size);
 	}
 
 	ProductRepository::create(
