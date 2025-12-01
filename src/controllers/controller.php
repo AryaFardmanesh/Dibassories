@@ -55,7 +55,7 @@ class Controller {
 		$result = [];
 
 		for ($i = 0; $i < $limit; $i++) {
-			$data = Controller::getRequest($name . $i);
+			$data = Controller::getRequest("$name-$i");
 
 			if ($data === null) {
 				break;
