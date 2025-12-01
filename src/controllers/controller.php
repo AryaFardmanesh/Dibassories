@@ -50,6 +50,26 @@ class Controller {
 		header("location: $path");
 		die;
 	}
+
+	final public static function fetchSerialized(string $name, int $limit, bool $split = false, string $separator = ""): array {
+		$result = [];
+
+		for ($i = 0; $i < $limit; $i++) {
+			$data = Controller::getRequest($name . $i);
+
+			if ($data === null) {
+				break;
+			}
+
+			if ($split) {
+				$data = str_getcsv($data, $separator);
+			}
+
+			array_push($result, $data);
+		}
+
+		return $result;
+	}
 }
 
 ?>
