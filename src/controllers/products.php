@@ -117,55 +117,35 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	$materials = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_MATERIAL_COUNT);
 	$sizes = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
 
-	$imageMain = uploadFile("image_main", PRODUCT_IMAGE_DIR);
-	$image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR);
-	$image3 = uploadFile("image_3", PRODUCT_IMAGE_DIR);
-	$image4 = uploadFile("image_4", PRODUCT_IMAGE_DIR);
+	$imageMain = uploadFile("image_main", PRODUCT_IMAGE_DIR, true, $product->image[0]);
+	$image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR, true, $product->image[1]);
+	$image3 = uploadFile("image_3", PRODUCT_IMAGE_DIR, true, $product->image[2]);
+	$image4 = uploadFile("image_4", PRODUCT_IMAGE_DIR, true, $product->image[3]);
 
 	$images = [];
 
 	if (gettype($imageMain) === "string") {
 		array_push($images, $imageMain);
-
-		$imgPath = $product->image[0];
-		if (file_exists($imgPath)) {
-			unlink($imgPath);
-		}
 	}elseif ($imageMain !== FILE_STATUS_NOT_FOUND) {
-		Controller::setError("تصویر شاخص با موفقیت آپلود نشد.");
+		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
 	}
 	if (gettype($image2) === "string") {
 		array_push($images, $image2);
-
-		$imgPath = $product->image[1];
-		if (file_exists($imgPath)) {
-			unlink($imgPath);
-		}
 	}elseif ($image2 !== FILE_STATUS_NOT_FOUND) {
-		Controller::setError("تصویر دوم با موفقیت آپلود نشد.");
+		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
 	}
 	if (gettype($image3) === "string") {
 		array_push($images, $image3);
-
-		$imgPath = $product->image[2];
-		if (file_exists($imgPath)) {
-			unlink($imgPath);
-		}
 	}elseif ($image3 !== FILE_STATUS_NOT_FOUND) {
-		Controller::setError("تصویر سوم با موفقیت آپلود نشد.");
+		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
 	}
 	if (gettype($image4) === "string") {
 		array_push($images, $image4);
-
-		$imgPath = $product->image[3];
-		if (file_exists($imgPath)) {
-			unlink($imgPath);
-		}
 	}elseif ($image4 !== FILE_STATUS_NOT_FOUND) {
-		Controller::setError("تصویر چهارم با موفقیت آپلود نشد.");
+		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
 	}
 
