@@ -30,4 +30,20 @@ function uploadFile(string $name, string $address): string|int {
 	return $newFilename;
 }
 
+function convertUploadErrorToString(int $error): string {
+	switch ($error) {
+		case FILE_STATUS_NOT_FOUND:
+			return "فایل در درخواست تنظیم نشده است.";
+		case FILE_STATUS_ALREADY_EXISTS:
+			return "این فایل فایل قبلا آپلود شده است.";
+		case FILE_STATUS_LARGE_SIZE:
+			return "اندازه فایل بزرگ است.";
+		case FILE_STATUS_INVALID_SUFFIX:
+			return "این فایل قابل آپلود نیست.";
+		case FILE_STATUS_FAILED:
+		default:
+			return "فایل با موفقیت آپلود نشد.";
+	}
+}
+
 ?>
