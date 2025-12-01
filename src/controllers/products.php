@@ -32,50 +32,10 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	$count = (int)Controller::getRequest("count", true);
 	$price = (int)Controller::getRequest("price", true);
 	$offer = (int)Controller::getRequest("offer", true);
-	$images = [];
-	$colors = [];
-	$materials = [];
-	$sizes = [];
-
-	for ($i = 0; $i < 4; $i++) {
-		$image = Controller::getRequest("image-$i");
-
-		if ($image === null) {
-			break;
-		}
-
-		array_push($images, $image);
-	}
-
-	for ($i = 0; $i < CONTROLLER_PRODUCT_LIMIT_COLOR_COUNT; $i++) {
-		$color = Controller::getRequest("color-$i");
-
-		if ($color === null) {
-			break;
-		}
-
-		array_push($colors, str_getcsv($color, ","));
-	}
-
-	for ($i = 0; $i < CONTROLLER_PRODUCT_LIMIT_MATERIAL_COUNT; $i++) {
-		$material = Controller::getRequest("material-$i");
-
-		if ($material === null) {
-			break;
-		}
-
-		array_push($materials, $material);
-	}
-
-	for ($i = 0; $i < CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT; $i++) {
-		$size = Controller::getRequest("size-$i");
-
-		if ($size === null) {
-			break;
-		}
-
-		array_push($sizes, $size);
-	}
+	$images = Controller::fetchSerialized("image", 4);
+	$colors = Controller::fetchSerialized("color", CONTROLLER_PRODUCT_LIMIT_COLOR_COUNT, true, ",");
+	$materials = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_MATERIAL_COUNT);
+	$sizes = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
 
 	ProductRepository::create(
 		$owner,
