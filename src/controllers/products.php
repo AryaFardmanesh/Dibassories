@@ -68,6 +68,11 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 		goto out;
 	}
 
+	if ($product->owner !== $owner || $account->role !== ROLE_ADMIN) {
+		Controller::setError("شمااجازه ویرایش این محصول را ندارید.");
+		goto out;
+	}
+
 	$type = (int)Controller::getRequest("type");
 	$name = Controller::getRequest("name");
 	$description = Controller::getRequest("description");
