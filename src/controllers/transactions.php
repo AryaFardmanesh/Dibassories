@@ -175,7 +175,41 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_TRANSACTION_STATUS_SUSPENDED) {
-	// ...
+	$transactionId = Controller::getRequest("transaction", true);
+	$transaction = TransactionRepository::find($transactionId);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
+
+	if ($transaction->wallet !== $owner && $account->role !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در این تراکنش را ندارید.");
+		goto out;
+	}
+
+	if ($transaction->status === STATUS_PAID || $transaction->status === STATUS_CLOSED) {
+
+		if ($account->wallet_balance < $transaction->amount) {
+			Controller::setError("موجود حساب کاربر کمتر از مقدار تراکنش است.");
+			goto out;
+		}
+
+		$account->wallet_balance -= $transaction->amount;
+		AccountRepository::update($account);
+
+		if (AccountRepository::hasError()) {
+			Controller::setError(AccountRepository::getError());
+			goto out;
+		}
+	}
+
+	TransactionRepository::updateStatus($transactionId, STATUS_SUSPENDED);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_TRANSACTION_STATUS_OK) {
 	// ...
 }
