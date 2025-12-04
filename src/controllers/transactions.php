@@ -52,6 +52,17 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 	}
 }elseif ($req === CONTROLLER_TRANSACTION_REMOVE) {
 	$transactionId = Controller::getRequest("transaction", true);
+	$transaction = TransactionRepository::find($transactionId);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
+
+	if ($transaction->wallet !== $owner && $account->role !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در این تراکنش را ندارید.");
+		goto out;
+	}
 
 	TransactionRepository::remove($transactionId);
 
