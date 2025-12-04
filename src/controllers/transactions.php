@@ -110,9 +110,27 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		Controller::setError(TransactionRepository::getError());
 		goto out;
 	}
-}elseif ($req === CONTROLLER_TRANSACTION_STATUS_PAIED) {
-	// ...
-}elseif ($req === CONTROLLER_TRANSACTION_STATUS_NOT_PAIED) {
+}elseif ($req === CONTROLLER_TRANSACTION_STATUS_PAID) {
+	$transactionId = Controller::getRequest("transaction", true);
+	$transaction = TransactionRepository::find($transactionId);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
+
+	if ($transaction->wallet !== $owner && $account->role !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در این تراکنش را ندارید.");
+		goto out;
+	}
+
+	TransactionRepository::updateStatus($transactionId, STATUS_PAID);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_TRANSACTION_STATUS_NOT_PAID) {
 	// ...
 }elseif ($req === CONTROLLER_TRANSACTION_STATUS_SUSPENDED) {
 	// ...
