@@ -228,7 +228,7 @@ function getProduct(string $id): ProductModel {
 }
 
 function hasPermission(string $productOwner, string $requestOwner, int $accountRole): void {
-	if ($productOwner !== $requestOwner || $accountRole !== ROLE_ADMIN) {
+	if ($productOwner !== $requestOwner && $accountRole !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در این محصول را ندارید.");
 		goto out;
 	}
