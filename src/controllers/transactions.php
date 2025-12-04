@@ -36,7 +36,14 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 
 	// Should be redirect to zarinpal payment gate.
 }elseif ($req === CONTROLLER_TRANSACTION_EXCHANGE) {
-	// ...
+	$amount = (int)Controller::getRequest("amount", true);
+
+	TransactionRepository::create($owner, $amount, TRANSACTION_TYPE_EXCHANGE, STATUS_NOT_PAID);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_TRANSACTION_REMOVE) {
 	// ...
 }elseif ($req === CONTROLLER_TRANSACTION_OPEN) {
