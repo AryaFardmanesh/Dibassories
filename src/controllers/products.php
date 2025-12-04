@@ -179,9 +179,19 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	ProductRepository::updateStatus($productId, STATUS_OK);
 	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_ACCEPT) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	ProductRepository::updateStatus($productId, STATUS_OK);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_REJECT) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	ProductRepository::remove($productId);
+	checkError();
+	ProductRepository::remove($productId);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_INC) {
 	// ...
 }elseif ($req === CONTROLLER_PRODUCT_DEC) {
