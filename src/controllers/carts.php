@@ -74,7 +74,26 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_CART_INC_PRODUCT_COUNT) {
-	// ....
+	$productId = Controller::getRequest("product", true);
+
+	$product = ProductRepository::findById($productId);
+
+	if (ProductRepository::hasError()) {
+		Controller::setError(ProductRepository::getError());
+		goto out;
+	}
+
+	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
+		goto out;
+	}
+
+	ShoppingCartRepository::updateCount($productId, $product->count + 1);
+
+	if (ShoppingCartRepository::hasError()) {
+		Controller::setError(ShoppingCartRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_CART_DEC_PRODUCT_COUNT) {
 	// ....
 }
