@@ -193,9 +193,21 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	ProductRepository::remove($productId);
 	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_INC) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	ProductRepository::updateCount($productId, $product->count + 1);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_DEC) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	if ($product->count === 0) {
+		goto out;
+	}
+
+	ProductRepository::updateCount($productId, $product->count - 1);
+	checkError();
 }
 
 out:
