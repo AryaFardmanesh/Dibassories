@@ -37,6 +37,12 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 	// Should be redirect to zarinpal payment gate.
 }elseif ($req === CONTROLLER_TRANSACTION_EXCHANGE) {
 	$amount = (int)Controller::getRequest("amount", true);
+	$balance = $account->wallet_balance;
+
+	if ($amount > $balance) {
+		Controller::setError("نمیتوان بیشتر از موجودی کیف پولتان برداشت داشته باشید.");
+		goto out;
+	}
 
 	TransactionRepository::create($owner, $amount, TRANSACTION_TYPE_EXCHANGE, STATUS_NOT_PAID);
 
