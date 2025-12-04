@@ -3,6 +3,7 @@
 include_once __DIR__ . "/controller.php";
 include_once __DIR__ . "/../repositories/accounts.php";
 include_once __DIR__ . "/../repositories/carts.php";
+include_once __DIR__ . "/../repositories/products.php";
 
 $req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
 $user = Controller::getRequest("user", true);
@@ -26,6 +27,18 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 	$sizeId = Controller::getRequest("size", true);
 	$count = (int)Controller::getRequest("count", true);
 
+	$product = ProductRepository::findById($productId);
+
+	if (ProductRepository::hasError()) {
+		Controller::setError(ProductRepository::getError());
+		goto out;
+	}
+
+	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
+		goto out;
+	}
+
 	ShoppingCartRepository::add($user, $productId, $colorId, $sizeId, $materialId, $count);
 
 	if (ShoppingCartRepository::hasError()) {
@@ -34,6 +47,18 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 	}
 }elseif ($req === CONTROLLER_CART_REMOVE_CART) {
 	$productId = Controller::getRequest("product", true);
+
+	$product = ProductRepository::findById($productId);
+
+	if (ProductRepository::hasError()) {
+		Controller::setError(ProductRepository::getError());
+		goto out;
+	}
+
+	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
+		goto out;
+	}
 
 	ShoppingCartRepository::remove($user, $productId);
 
