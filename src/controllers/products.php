@@ -1,7 +1,5 @@
 <?php
 
-use function PHPSTORM_META\type;
-
 include_once __DIR__ . "/controller.php";
 include_once __DIR__ . "/../repositories/products.php";
 include_once __DIR__ . "/../repositories/accounts.php";
