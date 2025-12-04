@@ -34,7 +34,7 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
@@ -55,7 +55,7 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
@@ -83,7 +83,7 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
@@ -104,7 +104,7 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user || $account->role !== ROLE_ADMIN) {
+	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
