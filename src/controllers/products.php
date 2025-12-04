@@ -85,27 +85,10 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 		$offer
 	);
 
-	if (ProductRepository::hasError()) {
-		Controller::setError(ProductRepository::getError());
-		goto out;
-	}
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_UPDATE) {
-	$product = ProductRepository::findById($productId);
-
-	if (ProductRepository::hasError()) {
-		Controller::setError(ProductRepository::getError());
-		goto out;
-	}
-
-	if ($product === null) {
-		Controller::setError("محصول یافت نشد.");
-		goto out;
-	}
-
-	if ($product->owner !== $owner || $account->role !== ROLE_ADMIN) {
-		Controller::setError("شمااجازه ویرایش این محصول را ندارید.");
-		goto out;
-	}
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
 
 	$type = (int)Controller::getRequest("type");
 	$name = Controller::getRequest("name");
@@ -158,43 +141,31 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	if ($offer !== null) $product->offer = $offer;
 
 	ProductRepository::update($product);
-
-	if (ProductRepository::hasError()) {
-		Controller::setError(ProductRepository::getError());
-		goto out;
-	}
+	checkError();
 
 	foreach ($colors as $color) {
 		$name = $color[0];
 		$hex = $color[1];
 
 		ProductRepository::updateColor($productId, $name, $hex);
-
-		if (ProductRepository::hasError()) {
-			Controller::setError(ProductRepository::getError());
-			goto out;
-		}
+		checkError();
 	}
 
 	foreach ($materials as $material) {
 		ProductRepository::updateMaterial($productId, $material);
-
-		if (ProductRepository::hasError()) {
-			Controller::setError(ProductRepository::getError());
-			goto out;
-		}
+		checkError();
 	}
 
 	foreach ($sizes as $size) {
 		ProductRepository::updateSize($productId, $size);
-
-		if (ProductRepository::hasError()) {
-			Controller::setError(ProductRepository::getError());
-			goto out;
-		}
+		checkError();
 	}
 }elseif ($req === CONTROLLER_PRODUCT_SUSPEND) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	ProductRepository::updateStatus($productId, STATUS_SUSPENDED);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_REMOVE) {
 	// ...
 }elseif ($req === CONTROLLER_PRODUCT_RESTORE) {
@@ -211,5 +182,35 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 
 out:
 Controller::redirect(Controller::getRequest("redirect"));
+
+function getProduct(string $id): ProductModel {
+	$product = ProductRepository::findById($id);
+
+	if (ProductRepository::hasError()) {
+		Controller::setError(ProductRepository::getError());
+		goto out;
+	}
+
+	if ($product === null) {
+		Controller::setError("محصول یافت نشد.");
+		goto out;
+	}
+
+	return $product;
+}
+
+function hasPermission(string $productOwner, string $requestOwner, int $accountRole): void {
+	if ($productOwner !== $requestOwner || $accountRole !== ROLE_ADMIN) {
+		Controller::setError("شما مجوز ایجاد تغییر در این محصول را ندارید.");
+		goto out;
+	}
+}
+
+function checkError(): void {
+	if (ProductRepository::hasError()) {
+		Controller::setError(ProductRepository::getError());
+		goto out;
+	}
+}
 
 ?>
