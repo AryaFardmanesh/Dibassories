@@ -54,7 +54,14 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_TRANSACTION_OPEN) {
-	// ...
+	$transactionId = Controller::getRequest("transaction", true);
+
+	TransactionRepository::updateStatus($transactionId, STATUS_OPENED);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_TRANSACTION_CLOSE) {
 	// ...
 }elseif ($req === CONTROLLER_TRANSACTION_STATUS_PAIED) {
