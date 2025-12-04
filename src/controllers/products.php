@@ -167,9 +167,17 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	ProductRepository::updateStatus($productId, STATUS_SUSPENDED);
 	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_REMOVE) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	ProductRepository::remove($productId);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_RESTORE) {
-	// ...
+	$product = getProduct($productId);
+	hasPermission($product->owner, $account->id, $account->role);
+
+	ProductRepository::updateStatus($productId, STATUS_OK);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_ACCEPT) {
 	// ...
 }elseif ($req === CONTROLLER_PRODUCT_REJECT) {
