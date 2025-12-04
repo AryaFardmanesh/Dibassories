@@ -4,13 +4,13 @@
 define('BASE_URL', '/Dibassories');
 define('ASSETS_DIR', BASE_URL . '/assets');
 
-// Database config
+// Database Config
 define('DB_SERVERNAME', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'dibassories');
 
-// Database enumerations
+// Database Enumerations
 define('ROLE_CUSTOMER', 10);
 define('ROLE_SELLER', 20);
 define('ROLE_ADMIN', 30);
@@ -33,7 +33,7 @@ define('TRANSACTION_TYPE_BUY', 0);
 define('TRANSACTION_TYPE_CHARGE', 1);
 define('TRANSACTION_TYPE_EXCHANGE', 2);
 
-// Cookies data
+// Cookies Config
 define('COOKIE_JWT_NAME', 'DIBAS_TK');
 define('COOKIE_EXP_TIME', (86400 * 30) /* 86400 = 1 Day - 30 Days */);
 
