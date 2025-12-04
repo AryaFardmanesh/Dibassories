@@ -45,7 +45,14 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_TRANSACTION_REMOVE) {
-	// ...
+	$transactionId = Controller::getRequest("transaction", true);
+
+	TransactionRepository::remove($transactionId);
+
+	if (TransactionRepository::hasError()) {
+		Controller::setError(TransactionRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_TRANSACTION_OPEN) {
 	// ...
 }elseif ($req === CONTROLLER_TRANSACTION_CLOSE) {
