@@ -208,7 +208,7 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		Controller::setError(TransactionRepository::getError());
 		goto out;
 	}
-}elseif ($req === CONTROLLER_TRANSACTION_STATUS_OK) {
+}elseif ($req === CONTROLLER_TRANSACTION_STATUS_CONFIRM) {
 	$transactionId = Controller::getRequest("transaction", true);
 	$transaction = TransactionRepository::find($transactionId);
 
