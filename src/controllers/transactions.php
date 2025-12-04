@@ -20,7 +20,21 @@ if ($account === null) {
 }
 
 if ($req === CONTROLLER_TRANSACTION_CHARGE) {
-	// ...
+	$amount = (int)Controller::getRequest("amount", true);
+	$isTest = Controller::getRequest("tcode") === TRANSACTION_TEST_CODE ? true : false;
+
+	if ($isTest) {
+		TransactionRepository::create($owner, $amount, TRANSACTION_TYPE_CHARGE, STATUS_NOT_PAID);
+
+		if (TransactionRepository::hasError()) {
+			Controller::setError(TransactionRepository::getError());
+			goto out;
+		}
+
+		goto out;
+	}
+
+	// Should be redirect to zarinpal payment gate.
 }elseif ($req === CONTROLLER_TRANSACTION_EXCHANGE) {
 	// ...
 }elseif ($req === CONTROLLER_TRANSACTION_REMOVE) {
