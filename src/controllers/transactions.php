@@ -124,6 +124,14 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		goto out;
 	}
 
+	$account->wallet_balance += $transaction->amount;
+	AccountRepository::update($account);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+
 	TransactionRepository::updateStatus($transactionId, STATUS_PAID);
 
 	if (TransactionRepository::hasError()) {
