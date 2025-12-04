@@ -67,7 +67,12 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_CART_EMPTY_CART) {
-	// ....
+	ShoppingCartRepository::removeAll($user);
+
+	if (ShoppingCartRepository::hasError()) {
+		Controller::setError(ShoppingCartRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_CART_INC_PRODUCT_COUNT) {
 	// ....
 }elseif ($req === CONTROLLER_CART_DEC_PRODUCT_COUNT) {
