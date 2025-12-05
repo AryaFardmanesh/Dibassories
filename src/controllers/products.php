@@ -35,7 +35,7 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	$offer = (int)Controller::getRequest("offer", true);
 	$colors = Controller::fetchSerialized("color", CONTROLLER_PRODUCT_LIMIT_COLOR_COUNT, true, ",");
 	$materials = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_MATERIAL_COUNT);
-	$sizes = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
+	$sizes = Controller::fetchSerialized("size", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
 
 	$imageMain = uploadFile("image_main", PRODUCT_IMAGE_DIR);
 	$image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR);
