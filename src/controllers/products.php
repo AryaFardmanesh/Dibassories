@@ -6,7 +6,7 @@ include_once __DIR__ . "/../repositories/accounts.php";
 include_once __DIR__ . "/../utils/upload.php";
 
 $req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
-$owner = Controller::getRequest("owner", true);
+$owner = Controller::getRequest("user", true);
 $productId = Controller::getRequest("product");
 
 $account = AccountRepository::findById($owner);
