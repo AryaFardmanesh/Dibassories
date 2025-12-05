@@ -25,7 +25,8 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 	$colorId = Controller::getRequest("color", true);
 	$materialId = Controller::getRequest("material", true);
 	$sizeId = Controller::getRequest("size", true);
-	$count = (int)Controller::getRequest("count", true);
+	$count = (int)Controller::getRequest("
+	", true);
 
 	$product = ProductRepository::findById($productId);
 
