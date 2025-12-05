@@ -112,4 +112,7 @@ define('TRANSACTION_TEST_CODE', 'XydL9');
 
 define('CONTROLLER_ORDER_PURCHE', 1);
 
+define('PAYMENT_METHOD_WALLET', 1);
+define('PAYMENT_METHOD_ONLINE', 2);
+
 ?>
