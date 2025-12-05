@@ -5,7 +5,7 @@ include_once __DIR__ . "/../repositories/transactions.php";
 include_once __DIR__ . "/../repositories/accounts.php";
 
 $req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
-$owner = Controller::getRequest("owner", true);
+$owner = Controller::getRequest("user", true);
 
 $account = AccountRepository::findById($owner);
 
