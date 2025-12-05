@@ -132,7 +132,19 @@
 							</div>
 
 							<div class="row g-3 mb-3">
-								<div class="col-md-6">
+								<div class="col-md-4">
+									<label for="productPrice" class="form-label fw-bold">قیمت</label>
+									<input
+										type="number"
+										id="productPrice"
+										name="price"
+										class="form-control"
+										autocomplete="off"
+										min="1"
+										required
+									/>
+								</div>
+								<div class="col-md-4">
 									<label for="productCount" class="form-label fw-bold">تعداد موجودی</label>
 									<input
 										type="number"
@@ -144,7 +156,7 @@
 										required
 									/>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<label for="productOffer" class="form-label fw-bold">تخفیف (%)</label>
 									<input
 										type="number"
