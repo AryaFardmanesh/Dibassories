@@ -4,6 +4,7 @@ function testInput(string $data): string {
 	$data = trim($data);
 	$data = stripslashes($data);
 	$data = htmlspecialchars($data);
+	$data = convertToEnglish($data);
 	return $data;	
 }
 
@@ -18,7 +19,7 @@ function dbFlatData(string|null $data): string {
 	return "'$data'";
 }
 
-function convertToEnglish(string $raw) {
+function convertToEnglish(string $raw): string {
 	$newNumbers = range(0, 9);
 	// 1. Persian HTML decimal
 	$persianDecimal = array('&#1776;', '&#1777;', '&#1778;', '&#1779;', '&#1780;', '&#1781;', '&#1782;', '&#1783;', '&#1784;', '&#1785;');
