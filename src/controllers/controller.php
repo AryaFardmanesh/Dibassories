@@ -71,7 +71,7 @@ class Controller {
 		return $result;
 	}
 
-	final public static function onSubmit(string $method, callable $callback, array $paramsOptional, array $paramsMandatory): void {
+	final public static function onSubmit(string $method, callable $callback, array $paramsOptional = [], array $paramsMandatory = []): void {
 		if ($_SERVER["REQUEST_METHOD"] === $method) {
 			$params = [];
 
