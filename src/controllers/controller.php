@@ -20,6 +20,14 @@ class Controller {
 		Controller::$error = $err;
 	}
 
+	final static public function fetchError(): string|null {
+		if (isset($_GET["error"])) {
+			return $_GET["error"];
+		}
+
+		return null;
+	}
+
 	final public static function getRequest(string $name, bool $mandatory = false): string|null {
 		if (isset($_GET[$name])) {
 			return testInput($_GET[$name]);
