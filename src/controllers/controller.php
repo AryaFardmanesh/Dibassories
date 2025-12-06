@@ -70,6 +70,36 @@ class Controller {
 
 		return $result;
 	}
+
+	final public static function onSubmit(string $method, callable $callback, array $paramsOptional, array $paramsMandatory): void {
+		if ($_SERVER["REQUEST_METHOD"] === $method) {
+			$params = [];
+
+			foreach ($paramsOptional as $name) {
+				$value = null;
+
+				if (isset($_REQUEST[$name])) {
+					$value = testInput($_REQUEST[$name]);
+				}
+
+				$params[$name] = $value;
+			}
+
+			foreach ($paramsMandatory as $name) {
+				$value = null;
+
+				if (!isset($_REQUEST[$name])) {
+					Controller::setError("نمیتوان فیلد $name خالی باشد.");
+					Controller::redirect(htmlspecialchars($_SERVER["PHP_SELF"]));
+				}
+
+				$value = testInput($_REQUEST[$name]);
+				$params[$name] = $value;
+			}
+
+			$callback($params);
+		}
+	}
 }
 
 ?>
