@@ -1,4 +1,16 @@
-<?php include __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/services/accounts.php";
+include __DIR__ . "/../src/controllers/controller.php";
+
+$account = AccountService::getAccountFromCookie();
+
+if ($account === null) {
+	Controller::redirect(null);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -91,7 +103,11 @@
 						<h4 class="mb-0">پروفایل کاربری</h4>
 					</div>
 					<div class="card-body p-4">
-						<form action="#" method="POST" class="needs-validation" novalidate>
+						<form action="<?= BASE_URL . "/src/controllers/accounts.php" ?>" method="GET" class="needs-validation" novalidate>
+							<input type="hidden" name="req" value="<?= CONTROLLER_ACCOUNT_UPDATE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= $_SERVER["PHP_SELF"] ?>" />
+
 							<div class="row g-3">
 								<div class="col-md-6">
 									<label for="username" class="form-label fw-bold">نام کاربری</label>
@@ -100,7 +116,7 @@
 										id="username"
 										name="username"
 										class="form-control"
-										value="arya_fardmanesh"
+										value="<?= $account->username ?>"
 										autocomplete="off"
 										readonly
 									>
@@ -112,7 +128,7 @@
 										id="email"
 										name="email"
 										class="form-control"
-										value="example@email.com"
+										value="<?= $account->email ?>"
 										autocomplete="off"
 										required
 									>
@@ -124,7 +140,7 @@
 										id="fname"
 										name="fname"
 										class="form-control"
-										value="آریا"
+										value="<?= $account->fname ?>"
 										autocomplete="off"
 										min="4"
 										max="32"
@@ -138,7 +154,7 @@
 										id="lname"
 										name="lname"
 										class="form-control"
-										value="فردمنش"
+										value="<?= $account->lname ?>"
 										autocomplete="off"
 										min="4"
 										max="32"
@@ -152,7 +168,7 @@
 										id="phone"
 										name="phone"
 										class="form-control"
-										value="09121234567"
+										value="<?= $account->phone ?>"
 										autocomplete="off"
 										max="14"
 										required
@@ -165,12 +181,44 @@
 										id="zipcode"
 										name="zipcode"
 										class="form-control"
-										value="1234567890"
+										value="<?= $account->zipcode ?>"
 										autocomplete="off"
 										max="10"
 										required
 									>
 								</div>
+								<?php if ($account->card_number !== null) { ?>
+								<div class="col-md-6">
+									<label for="card_number" class="form-label fw-bold">شماره کارت</label>
+									<input
+										type="text"
+										id="card_number"
+										name="card_number"
+										class="form-control"
+										value="<?= $account->card_number ?>"
+										autocomplete="off"
+										min="16"
+										max="16"
+										required
+									>
+								</div>
+								<?php } ?>
+								<?php if ($account->card_terminal !== null) { ?>
+								<div class="col-md-6">
+									<label for="card_terminal" class="form-label fw-bold">شماره کارت</label>
+									<input
+										type="text"
+										id="card_terminal"
+										name="card_terminal"
+										class="form-control"
+										value="<?= $account->card_terminal ?>"
+										autocomplete="off"
+										min="32"
+										max="32"
+										required
+									>
+								</div>
+								<?php } ?>
 								<div class="col-12">
 									<label for="address" class="form-label fw-bold">آدرس</label>
 									<textarea
@@ -181,7 +229,7 @@
 										max="10"
 										rows="3"
 										required
-									>تهران، خیابان ولیعصر، کوچه مثال، پلاک ۱۲</textarea>
+									><?= $account->address ?></textarea>
 								</div>
 							</div>
 							<div class="text-center mt-4">
