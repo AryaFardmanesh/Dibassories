@@ -7,8 +7,9 @@ include __DIR__ . "/../src/controllers/controller.php";
 
 $slug = Controller::getRequest("slug", true);
 $isLogin = AccountService::isLogin();
+$account = AccountService::getAccountFromCookie();
 $product = ProductService::findBySlug($slug);
-$error = null;
+$error = Controller::getRequest("error");
 
 if (ProductRepository::hasError()) {
 	$error = ProductRepository::getError();
@@ -18,10 +19,10 @@ if ($product === null) {
 	Controller::redirect(BASE_URL . "/products/");
 }
 
-$shoppingLink = BASE_URL . "/";
+$shoppingLink = BASE_URL . "/login/";
 
-
-if (!$isLogin) {
+if ($isLogin) {
+	$shoppingLink = SRC_DIR . "/controllers/carts.php";
 }
 
 ?>
@@ -86,8 +87,14 @@ if (!$isLogin) {
 			</div>
 
 			<div class="col-lg-7 col-md-6">
-				<form action="#" method="POST" class="border rounded-4 p-4 shadow-sm bg-white">
+				<form action="<?= $shoppingLink ?>" method="GET" class="border rounded-4 p-4 shadow-sm bg-white">
 					<?php if ($error !== null) echo "<div class='alert alert-danger'>$error</div>" ?>
+
+					<input type="hidden" name="req" value="<?= CONTROLLER_CART_ADD_CART ?>" />
+					<input type="hidden" name="user" value="<?= $account !== null ? $account->id : null ?>" />
+					<input type="hidden" name="product" value="<?= $product->product->id ?>" />
+					<input type="hidden" name="count" value="1" />
+					<input type="hidden" name="redirect" value="<?= BASE_URL . "/product/" . urlencode($slug) ?>" />
 
 					<div class="d-flex align-items-center gap-2 mb-3">
 						<span class="fw-block d-block mb-2">انگشتر</span>
