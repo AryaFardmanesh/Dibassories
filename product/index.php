@@ -8,27 +8,34 @@ include __DIR__ . "/../src/repositories/carts.php";
 include __DIR__ . "/../src/controllers/controller.php";
 
 $slug = Controller::getRequest("slug", true);
-$isLogin = AccountService::isLogin();
-$account = AccountService::getAccountFromCookie();
-$product = ProductService::findBySlug($slug);
-$cart = ShoppingCartRepository::find($account->id);
-$prodCart = null;
-$inCart = false;
-$inCartColor = null;
-$inCartMaterial = null;
-$inCartSize = null;
 $error = Controller::getRequest("error");
 
-if (ProductRepository::hasError()) {
-	$error = ProductRepository::getError();
+$account = AccountService::getAccountFromCookie();
+if (AccountRepository::hasError()) {
+	$error = AccountRepository::getError();
 }
 
-if (ShoppingCartRepository::hasError()) {
+$product = ProductService::findBySlug($slug);
+if (ProductRepository::hasError()) {
 	$error = ProductRepository::getError();
 }
 
 if ($product === null) {
 	Controller::redirect(BASE_URL . "/products/");
+}
+
+$cart = [];
+$prodCart = null;
+$inCart = false;
+$inCartColor = null;
+$inCartMaterial = null;
+$inCartSize = null;
+
+if ($account !== null) {
+	$cart = ShoppingCartRepository::find($account->id);
+	if (ShoppingCartRepository::hasError()) {
+		$error = ProductRepository::getError();
+	}
 }
 
 foreach ($cart as $prod) {
@@ -44,7 +51,7 @@ foreach ($cart as $prod) {
 
 $shoppingLink = BASE_URL . "/login/";
 
-if ($isLogin) {
+if ($account !== null) {
 	$shoppingLink = SRC_DIR . "/controllers/carts.php";
 }
 
