@@ -27,9 +27,9 @@ class ProductService extends BaseService {
 			return null;
 		}
 
-		$colorModel = ProductRepository::findColors($id);
-		$materialModel = ProductRepository::findMaterials($id);
-		$sizeModel = ProductRepository::findSizes($id);
+		$colorModel = ProductRepository::findColors($productModel->id);
+		$materialModel = ProductRepository::findMaterials($productModel->id);
+		$sizeModel = ProductRepository::findSizes($productModel->id);
 
 		if (ProductRepository::hasError()) {
 			ProductService::setError(ProductRepository::getError());
