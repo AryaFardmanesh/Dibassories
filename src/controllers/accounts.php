@@ -31,17 +31,17 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 	$instagram = Controller::getRequest("instagram");
 	$telegram = Controller::getRequest("telegram");
 
-	if ($username) $account->username = $username;
-	if ($email) $account->email = $email;
-	if ($fname) $account->fname = $fname;
-	if ($lname) $account->lname = $lname;
-	if ($phone) $account->phone = $phone;
-	if ($zipcode) $account->zipcode = $zipcode;
-	if ($address) $account->address = $address;
-	if ($card_number) $account->card_number = $card_number;
-	if ($card_terminal) $account->card_terminal = $card_terminal;
-	if ($instagram) $account->instagram = $instagram;
-	if ($telegram) $account->telegram = $telegram;
+	if ($username && $username !== "") $account->username = $username;
+	if ($email && $email !== "") $account->email = $email;
+	if ($fname && $fname !== "") $account->fname = $fname;
+	if ($lname && $lname !== "") $account->lname = $lname;
+	if ($phone && $phone !== "") $account->phone = $phone;
+	if ($zipcode && $zipcode !== "") $account->zipcode = $zipcode;
+	if ($address && $address !== "") $account->address = $address;
+	if ($card_number && $card_number !== "") $account->card_number = $card_number;
+	if ($card_terminal && $card_terminal !== "") $account->card_terminal = $card_terminal;
+	if ($instagram && $instagram !== "") $account->instagram = $instagram;
+	if ($telegram && $telegram !== "") $account->telegram = $telegram;
 
 	AccountRepository::update($account);
 

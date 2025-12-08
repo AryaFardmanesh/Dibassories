@@ -318,7 +318,7 @@ class AccountRepository extends BaseRepository {
 		$fname = $model->fname;
 		$lname = $model->lname;
 		$phone = $model->phone;
-		$pangirno = $model->pangirno;
+		$pangirno = dbFlatData($model->pangirno);
 		$address = $model->address;
 		$zipcode = $model->zipcode;
 		$card_number = dbFlatData($model->card_number);
@@ -335,7 +335,7 @@ class AccountRepository extends BaseRepository {
 			WHERE `dibas_accounts`.`username` = '$username'
 			OR `dibas_accounts`.`email` = '$email'
 			OR `dibas_accounts`.`phone` = '$phone'
-			OR `dibas_accounts`.`pangirno` = '$pangirno';"
+			OR `dibas_accounts`.`pangirno` = $pangirno;"
 		);
 
 		if (Database::hasError()) {
@@ -359,7 +359,7 @@ class AccountRepository extends BaseRepository {
 					$field = "ایمیل";
 				}elseif ($row["phone"] === $phone) {
 					$field = "شماره تلفن همراه";
-				}elseif ($row["pangirno"] === $pangirno) {
+				}elseif ($pangirno !== 'NULL' && $row["pangirno"] === $pangirno) {
 					$field = "کد ملی";
 				}
 
@@ -378,7 +378,7 @@ class AccountRepository extends BaseRepository {
 				`fname` = '$fname',
 				`lname` = '$lname',
 				`phone` = '$phone',
-				`pangirno` = '$pangirno',
+				`pangirno` = $pangirno,
 				`address` = '$address',
 				`zipcode` = '$zipcode',
 				`card_number` = $card_number,
