@@ -3,6 +3,7 @@
 // Global
 define('BASE_URL', '/Dibassories');
 define('ASSETS_DIR', BASE_URL . '/assets');
+define('SRC_DIR', BASE_URL . '/src');
 
 // Database Config
 define('DB_SERVERNAME', 'localhost');
