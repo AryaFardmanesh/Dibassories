@@ -229,7 +229,7 @@ Clears all items from the user's cart.
 Increases the count of a product inside the cart.
 
 **Parameters:**
-`product (uuid)`
+`cart (uuid)`, `product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -241,7 +241,7 @@ Seller (Owner), Admin
 Decreases the count of a product inside the cart.
 
 **Parameters:**
-`product (uuid)`
+`cart (uuid)`, `product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin

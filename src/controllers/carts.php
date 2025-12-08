@@ -64,36 +64,56 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_CART_INC_PRODUCT_COUNT) {
-	$productId = Controller::getRequest("product", true);
+	$cart = Controller::getRequest("cart", true);
+	$product = Controller::getRequest("product", true);
 
-	$product = ProductRepository::findById($productId);
+	$cart = ShoppingCartRepository::findById($cart);
+	$product = ProductRepository::findById($product);
+
+	if (ShoppingCartRepository::hasError()) {
+		Controller::setError(ShoppingCartRepository::getError());
+		goto out;
+	}
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
 		goto out;
 	}
 
-	ShoppingCartRepository::updateCount($productId, $product->count + 1);
+	if ($cart->count > ($product->count + 1)) {
+		Controller::setError("تعداد محصول کمتر از درخواست شما است.");
+		goto out;
+	}
+
+	ShoppingCartRepository::updateCount($cart->id, $cart->count + 1);
 
 	if (ShoppingCartRepository::hasError()) {
 		Controller::setError(ShoppingCartRepository::getError());
 		goto out;
 	}
 }elseif ($req === CONTROLLER_CART_DEC_PRODUCT_COUNT) {
-	$productId = Controller::getRequest("product", true);
+	$cart = Controller::getRequest("cart", true);
+	$product = Controller::getRequest("product", true);
 
-	$product = ProductRepository::findById($productId);
+	$cart = ShoppingCartRepository::findById($cart);
+	$product = ProductRepository::findById($product);
+
+	if (ShoppingCartRepository::hasError()) {
+		Controller::setError(ShoppingCartRepository::getError());
+		goto out;
+	}
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
 		goto out;
 	}
 
-	if ($product->count === 0) {
+	if (($cart->count - 1) <= 0) {
+		Controller::setError("تعداد درخواستی شما کمتر از یک است.");
 		goto out;
 	}
 
-	ShoppingCartRepository::updateCount($productId, $product->count - 1);
+	ShoppingCartRepository::updateCount($cart->id, $cart->count - 1);
 
 	if (ShoppingCartRepository::hasError()) {
 		Controller::setError(ShoppingCartRepository::getError());
