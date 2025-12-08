@@ -231,14 +231,13 @@ if ($isLogin) {
 		<div class="row g-3 justify-content-center">
 
 			<div class="col-12 text-center">
-				<img id="mainImage" src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="img-fluid rounded-4 shadow-sm" style="max-height: 450px; object-fit: contain; cursor: zoom-in;" alt="تصویر اصلی محصول" data-bs-toggle="modal" data-bs-target="#imageModal">
+				<img id="mainImage" src="<?= ASSETS_DIR ?>/img/products/<?= $product->product->image[0] ?>" class="img-fluid rounded-4 shadow-sm" style="max-height: 450px; object-fit: contain; cursor: zoom-in;" alt="تصویر اصلی محصول" data-bs-toggle="modal" data-bs-target="#imageModal">
 			</div>
 
 			<div class="col-12 d-flex justify-content-center gap-3 flex-wrap mt-3">
-				<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="thumb-img rounded-3 border border-2 border-primary" alt="تصویر ۱" style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;">
-				<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="thumb-img rounded-3 border border-2 border-transparent" alt="تصویر ۲" style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;">
-				<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="thumb-img rounded-3 border border-2 border-transparent" alt="تصویر ۳" style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;">
-				<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="thumb-img rounded-3 border border-2 border-transparent" alt="تصویر ۴" style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;">
+				<?php foreach ($product->product->image as $img) { ?>
+					<img src="<?= ASSETS_DIR ?>/img/products/<?= $img ?>" class="thumb-img rounded-3 border border-2 border-primary" style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;">
+				<?php } ?>
 			</div>
 
 		</div>
@@ -247,7 +246,7 @@ if ($isLogin) {
 			<div class="modal-dialog modal-dialog-centered modal-lg">
 				<div class="modal-content bg-transparent border-0">
 					<div class="modal-body text-center">
-						<img id="modalImage" src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="img-fluid rounded-3 shadow-lg" alt="تصویر محصول بزرگ">
+						<img id="modalImage" src="<?= ASSETS_DIR ?>/img/products/<?= $product->product->image[0] ?>" class="img-fluid rounded-3 shadow-lg" alt="تصویر محصول بزرگ">
 					</div>
 				</div>
 			</div>
