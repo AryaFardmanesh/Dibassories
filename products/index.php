@@ -167,7 +167,7 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 				foreach ($products as $product) {
 			?>
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<a href="#" class="text-decoration-none text-dark">
+				<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none text-dark">
 					<div class="card border-0 shadow-sm h-100 product-card">
 						<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="card-img-top p-3" alt="<?= $product->name ?>">
 						<div class="card-body pt-0">
