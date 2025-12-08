@@ -43,6 +43,8 @@ if ($account !== null) {
 							<li><a class="dropdown-item" href="<?= BASE_URL ?>/panel/">پنل</a></li>
 							<li><hr class="dropdown-divider"></li>
 							<?php } ?>
+							<li><a class="dropdown-item" href="<?= BASE_URL ?>/profile/">پروفایل</a></li>
+							<li><hr class="dropdown-divider"></li>
 							<li><a class="dropdown-item text-danger" href="<?= BASE_URL ?>/logout/">خروج از سایت</a></li>
 						</ul>
 					</li>
