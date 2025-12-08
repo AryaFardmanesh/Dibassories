@@ -25,18 +25,12 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 	$colorId = Controller::getRequest("color", true);
 	$materialId = Controller::getRequest("material", true);
 	$sizeId = Controller::getRequest("size", true);
-	$count = (int)Controller::getRequest("
-	", true);
+	$count = (int)Controller::getRequest("count", true);
 
 	$product = ProductRepository::findById($productId);
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
-	}
-
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
 
@@ -53,11 +47,6 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
-	}
-
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
 
@@ -84,11 +73,6 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
-		goto out;
-	}
-
 	ShoppingCartRepository::updateCount($productId, $product->count + 1);
 
 	if (ShoppingCartRepository::hasError()) {
@@ -102,11 +86,6 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
-	}
-
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
 		goto out;
 	}
 

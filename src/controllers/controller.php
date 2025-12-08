@@ -52,6 +52,7 @@ class Controller {
 				$path .= "?";
 			}
 
+			$error = urlencode($error);
 			$path .= "error=$error";
 		}
 
@@ -107,6 +108,19 @@ class Controller {
 
 			$callback($params);
 		}
+	}
+
+	final public static function makeControllerUrl(string $controller, int $req, array $params): string {
+		$url = SRC_DIR . "/controllers/$controller.php?" . CONTROLLER_REQ_NAME ."=" . $req;
+
+		foreach ($params as $key => $value) {
+			$key = urlencode($key);
+			$value = urlencode($value);
+
+			$url .= "&$key=$value";
+		}
+
+		return $url;
 	}
 }
 
