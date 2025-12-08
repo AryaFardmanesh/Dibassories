@@ -158,6 +158,25 @@ class AccountService extends BaseService {
 
 		return true;
 	}
+
+	final public static function getAccountFromCookie(): AccountModel|null {
+		$token = Cookie::get(COOKIE_JWT_NAME);
+
+		if ($token === null) {
+			return null;
+		}
+
+		$data = JWT::decode($token)["body"];
+		$id = $data["id"];
+		$exp = $data["exp"];
+		$now = strtotime("today midnight");
+
+		if ($now >= $exp) {
+			return null;
+		}
+
+		return AccountRepository::findById($id);
+	}
 }
 
 ?>
