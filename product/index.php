@@ -1,4 +1,30 @@
-<?php include __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/services/accounts.php";
+include __DIR__ . "/../src/services/products.php";
+include __DIR__ . "/../src/controllers/controller.php";
+
+$slug = Controller::getRequest("slug", true);
+$isLogin = AccountService::isLogin();
+$product = ProductService::findBySlug($slug);
+$error = null;
+
+if (ProductRepository::hasError()) {
+	$error = ProductRepository::getError();
+}
+
+if ($product === null) {
+	Controller::redirect(BASE_URL . "/products/");
+}
+
+$shoppingLink = BASE_URL . "/";
+
+
+if (!$isLogin) {
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -61,6 +87,7 @@
 
 			<div class="col-lg-7 col-md-6">
 				<form action="#" method="POST" class="border rounded-4 p-4 shadow-sm bg-white">
+					<?php if ($error !== null) echo "<div class='alert alert-danger'>$error</div>" ?>
 
 					<div class="d-flex align-items-center gap-2 mb-3">
 						<span class="fw-block d-block mb-2">انگشتر</span>
