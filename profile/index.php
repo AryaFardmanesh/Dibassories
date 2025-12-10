@@ -3,9 +3,13 @@
 include __DIR__ . "/../src/config.php";
 include __DIR__ . "/../src/repositories/carts.php";
 include __DIR__ . "/../src/repositories/products.php";
+include __DIR__ . "/../src/repositories/orders.php";
+include __DIR__ . "/../src/repositories/transactions.php";
 include __DIR__ . "/../src/services/accounts.php";
 include __DIR__ . "/../src/controllers/controller.php";
+include __DIR__ . "/../src/utils/convert.php";
 
+$error = Controller::getRequest("error");
 $account = AccountService::getAccountFromCookie();
 
 if ($account === null) {
@@ -96,6 +100,8 @@ if ($account === null) {
 </head>
 <body>
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
+
+	<?php if ($error !== null) echo "<div class='alert alert-danger mx-3 mt-3'>$error</div>"; ?>
 
 	<section class="container-fluid my-5">
 		<div class="row justify-content-center">
@@ -331,7 +337,7 @@ if ($account === null) {
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body text-center py-4">
 						<h4 class="fw-bold text-primary mb-2">موجودی کیف پول شما</h4>
-						<h2 class="fw-bolder text-success mb-3">۲,۴۵۰,۰۰۰ <small class="text-muted fs-5">تومان</small></h2>
+						<h2 class="fw-bolder text-success mb-3"><?= number_format((float)$account->wallet_balance) ?> <small class="text-muted fs-5">تومان</small></h2>
 						<p class="text-muted">از موجودی خود می‌توانید برای خرید یا برداشت وجه استفاده کنید.</p>
 					</div>
 				</div>
@@ -344,7 +350,11 @@ if ($account === null) {
 							(در نسخهٔ آزمایشی، از کد تست برای شارژ بدون پرداخت واقعی می‌توان استفاده کرد.)
 						</p>
 
-						<form id="chargeForm" class="row g-3 align-items-end needs-validation" novalidate>
+						<form action="<?= BASE_URL . "/src/controllers/transactions.php" ?>" method="GET" id="chargeForm" class="row g-3 align-items-end needs-validation" novalidate>
+							<input type="hidden" name="req" value="<?= CONTROLLER_TRANSACTION_CHARGE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME) ?>" />
+
 							<div class="col-12 col-md-6 mb-auto">
 								<label for="chargeAmount" class="form-label fw-semibold">مبلغ (تومان)</label>
 								<input
@@ -364,7 +374,7 @@ if ($account === null) {
 								<input
 									type="text"
 									id="testCode"
-									name="testCode"
+									name="tcode"
 									class="form-control"
 									placeholder="اگر کد تست دارید وارد کنید"
 									autocomplete="off"
@@ -386,18 +396,22 @@ if ($account === null) {
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body">
 						<h5 class="fw-bold mb-3 text-primary">برداشت وجه از کیف پول</h5>
-						<form class="needs-validation" novalidate>
+						<form action="<?= BASE_URL . "/src/controllers/transactions.php" ?>" method="GET" class="needs-validation" novalidate>
+							<input type="hidden" name="req" value="<?= CONTROLLER_TRANSACTION_EXCHANGE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME) ?>" />
+
 							<div class="mb-3">
 								<label for="withdrawAmount" class="form-label">مبلغ مورد نظر (تومان)</label>
 								<input
 									type="number"
 									class="form-control rounded-3"
 									id="withdrawAmount"
-									name="withdrawAmount"
+									name="amount"
 									placeholder="مثلاً ۵۰۰,۰۰۰"
 									autocomplete="off"
 									min="0"
-									max="2450000"
+									max="<?= $account->wallet_balance ?>"
 									required
 								>
 							</div>
@@ -423,17 +437,24 @@ if ($account === null) {
 									</tr>
 								</thead>
 								<tbody>
+									<?php
+										$orders = OrderRepository::findForOwner($account->id);
+										foreach ($orders as $order) {
+											$product = ProductRepository::findById($order->product);
+											if ($product === null) continue;
+									?>
 									<tr>
 										<td>
-											<a href="#" class="text-decoration-none">
-												<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="rounded shadow-sm" width="40" height="40" alt="Product image" />
+											<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none">
+												<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="rounded shadow-sm" width="40" height="40" alt="<?= $product->name ?>" />
 											</a>
 										</td>
-										<td>1</td>
-										<td>۴۵۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۵</td>
-										<td><span class="badge bg-success">در حال ارسال</span></td>
+										<td><?= $order->count ?></td>
+										<td><?= number_format((float)$order->total) ?></td>
+										<td><?= $order->created_at->format("Y/m/d") ?></td>
+										<td><span class="badge bg-<?= convertStatusToColor($order->status) ?>"><?= convertStatusToString($order->status) ?></span></td>
 									</tr>
+									<?php } ?>
 								</tbody>
 							</table>
 						</div>
@@ -454,24 +475,17 @@ if ($account === null) {
 									</tr>
 								</thead>
 								<tbody>
+									<?php
+										$transactions = TransactionRepository::findOwner($account->id);
+										foreach ($transactions as $transaction) {
+									?>
 									<tr>
-										<td>خرید محصول</td>
-										<td>۴۵۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۵</td>
-										<td><span class="badge bg-success">پرداخت شده</span></td>
+										<td><?= convertTransactionTypeToString($transaction->type) ?></td>
+										<td><?= number_format((float)$transaction->amount) ?></td>
+										<td><?= $transaction->created_at->format("Y/m/d") ?></td>
+										<td><span class="badge bg-<?= convertStatusToColor($transaction->status) ?>"><?= convertStatusToString($transaction->status) ?></span></td>
 									</tr>
-									<tr>
-										<td>برداشت از کیف پول</td>
-										<td>۳۰۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۳</td>
-										<td><span class="badge bg-warning text-dark">در حال تایید</span></td>
-									</tr>
-									<tr>
-										<td>شارژ حساب</td>
-										<td>۱,۰۰۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۰</td>
-										<td><span class="badge bg-danger">پرداخت نشده</span></td>
-									</tr>
+									<?php } ?>
 								</tbody>
 							</table>
 						</div>
@@ -482,6 +496,7 @@ if ($account === null) {
 		</div>
 	</section>
 
+	<?php if ($account->role === ROLE_CUSTOMER) { ?>
 	<section class="container-fluid my-4">
 		<div class="card shadow-sm border-0 rounded-4">
 			<div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -492,7 +507,10 @@ if ($account === null) {
 			</div>
 			<div class="collapse" id="sellerRequestCollapse">
 				<div class="card-body">
-					<form id="sellerRequestForm" action="request_seller.php" method="POST" class="row g-3 needs-validation" novalidate>
+					<form action="<?= BASE_URL . "/src/controllers/accounts.php" ?>" method="GET" id="sellerRequestForm" class="row g-3 needs-validation" novalidate>
+						<input type="hidden" name="req" value="<?= CONTROLLER_ACCOUNT_SELLER_REQUEST ?>" />
+						<input type="hidden" name="user" value="<?= $account->id ?>" />
+						<input type="hidden" name="redirect" value="<?= dirname($_SERVER["PHP_SELF"]) ?>" />
 
 						<div class="col-12">
 							<p class="small text-muted mb-0">
@@ -507,7 +525,7 @@ if ($account === null) {
 							<input
 								type="text"
 								id="national_id"
-								name="national_id"
+								name="pangirno"
 								class="form-control"
 								placeholder="مثال: 0012345678"
 								pattern="\d{10}"
@@ -537,16 +555,16 @@ if ($account === null) {
 							<input
 								type="text"
 								id="shaba"
-								name="shaba"
+								name="card_terminal"
 								class="form-control"
-								placeholder="مثال: IR.........................."
-								pattern="IR[0-9A-Za-z]{24}"
+								placeholder="مثال: .........................."
+								pattern="[0-9]{24}"
 								required
 							>
 							<div class="form-text">
-								شماره شبا بانکی را با پیش‌شماره <code>IR</code> وارد کنید. دقت کنید نام صاحب حساب باید با <strong>نام و نام خانوادگی ثبت‌شده در پروفایل</strong> مطابقت داشته باشد.
+								دقت کنید نام صاحب حساب باید با <strong>نام و نام خانوادگی ثبت‌شده در پروفایل</strong> مطابقت داشته باشد.
 							</div>
-							<div class="invalid-feedback">لطفاً یک شماره شبا معتبر وارد کنید (با IR شروع شود).</div>
+							<div class="invalid-feedback">لطفاً یک شماره شبا معتبر وارد کنید.</div>
 						</div>
 
 						<div class="col-12 col-md-6">
@@ -591,6 +609,7 @@ if ($account === null) {
 			</div>
 		</div>
 	</section>
+	<?php } ?>
 
 	<!-- Validating forms -->
 	<script>
