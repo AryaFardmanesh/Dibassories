@@ -1,6 +1,8 @@
 <?php
 
 include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/repositories/carts.php";
+include __DIR__ . "/../src/repositories/products.php";
 include __DIR__ . "/../src/services/accounts.php";
 include __DIR__ . "/../src/controllers/controller.php";
 
@@ -248,84 +250,43 @@ if ($account === null) {
 
 			<div class="d-flex gap-2">
 				<button id="clearCartBtn" class="btn btn-outline-danger">حذف سبد خرید</button>
-				<a href="checkout.php" id="checkoutBtn" class="btn btn-primary">ثبت سفارش</a>
+				<a href="<?= BASE_URL . "/checkout/" ?>" id="checkoutBtn" class="btn btn-primary">ثبت سفارش</a>
 			</div>
 		</div>
 
 		<div class="cart-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
 
-		<a href="/product/gerdanband-tala" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
+		<?php
+			$cart = ShoppingCartRepository::find($account->id);
+			foreach ($cart as $cartInfo) {
+				$cartProduct = ProductRepository::findById($cartInfo->product);
+				if ($cartProduct === null) {
+					continue;
+				}
+		?>
+			<a href="<?= BASE_URL . "/product/" . urlencode($cartProduct->name) ?>" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
 				<div class="position-relative">
-					<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top" alt="گردنبند طلا">
-					<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 2</span>
+					<img src="<?= ASSETS_DIR ?>/img/products/<?= $cartProduct->image[0] ?>" class="card-img-top" alt="<?= $cartProduct->name ?>">
 				</div>
 				<div class="card-body">
-					<h6 class="card-title fw-bold mb-1 text-truncate">گردنبند طلا زنانه مدل A</h6>
-					<div class="d-flex justify-content-center align-items-center my-2">
-						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
-						<span class="form-control form-control-sm mx-2 text-center">1</span>
-						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
-					</div>
+					<h6 class="card-title fw-bold mb-1 text-truncate"><?= $cartProduct->name ?></h6>
+					<span> تعداد: <?= $cartInfo->count ?></span>
 					<div class="d-flex justify-content-between align-items-center">
-						<div>
-							<span class="text-muted text-decoration-line-through small">۴۵۰,۰۰۰</span>
-							<span class="text-danger fw-bold ms-1">۳۵۰,۰۰۰</span>
-						</div>
-						<div>
-							<span class="badge bg-danger">٪۲۲</span>
-							<span class="badge bg-light text-dark border ms-1">تومان</span>
-						</div>
+						<?php if ($cartProduct->offer === 0) { ?>
+						<?php }else { ?>
+							<div>
+								<span class="text-muted text-decoration-line-through small"><?= number_format((float)$cartProduct->price)  ?></span>
+								<span class="text-danger fw-bold ms-1"><?= number_format((float)$cartProduct->price - ($cartProduct->price * $cartProduct->offer / 100)) ?></span>
+							</div>
+							<div>
+								<span class="badge bg-danger">٪<?= $cartProduct->offer ?></span>
+								<span class="badge bg-light text-dark border ms-1">تومان</span>
+							</div>
+						<?php } ?>
 					</div>
 				</div>
 			</a>
-
-			<a href="/product/angoshtr-esteel" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
-				<div class="position-relative">
-					<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top" alt="انگشتر استیل">
-					<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 1</span>
-				</div>
-				<div class="card-body">
-					<h6 class="card-title fw-bold mb-1 text-truncate">انگشتر استیل مردانه</h6>
-					<div class="d-flex justify-content-center align-items-center my-2">
-						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
-						<span class="form-control form-control-sm mx-2 text-center">1</span>
-						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
-					</div>
-					<div class="d-flex justify-content-between align-items-center">
-						<div>
-							<span class="fw-bold text-dark">۱۸۰,۰۰۰</span>
-						</div>
-						<div>
-							<span class="badge bg-light text-dark border ms-1">تومان</span>
-						</div>
-					</div>
-				</div>
-			</a>
-
-			<a href="/product/gooshvare-kelasik" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
-				<div class="position-relative">
-					<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top" alt="گوشواره">
-					<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 1</span>
-				</div>
-				<div class="card-body">
-					<h6 class="card-title fw-bold mb-1 text-truncate">گوشواره کلاسیک</h6>
-					<div class="d-flex justify-content-center align-items-center my-2">
-						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
-						<span class="form-control form-control-sm mx-2 text-center">1</span>
-						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
-					</div>
-					<div class="d-flex justify-content-between align-items-center">
-						<div>
-							<span class="text-muted text-decoration-line-through small">۲۷۰,۰۰۰</span>
-							<span class="text-danger fw-bold ms-1">۲۲۰,۰۰۰</span>
-						</div>
-						<div>
-							<span class="badge bg-danger">٪۱۸</span>
-							<span class="badge bg-light text-dark border ms-1">تومان</span>
-						</div>
-					</div>
-				</div>
-			</a>
+		<?php } ?>
 
 		</div>
 	</section>
