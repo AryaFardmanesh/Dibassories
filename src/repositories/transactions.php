@@ -144,6 +144,52 @@ class TransactionRepository extends BaseRepository {
 			return null;
 	}
 
+	final public static function findOwner(string $id): array {
+		$models = [];
+
+		if (!TransactionRepository::dbConnect()) {
+			TransactionRepository::setError(Database::getError());
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_transactions`
+			WHERE `dibas_transactions`.`wallet` = '$id'
+			ORDER BY `dibas_transactions`.`created_at`;"
+		)->fetchAll();
+
+		if (Database::hasError()) {
+			TransactionRepository::setError(Database::getError());
+			goto out;
+		}
+
+		if ($rows === FALSE) {
+			goto out;
+		}
+
+		foreach ($rows as $row) {
+			$model = new TransactionModel(
+				$row["id"],
+				$row["wallet"],
+				(int)$row["amount"],
+				(int)$row["type"],
+				(int)$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				TransactionRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
+	}
+
 	final public static function findAll(int $page = 1, $limit = PAGINATION_LIMIT): array {
 		$models = [];
 
