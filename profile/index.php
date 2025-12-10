@@ -331,6 +331,12 @@ if ($account === null) {
 	</section>
 
 	<div class="modal fade" id="confirmClearModal" tabindex="-1" aria-labelledby="confirmClearModalLabel" aria-hidden="true">
+		<?php
+			$emptyCartLink = Controller::makeControllerUrl("carts", CONTROLLER_CART_EMPTY_CART, [
+				"user" => $account->id,
+				"redirect" => pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME)
+			]);
+		?>
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -342,7 +348,7 @@ if ($account === null) {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-					<a href="#" id="confirmClearBtn" class="btn btn-danger">بله، حذف کن</a>
+					<a href="<?= $emptyCartLink ?>" id="confirmClearBtn" class="btn btn-danger">بله، حذف کن</a>
 				</div>
 			</div>
 		</div>
