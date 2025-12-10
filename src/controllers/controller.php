@@ -46,6 +46,9 @@ class Controller {
 			$path = CONTROLLER_REDIRECT_URL;
 		}
 
+		$basename = basename($path);
+		$path = str_replace($basename, urlencode($basename), $path);
+
 		$error = Controller::getError();
 		if ($error !== null) {
 			if (!str_contains($path, "?")) {
