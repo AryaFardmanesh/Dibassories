@@ -76,6 +76,12 @@ Downgrades the user’s role.
 
 Submits a request to upgrade the user role to "seller".
 
+**Required Parameters:**
+`pangirno`, `card_number`, `card_terminal`
+
+**Optional Parameters:**
+`instagram`, `telegram`
+
 ⚠ **Bug:** No authentication validation exists.
 
 ---

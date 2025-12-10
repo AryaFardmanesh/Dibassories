@@ -98,6 +98,25 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_ACCOUNT_SELLER_REQUEST) {
+	$pangirno = Controller::getRequest("pangirno", true);
+	$card_number = Controller::getRequest("card_number", true);
+	$card_terminal = Controller::getRequest("card_terminal", true);
+	$instagram = Controller::getRequest("instagram");
+	$telegram = Controller::getRequest("telegram");
+
+	$account->pangirno = $pangirno;
+	$account->card_number = $card_number;
+	$account->card_terminal = $card_terminal;
+	$account->instagram = $instagram;
+	$account->telegram = $telegram;
+
+	AccountRepository::update($account);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+
 	AccountRepository::requestForSeller($user);
 
 	if (AccountRepository::hasError()) {
