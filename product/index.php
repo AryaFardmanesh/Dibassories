@@ -141,10 +141,10 @@ if ($account !== null) {
 
 					<div class="mb-4">
 						<?php if ($product->product->offer === 0) { ?>
-							<span class="text-muted fs-3"><?= $product->product->price ?> تومان</span>
+							<span class="text-muted fs-3"><?= number_format((float)$product->product->price) ?> تومان</span>
 						<?php }else { ?>
-							<span class="text-decoration-line-through text-muted fs-5"><?= $product->product->price ?> تومان</span>
-							<span class="fs-3 fw-bold text-danger ms-3"><?= $product->product->price - ($product->product->price * $product->product->offer / 100); ?> تومان</span>
+							<span class="text-decoration-line-through text-muted fs-5"><?= number_format((float)$product->product->price) ?> تومان</span>
+							<span class="fs-3 fw-bold text-danger ms-3"><?= number_format((float)$product->product->price - ($product->product->price * $product->product->offer / 100)) ?> تومان</span>
 							<span class="badge bg-danger">٪<?= $product->product->offer ?> تخفیف</span>
 						<?php } ?>
 						</div>
