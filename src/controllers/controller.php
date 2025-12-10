@@ -114,9 +114,6 @@ class Controller {
 		$url = SRC_DIR . "/controllers/$controller.php?" . CONTROLLER_REQ_NAME ."=" . $req;
 
 		foreach ($params as $key => $value) {
-			$key = urlencode($key);
-			$value = urlencode($value);
-
 			$url .= "&$key=$value";
 		}
 
