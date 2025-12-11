@@ -7,7 +7,7 @@ include_once __DIR__ . "/../repositories/products.php";
 
 $req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
 $user = Controller::getRequest("user", true);
-$order = Controller::getError("order", true);
+$order = Controller::getRequest("order", true);
 
 $account = AccountRepository::findById($user);
 
