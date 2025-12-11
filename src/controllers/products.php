@@ -47,6 +47,8 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	if (gettype($imageMain) === "string") {
 		array_push($images, $imageMain);
 	}elseif ($imageMain !== FILE_STATUS_NOT_FOUND) {
+		echo "OK";
+		die;
 		Controller::setError("تصویر شاخص با موفقیت آپلود نشد.");
 		goto out;
 	}
@@ -216,12 +218,12 @@ function getProduct(string $id): ProductModel {
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 
 	if ($product === null) {
 		Controller::setError("محصول یافت نشد.");
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 
 	return $product;
@@ -230,14 +232,14 @@ function getProduct(string $id): ProductModel {
 function hasPermission(string $productOwner, string $requestOwner, int $accountRole): void {
 	if ($productOwner !== $requestOwner && $accountRole !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در این محصول را ندارید.");
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 }
 
 function checkError(): void {
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 }
 

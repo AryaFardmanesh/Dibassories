@@ -40,7 +40,7 @@ define('COOKIE_EXP_TIME', (86400 * 30) /* 86400 = 1 Day - 30 Days */);
 
 // Uploader Config
 define('LIMIT_FILE_SIZE', 2000000);
-define('PRODUCT_IMAGE_DIR', BASE_URL . '/assets/img/products');
+define('PRODUCT_IMAGE_DIR', realpath(dirname(__FILE__, 2)) . '/assets/img/products');
 
 define('FILE_STATUS_NOT_FOUND', 1);
 define('FILE_STATUS_ALREADY_EXISTS', 2);

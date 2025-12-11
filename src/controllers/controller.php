@@ -21,16 +21,16 @@ class Controller {
 	}
 
 	final static public function fetchError(): string|null {
-		if (isset($_GET["error"])) {
-			return $_GET["error"];
+		if (isset($_REQUEST["error"])) {
+			return $_REQUEST["error"];
 		}
 
 		return null;
 	}
 
 	final public static function getRequest(string $name, bool $mandatory = false): string|null {
-		if (isset($_GET[$name])) {
-			return testInput($_GET[$name]);
+		if (isset($_REQUEST[$name])) {
+			return testInput($_REQUEST[$name]);
 		}
 
 		if ($mandatory) {

@@ -37,8 +37,8 @@ class ProductModel extends BaseModel {
 			$this->setError("شرح محصول باید بین 12 تا 512 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(6, 512, join("|", $this->image))) {
-			$this->setError("نام تصاویر باید بین 6 تا 128 کاراکتر باشد.");
+		if (!ModelTest::inRange(1, 512, join("|", $this->image))) {
+			$this->setError("نام تصاویر باید بین 1 تا 128 کاراکتر باشد.");
 			return false;
 		}
 
