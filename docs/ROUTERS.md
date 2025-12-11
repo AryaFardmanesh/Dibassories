@@ -19,6 +19,7 @@ Some services also require additional identifiers such as the authenticated **us
 * **accounts** — Manages user profile, account state, and role operations.
 * **products** — Handles product lifecycle and seller operations.
 * **carts** — Controls the user’s shopping cart.
+* **orders** — Order management.
 * **transactions** — Manages wallet operations and transaction states.
 * **shopping** — Handles final purchase processing.
 
@@ -254,7 +255,49 @@ Seller (Owner), Admin
 
 ---
 
-# **4. Transactions Controller**
+# **4. Order**
+
+**Note:** All services require the `user` parameter.
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_CONFIRM)**
+
+Changes the order status to `Confirm`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_OPEN)**
+
+Changes the order status to `Open`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_CLOSE)**
+
+Changes the order status to `Close`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_SENT)**
+
+Changes the order status to `Sent`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+# **5. Transactions Controller**
 
 **Note:** All services require the `user` parameter.
 
@@ -362,7 +405,7 @@ Owner, Admin
 
 ---
 
-# **5. Shopping Controller**
+# **6. Shopping Controller**
 
 **Note:** Requires the `user` parameter.
 
