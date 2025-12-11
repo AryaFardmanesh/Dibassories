@@ -521,6 +521,39 @@ class ProductRepository extends BaseRepository {
 			return $models;
 	}
 
+	final public static function findColor(string $id): ProductColorModel|null {
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products_color` WHERE `dibas_products_color`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		$model = new ProductColorModel(
+			$row["id"],
+			$row["product"],
+			$row["color_name"],
+			$row["color_hex"]
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto out;
+		}
+
+		out:
+			Database::close();
+			return $model;
+	}
+
 	final public static function findMaterials(string $id): array {
 		$models = [];
 
@@ -561,6 +594,38 @@ class ProductRepository extends BaseRepository {
 			return $models;
 	}
 
+	final public static function findMaterial(string $id): ProductMaterialModel|null {
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products_material` WHERE `dibas_products_material`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		$model = new ProductMaterialModel(
+			$row["id"],
+			$row["product"],
+			$row["material"]
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto out;
+		}
+
+		out:
+			Database::close();
+			return $model;
+	}
+
 	final public static function findSizes(string $id): array {
 		$models = [];
 
@@ -599,6 +664,38 @@ class ProductRepository extends BaseRepository {
 		out:
 			Database::close();
 			return $models;
+	}
+
+	final public static function findSize(string $id): ProductSizeModel|null {
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products_size` WHERE `dibas_products_size`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		$model = new ProductSizeModel(
+			$row["id"],
+			$row["product"],
+			$row["size"]
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto out;
+		}
+
+		out:
+			Database::close();
+			return $model;
 	}
 
 	final public static function filter(

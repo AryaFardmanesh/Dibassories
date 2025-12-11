@@ -194,6 +194,55 @@ class OrderRepository extends BaseRepository {
 		return OrderRepository::findAssoc("provider", $provider);
 	}
 
+	final public static function findById(string $id): OrderModel|null {
+		if (!OrderRepository::dbConnect()) {
+			OrderRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_orders` WHERE `dibas_orders`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			OrderRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new OrderModel(
+			$row["id"],
+			$row["owner"],
+			$row["provider"],
+			$row["product"],
+			$row["product_color"],
+			$row["product_material"],
+			$row["product_size"],
+			(int)$row["count"],
+			(int)$row["total"],
+			$row["phone"],
+			$row["address"],
+			$row["zipcode"],
+			(int)$row["status"],
+			new DateTimeImmutable($row["created_at"])
+		);
+
+		if ($model->hasError()) {
+			OrderRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
+	}
+
 	final public static function findAll(int $page = 1, $limit = PAGINATION_LIMIT): array {
 		$models = [];
 
