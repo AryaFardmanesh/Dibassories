@@ -37,12 +37,47 @@ permissionCheck($orderModel, $account);
 
 if ($req === CONTROLLER_ORDER_STATUS_CONFIRM) {
 	OrderRepository::updateStatus($order, STATUS_CONFIRM);
+
+	if (OrderRepository::hasError()) {
+		Controller::setError(OrderRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ORDER_STATUS_OPEN) {
 	OrderRepository::updateStatus($order, STATUS_OPENED);
+
+	if (OrderRepository::hasError()) {
+		Controller::setError(OrderRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ORDER_STATUS_CLOSE) {
 	OrderRepository::updateStatus($order, STATUS_CLOSED);
+
+	if (OrderRepository::hasError()) {
+		Controller::setError(OrderRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ORDER_STATUS_SENT) {
 	OrderRepository::updateStatus($order, STATUS_SEND);
+
+	if (OrderRepository::hasError()) {
+		Controller::setError(OrderRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ORDER_STATUS_REMOVE) {
+	OrderRepository::remove($order);
+
+	if (OrderRepository::hasError()) {
+		Controller::setError(OrderRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ORDER_STATUS_UPDATE) {
+	$status = (int)Controller::getRequest("status", true);
+	OrderRepository::updateStatus($order, $status);
+
+	if (OrderRepository::hasError()) {
+		Controller::setError(OrderRepository::getError());
+		goto out;
+	}
 }
 
 out:
