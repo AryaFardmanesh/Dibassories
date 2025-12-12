@@ -427,6 +427,54 @@ class ProductRepository extends BaseRepository {
 			return false;
 	}
 
+	final public static function findForOwner(string $id): array {
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_products` WHERE `dibas_products`.`owner` = '$id';"
+		)->fetchAll();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		if ($rows === FALSE) {
+			goto out;
+		}
+
+		foreach ($rows as $row) {
+			$model = new ProductModel(
+				$row["id"],
+				$row["owner"],
+				(int)$row["type"],
+				$row["name"],
+				$row["description"],
+				str_getcsv($row["image"], "|"),
+				(int)$row["count"],
+				(int)$row["price"],
+				(int)$row["offer"],
+				(int)$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
+	}
+
 	private static function find(string $field, string $value): ?ProductModel {
 		if (!ProductRepository::dbConnect()) {
 			goto failed;
