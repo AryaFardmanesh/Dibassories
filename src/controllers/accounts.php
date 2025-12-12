@@ -56,6 +56,13 @@ if ($req === CONTROLLER_ACCOUNT_UPDATE) {
 		Controller::setError(AccountRepository::getError());
 		goto out;
 	}
+}elseif ($req === CONTROLLER_ACCOUNT_UNBLOCK) {
+	AccountRepository::updateStatus($user, STATUS_OK);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
 }elseif ($req === CONTROLLER_ACCOUNT_REMOVE) {
 	AccountRepository::removeById($user);
 
