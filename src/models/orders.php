@@ -60,8 +60,8 @@ class OrderModel extends BaseModel {
 			$this->setError("آدرس باید بین 12 تا 512 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(16, 16, $this->zipcode)) {
-			$this->setError("کد پستی باید 16 کاراکتر باشد.");
+		if (!ModelTest::inRange(10, 10, $this->zipcode)) {
+			$this->setError("کد پستی باید 10 کاراکتر باشد.");
 			return false;
 		}
 
