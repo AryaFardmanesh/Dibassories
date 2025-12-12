@@ -1,6 +1,7 @@
 <?php
 
 include __DIR__ . "/../../src/config.php";
+include __DIR__ . "/../../assets/components/pagination.php";
 include __DIR__ . "/../../src/utils/convert.php";
 include __DIR__ . "/../../src/controllers/controller.php";
 include __DIR__ . "/../../src/repositories/products.php";
@@ -8,6 +9,11 @@ include __DIR__ . "/../../src/repositories/orders.php";
 include __DIR__ . "/../../src/services/accounts.php";
 
 $account = AccountService::getAccountFromCookie();
+$page = Controller::getRequest("page");
+
+if ($page === null) {
+	$page = 1;
+}
 
 if ($account === null || $account->role !== ROLE_ADMIN) {
 	Controller::redirect(null);
@@ -106,7 +112,7 @@ foreach ($users as $user) {
 
 								<?php
 									$i = 0;
-									$users = AccountRepository::filter(1);
+									$users = AccountRepository::filter($page);
 									foreach ($users as $users) {
 										$roleColor = "success";
 										if ($user->role === ROLE_ADMIN) $roleColor = "danger";
@@ -130,22 +136,27 @@ foreach ($users as $user) {
 												$blockOrUnblockReqCode = CONTROLLER_ACCOUNT_UNBLOCK;
 											}
 
-											$blockLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_BLOCK, [
+											$upgradeRoleDisabled = "";
+											$downgradeRoleDisabled = "";
+											if ($user->role == ROLE_ADMIN) $upgradeRoleDisabled = "disabled";
+											elseif ($user->role == ROLE_CUSTOMER) $downgradeRoleDisabled = "disabled";
+
+											$blockOrUnblockLink = Controller::makeControllerUrl("accounts", $blockOrUnblockReqCode, [
 												"user" => $user->id,
 												"redirect" => dirname($_SERVER["PHP_SELF"])
 											]);
-											$upgradeRoleLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_BLOCK, [
+											$upgradeRoleLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_UPGRADE, [
 												"user" => $user->id,
 												"redirect" => dirname($_SERVER["PHP_SELF"])
 											]);
-											$downgradeRoleLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_BLOCK, [
+											$downgradeRoleLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_DOWNGRADE, [
 												"user" => $user->id,
 												"redirect" => dirname($_SERVER["PHP_SELF"])
 											]);
 										?>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">مسدود</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1 disabled">ارتقای نقش</a>
-										<a href="#" class="btn btn-sm btn-danger w-100">تنزل نقش</a>
+										<a href="<?= $blockOrUnblockLink ?>" class="btn btn-sm btn-danger w-100 mb-1"><?= $blockOrUnblock ?></a>
+										<a href="<?= $upgradeRoleLink ?>" class="btn btn-sm btn-danger w-100 mb-1 <?= $upgradeRoleDisabled ?>">ارتقای نقش</a>
+										<a href="<?= $downgradeRoleLink ?>" class="btn btn-sm btn-danger w-100 <?= $downgradeRoleDisabled ?>">تنزل نقش</a>
 									</td>
 								</tr>
 								<?php } ?>
@@ -155,35 +166,7 @@ foreach ($users as $user) {
 					</div>
 
 					<div class="container-fluid">
-						<nav>
-							<ul class="pagination justify-content-center flex-wrap gap-2">
-								<li class="page-item disabled">
-									<a class="page-link rounded-3" href="#" tabindex="-1" aria-disabled="true">قبلی</a>
-								</li>
-
-								<li class="page-item active" aria-current="page">
-									<a class="page-link rounded-3" href="#">1</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">2</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">3</a>
-								</li>
-
-								<li class="page-item">
-									<span class="page-link border-0 bg-transparent text-muted">...</span>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">10</a>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">بعدی</a>
-								</li>
-							</ul>
-						</nav>
+						<?php echo createPagination(AccountRepository::getPageCount(), $page); ?>
 					</div>
 				</div>
 			</div>
