@@ -32,7 +32,7 @@ function uploadFile(string $name, string $address, bool $removeOldFile = false, 
 		unlink($oldPath);
 	}
 
-	return $newFilename;
+	return basename($newFilename);
 }
 
 function convertUploadErrorToString(int $error): string {
