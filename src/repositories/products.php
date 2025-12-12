@@ -165,6 +165,160 @@ class ProductRepository extends BaseRepository {
 			return null;
 	}
 
+	final public static function addColors(string $product, array $colors): bool {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		foreach ($colors as $color) {
+			$name = $color[0];
+			$hex = $color[1];
+
+			$model = new ProductColorModel(
+				uuid(),
+				$product,
+				$name,
+				$hex
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto failed;
+			}
+
+			// Extract model data
+			$id = $model->id;
+			$product = $model->product;
+			$name = $model->name;
+			$hex = $model->hex;
+
+			// Insert new record
+			Database::query(
+				"INSERT INTO `dibas_products_color` (
+					`id`,
+					`product`,
+					`color_name`,
+					`color_hex`
+				) VALUES (
+					'$id',
+					'$product',
+					'$name',
+					'$hex'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
+	final public static function addMaterials(string $product, array $materials): bool {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		foreach ($materials as $material) {
+			$model = new ProductMaterialModel(
+				uuid(),
+				$product,
+				$material
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto failed;
+			}
+
+			// Extract model data
+			$id = $model->id;
+			$product = $model->product;
+			$material = $model->material;
+
+			// Insert new record
+			Database::query(
+				"INSERT INTO `dibas_products_material` (
+					`id`,
+					`product`,
+					`material`
+				) VALUES (
+					'$id',
+					'$product',
+					'$material'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
+	final public static function addSizes(string $product, array $sizes): bool {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		foreach ($sizes as $size) {
+			$model = new ProductSizeModel(
+				uuid(),
+				$product,
+				$size
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto failed;
+			}
+
+			// Extract model data
+			$id = $model->id;
+			$product = $model->product;
+			$size = $model->size;
+
+			// Insert new record
+			Database::query(
+				"INSERT INTO `dibas_products_size` (
+					`id`,
+					`product`,
+					`size`
+				) VALUES (
+					'$id',
+					'$product',
+					'$size'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
 	final public static function remove(string $id): bool {
 		if (!ProductRepository::dbConnect()) {
 			goto failed;

@@ -28,8 +28,8 @@ function uploadFile(string $name, string $address, bool $removeOldFile = false, 
 		return FILE_STATUS_FAILED;
 	}
 
-	if ($removeOldFile && file_exists($oldPath)) {
-		unlink($oldPath);
+	if ($removeOldFile && file_exists($address . "/" . $oldPath)) {
+		unlink($address . "/" . $oldPath);
 	}
 
 	return basename($newFilename);
