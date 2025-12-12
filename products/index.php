@@ -4,6 +4,7 @@ include __DIR__ . "/../src/config.php";
 include __DIR__ . "/../src/utils/convert.php";
 include __DIR__ . "/../src/repositories/products.php";
 include __DIR__ . "/../src/controllers/controller.php";
+include __DIR__ . "/../assets/components/pagination.php";
 
 $page = Controller::getRequest("page");
 $sort = Controller::getRequest("sort");
@@ -206,63 +207,10 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 	</section>
 
 	<section class="container my-5">
-		<nav aria-label="صفحه‌بندی محصولات">
-			<?php
-			$pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, $name, $type, $minPrice, $maxPrice);
-			$query = str_replace(["products", "index.php"], "", basename($_SERVER['REQUEST_URI']));
-			$previousDisabled = $page === 1 ? "disabled" : "";
-			$nextDisabled = $page === $pageCount ? "disabled" : "";
-
-			if (str_contains($query, "page")) {
-				$query = str_replace("page=$page", "", $query);
-			}
-			if (!str_contains($query, "?")) {
-				$query .= "?";
-			}
-
-			$nextLink = $query . ("page=" . ($page + 1));
-			$prevLink = $query . ("page=" . ($page - 1));
-			?>
-
-			<ul class="pagination justify-content-center flex-wrap gap-2">
-				<li class="page-item <?= $previousDisabled ?>">
-					<a class="page-link rounded-3" href="<?= $prevLink ?>" tabindex="-1" aria-disabled="true">قبلی</a>
-				</li>
-
-				<?php
-				for ($i = $page; $i < ($page + 3); $i++) {
-					$link = $query . ("page=" . $i);
-					$isActive = $page === $i ? "active" : null;
-					$isDisabled = $i > $pageCount ? "disabled" : null;
-				?>
-				<li class="page-item <?= $isActive ?> <?= $isDisabled ?>">
-					<a class="page-link rounded-3" href="<?= $link ?>"><?= $i ?></a>
-				</li>
-				<?php } ?>
-
-				<li class="page-item">
-					<span class="page-link border-0 bg-transparent text-muted">...</span>
-				</li>
-
-				<?php
-				if ($pageCount < 4) {
-					goto skipPartTwo;
-				}
-				for ($i = ($pageCount - 2); $i < $pageCount; $i++) {
-				?>
-				<li class="page-item <?= $isActive ?> <?= $isDisabled ?>">
-					<a class="page-link rounded-3" href="<?= $link ?>"><?= $i ?></a>
-				</li>
-				<?php
-				}
-				skipPartTwo:
-				?>
-
-				<li class="page-item <?= $nextDisabled ?>">
-					<a class="page-link rounded-3" href="<?= $nextLink ?>">بعدی</a>
-				</li>
-			</ul>
-		</nav>
+		<?php
+			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, $name, $type, $minPrice, $maxPrice);
+			echo createPagination($pageCount, $page);
+		?>
 	</section>
 
 	<?php include __DIR__ . "/../assets/components/footer.php"; ?>
