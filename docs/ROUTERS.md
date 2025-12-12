@@ -297,6 +297,24 @@ Changes the order status to `Sent`.
 
 ---
 
+### **req(CONTROLLER_ORDER_STATUS_REMOVE)**
+
+This router removes the product.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_UPDATE)**
+
+This router updates the product status.
+
+**Parameters:**
+`order (uuid)`, `status (int)`
+
+---
+
 # **5. Transactions Controller**
 
 **Note:** All services require the `user` parameter.
