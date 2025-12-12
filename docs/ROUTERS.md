@@ -139,6 +139,9 @@ Seller (Owner), Admin
 
 Moves the product to a suspended state.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -147,6 +150,9 @@ Seller (Owner), Admin
 ### **req(CONTROLLER_PRODUCT_REMOVE)**
 
 Deletes the product.
+
+**Required Parameters:**
+`product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -157,6 +163,9 @@ Seller (Owner), Admin
 
 Restores a previously removed or suspended product.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -165,6 +174,9 @@ Seller (Owner), Admin
 ### **req(CONTROLLER_PRODUCT_ACCEPT)**
 
 Marks a product as accepted.
+
+**Required Parameters:**
+`product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -175,6 +187,9 @@ Seller (Owner), Admin
 
 Marks a product as rejected.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -184,6 +199,9 @@ Seller (Owner), Admin
 
 Increases the product stock count.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -192,6 +210,9 @@ Seller (Owner), Admin
 ### **req(CONTROLLER_PRODUCT_DEC)**
 
 Decreases the product stock count.
+
+**Required Parameters:**
+`product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
