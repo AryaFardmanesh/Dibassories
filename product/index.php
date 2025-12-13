@@ -112,7 +112,7 @@ if ($account !== null) {
 
 			<div class="col-lg-5 col-md-6 text-center">
 				<div class="border rounded-4 p-3 shadow-sm bg-white">
-					<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" alt="تصویر محصول" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain;">
+					<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->product->image[0] ?>" alt="تصویر محصول" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain;">
 				</div>
 			</div>
 
