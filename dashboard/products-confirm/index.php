@@ -18,7 +18,7 @@ if ($account === null || $account->role !== ROLE_ADMIN) {
 	Controller::redirect(null);
 }
 
-$products = ProductRepository::filter(1, PHP_INT_MAX);
+$products = ProductRepository::filter(1, PHP_INT_MAX, SORT_NEWEST, null, null, null, null, null);
 $productsCount = 0;
 $productsOkCount = 0;
 $productsBlockCount = 0;
