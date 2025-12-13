@@ -187,7 +187,7 @@ $mostOfferProducts = ProductRepository::filter(1, PAGINATION_LIMIT, SORT_MOST_OF
 	<section class="container my-5">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h4 class="fw-bold mb-0">محصولات جدید</h4>
-			<a href="#" class="text-decoration-none text-primary small">مشاهده همه</a>
+			<a href="<?= BASE_URL . "/products/" ?>" class="text-decoration-none text-primary small">مشاهده همه</a>
 		</div>
 
 		<div class="product-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
@@ -214,7 +214,7 @@ $mostOfferProducts = ProductRepository::filter(1, PAGINATION_LIMIT, SORT_MOST_OF
 	<section class="container my-5">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h4 class="fw-bold mb-0">بیشترین تخفیف ها</h4>
-			<a href="#" class="text-decoration-none text-primary small">مشاهده همه</a>
+			<a href="<?= BASE_URL . "/products/?sort=" . SORT_MOST_OFFER ?>" class="text-decoration-none text-primary small">مشاهده همه</a>
 		</div>
 
 		<div class="product-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
