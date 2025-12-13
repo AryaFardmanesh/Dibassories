@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `dibas_products` (
   `owner` varchar(32) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `name` varchar(128) NOT NULL,
-  `description` text NOT NULL,
+  `description` varchar(512) NOT NULL,
   `image` varchar(512) NOT NULL,
   `count` int(11) NOT NULL,
   `price` decimal(12,2) NOT NULL,
