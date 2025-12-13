@@ -717,7 +717,7 @@ class AccountRepository extends BaseRepository {
 
 		$count = Database::query(
 			"SELECT COUNT(*) AS 'total'
-			FROM `dibas_accounts`;"
+			FROM `dibas_accounts_confirm`;"
 		);
 
 		if (Database::hasError()) {
