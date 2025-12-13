@@ -111,7 +111,7 @@ foreach ($users as $user) {
 							<tbody>
 
 								<?php
-									$i = 0;
+									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
 									$users = AccountRepository::filterConfirmRequest($page, PAGINATION_LIMIT);
 									foreach ($users as $user) {
 										$user = AccountRepository::findById($user->user);

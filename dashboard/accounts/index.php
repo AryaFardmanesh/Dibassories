@@ -111,7 +111,7 @@ foreach ($users as $user) {
 							<tbody>
 
 								<?php
-									$i = 0;
+									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
 									$users = AccountRepository::filter($page);
 									foreach ($users as $users) {
 										$roleColor = "success";

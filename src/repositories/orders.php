@@ -305,6 +305,7 @@ class OrderRepository extends BaseRepository {
 			goto out;
 		}
 
+		$closedStatus = STATUS_CLOSED;
 		$count = Database::query(
 			"SELECT COUNT(*) AS 'total'
 			FROM `dibas_orders`;"

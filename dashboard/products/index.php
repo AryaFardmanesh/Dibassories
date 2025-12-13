@@ -110,7 +110,7 @@ foreach ($products as $product) {
 							<tbody>
 
 								<?php
-									$i = 0;
+									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
 									$products = ProductRepository::filter($page, PAGINATION_LIMIT);
 									foreach ($products as $product) {
 										if ($product->status === STATUS_SUSPENDED) continue;
