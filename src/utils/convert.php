@@ -65,7 +65,7 @@ function convertStatusToColor(int $status): string {
 		case STATUS_OK:
 			return "success";
 		case STATUS_SUSPENDED:
-			return "warnning";
+			return "warning";
 		case STATUS_REMOVED:
 			return "danger";
 		case STATUS_NOT_PAID:
