@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `dibas_accounts` (
   `fname` varchar(32) NOT NULL,
   `lname` varchar(32) NOT NULL,
   `phone` varchar(12) NOT NULL,
-  `pangirno` varchar(12) NOT NULL,
+  `pangirno` varchar(12) DEFAULT NULL,
   `address` varchar(512) NOT NULL,
   `zipcode` varchar(16) NOT NULL,
   `card_number` varchar(16) DEFAULT NULL,
@@ -88,6 +88,9 @@ CREATE TABLE IF NOT EXISTS `dibas_orders` (
   `owner` varchar(32) NOT NULL,
   `provider` varchar(32) NOT NULL,
   `product` varchar(32) NOT NULL,
+  `product_color` varchar(32) NOT NULL,
+  `product_material` varchar(32) NOT NULL,
+  `product_size` varchar(32) NOT NULL,
   `count` int(11) NOT NULL,
   `total` decimal(12,2) NOT NULL,
   `phone` varchar(12) NOT NULL,
@@ -108,8 +111,8 @@ CREATE TABLE IF NOT EXISTS `dibas_products` (
   `owner` varchar(32) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `name` varchar(128) NOT NULL,
-  `description` text NOT NULL,
-  `image` varchar(2048) NOT NULL,
+  `description` varchar(512) NOT NULL,
+  `image` varchar(512) NOT NULL,
   `count` int(11) NOT NULL,
   `price` decimal(12,2) NOT NULL,
   `offer` tinyint(4) DEFAULT NULL,
@@ -127,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `dibas_products_color` (
   `id` varchar(32) NOT NULL,
   `product` varchar(32) NOT NULL,
   `color_name` varchar(32) NOT NULL,
-  `color_hex` text NOT NULL
+  `color_hex` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

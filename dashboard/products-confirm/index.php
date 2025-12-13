@@ -1,4 +1,34 @@
-<?php include __DIR__ . "/../../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../../src/config.php";
+include __DIR__ . "/../../assets/components/pagination.php";
+include __DIR__ . "/../../src/utils/convert.php";
+include __DIR__ . "/../../src/controllers/controller.php";
+include __DIR__ . "/../../src/repositories/products.php";
+include __DIR__ . "/../../src/services/accounts.php";
+
+$account = AccountService::getAccountFromCookie();
+$page = Controller::getRequest("page");
+
+if ($page === null) {
+	$page = 1;
+}
+
+if ($account === null || $account->role !== ROLE_ADMIN) {
+	Controller::redirect(null);
+}
+
+$products = ProductRepository::filter(1, PHP_INT_MAX, SORT_NEWEST, null, null, null, null, null);
+$productsCount = 0;
+$productsOkCount = 0;
+$productsBlockCount = 0;
+foreach ($products as $product) {
+	$productsCount++;
+	if ($product->status === STATUS_OK) $productsOkCount++;
+	if ($product->status === STATUS_SUSPENDED) $productsBlockCount++;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -28,7 +58,7 @@
 				</button>
 				<h4 class="mb-0">داشبورد مدیر - تایید محصولات</h4>
 			</div>
-			<div class="text-muted small">سلام، آریا — امروز <span class="show-time"></span></div>
+			<div class="text-muted small">سلام، <?= $account->fname ?> — امروز <span class="show-time"></span></div>
 		</div>
 
 		<div class="row g-4">
@@ -36,7 +66,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات</h6>
-						<p class="h4 text-primary mb-0">1,234</p>
+						<p class="h4 text-primary mb-0"><?= number_format((float)$productsCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -44,7 +74,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات تایید شده</h6>
-						<p class="h4 text-success mb-0">356</p>
+						<p class="h4 text-success mb-0"><?= number_format((float)$productsOkCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -52,7 +82,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات معلق</h6>
-						<p class="h4 text-warning mb-0">12</p>
+						<p class="h4 text-warning mb-0"><?= number_format((float)$productsBlockCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -77,56 +107,47 @@
 							</thead>
 							<tbody>
 
+								<?php
+									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
+									foreach ($products as $product) {
+										if ($product->status !== STATUS_SUSPENDED) continue;
+										$i++;
+								?>
 								<tr>
-									<td>1</td>
+									<td><?= $i ?></td>
 									<td>
-										<a href="#" class="text-decoration-none">
-											<img src="<?= ASSETS_DIR  ?>/img/products/1.jpg" width="60" height="60" class="rounded shadow-sm" alt="Product images" />
+										<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none">
+											<img src="<?= ASSETS_DIR  ?>/img/products/<?= $product->image[0] ?>" width="60" height="60" class="rounded shadow-sm" alt="<?= $product->name ?>" />
 										</a>
 									</td>
-									<td>انگشتر طلا</td>
-									<td>14,000,000</td>
-									<td><span class="badge text-bg-warning">50%</span></td>
+									<td><?= $product->name ?></td>
+									<td><?= number_format((float)$product->price) ?></td>
+									<td><span class="badge text-bg-warning"><?= $product->offer ?>%</span></td>
 									<td>
-										<a href="#" class="btn btn-sm btn-success w-100 mb-1">تایید</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">رد</a>
+										<?php
+											$acceptLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_ACCEPT, [
+												"user" => $account->id,
+												"product" => $product->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+											$rejectLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_REJECT, [
+												"user" => $account->id,
+												"product" => $product->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+										?>
+										<a href="<?= $acceptLink ?>" class="btn btn-sm btn-success w-100 mb-1">تایید</a>
+										<a href="<?= $rejectLink ?>" class="btn btn-sm btn-danger w-100 mb-1">رد</a>
 									</td>
 								</tr>
+								<?php } ?>
 
 							</tbody>
 						</table>
 					</div>
 
 					<div class="container-fluid">
-						<nav>
-							<ul class="pagination justify-content-center flex-wrap gap-2">
-								<li class="page-item disabled">
-									<a class="page-link rounded-3" href="#" tabindex="-1" aria-disabled="true">قبلی</a>
-								</li>
-
-								<li class="page-item active" aria-current="page">
-									<a class="page-link rounded-3" href="#">1</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">2</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">3</a>
-								</li>
-
-								<li class="page-item">
-									<span class="page-link border-0 bg-transparent text-muted">...</span>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">10</a>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">بعدی</a>
-								</li>
-							</ul>
-						</nav>
+						<?= createPagination(ProductRepository::getPageCount(PAGINATION_LIMIT, STATUS_SUSPENDED), $page) ?>
 					</div>
 				</div>
 			</div>

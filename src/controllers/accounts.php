@@ -1,0 +1,159 @@
+<?php
+
+include_once __DIR__ . "/controller.php";
+include_once __DIR__ . "/../repositories/accounts.php";
+
+$req = (int)Controller::getRequest(CONTROLLER_REQ_NAME, true);
+$user = Controller::getRequest("user", true);
+
+$account = AccountRepository::findById($user);
+
+if (AccountRepository::hasError()) {
+	Controller::setError(AccountRepository::getError());
+	goto out;
+}
+
+if ($account === null) {
+	Controller::setError("کاربر یافت نشد.");
+	goto out;
+}
+
+if ($req === CONTROLLER_ACCOUNT_UPDATE) {
+	$username = Controller::getRequest("username");
+	$email = Controller::getRequest("email");
+	$fname = Controller::getRequest("fname");
+	$lname = Controller::getRequest("lname");
+	$phone = Controller::getRequest("phone");
+	$zipcode = Controller::getRequest("zipcode");
+	$address = Controller::getRequest("address");
+	$card_number = Controller::getRequest("card_number");
+	$card_terminal = Controller::getRequest("card_terminal");
+	$instagram = Controller::getRequest("instagram");
+	$telegram = Controller::getRequest("telegram");
+
+	if ($username && $username !== "") $account->username = $username;
+	if ($email && $email !== "") $account->email = $email;
+	if ($fname && $fname !== "") $account->fname = $fname;
+	if ($lname && $lname !== "") $account->lname = $lname;
+	if ($phone && $phone !== "") $account->phone = $phone;
+	if ($zipcode && $zipcode !== "") $account->zipcode = $zipcode;
+	if ($address && $address !== "") $account->address = $address;
+	if ($card_number && $card_number !== "") $account->card_number = $card_number;
+	if ($card_terminal && $card_terminal !== "") $account->card_terminal = $card_terminal;
+	if ($instagram && $instagram !== "") $account->instagram = $instagram;
+	if ($telegram && $telegram !== "") $account->telegram = $telegram;
+
+	AccountRepository::update($account);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_BLOCK) {
+	AccountRepository::updateStatus($user, STATUS_SUSPENDED);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_UNBLOCK) {
+	AccountRepository::updateStatus($user, STATUS_OK);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_REMOVE) {
+	AccountRepository::removeById($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_UPGRADE) {
+	$newRole = $account->role;
+	switch ($account->role) {
+		case ROLE_CUSTOMER:
+			$newRole = ROLE_SELLER;
+			break;
+		case ROLE_SELLER:
+			$newRole = ROLE_ADMIN;
+			break;
+	}
+
+	AccountRepository::updateRole($user, $newRole);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_DOWNGRADE) {
+	$newRole = $account->role;
+	switch ($account->role) {
+		case ROLE_ADMIN:
+			$newRole = ROLE_SELLER;
+			break;
+		case ROLE_SELLER:
+			$newRole = ROLE_CUSTOMER;
+			break;
+	}
+
+	AccountRepository::updateRole($user, $newRole);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_SELLER_REQUEST) {
+	$pangirno = Controller::getRequest("pangirno", true);
+	$card_number = Controller::getRequest("card_number", true);
+	$card_terminal = Controller::getRequest("card_terminal", true);
+	$instagram = Controller::getRequest("instagram");
+	$telegram = Controller::getRequest("telegram");
+
+	$account->pangirno = $pangirno;
+	$account->card_number = $card_number;
+	$account->card_terminal = $card_terminal;
+	$account->instagram = $instagram;
+	$account->telegram = $telegram;
+
+	AccountRepository::update($account);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+
+	AccountRepository::requestForSeller($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_SELLER_ACCEPT) {
+	AccountRepository::updateRole($user, ROLE_SELLER);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+
+	AccountRepository::removeSellerRequest($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}elseif ($req === CONTROLLER_ACCOUNT_SELLER_REJECT) {
+	AccountRepository::removeSellerRequest($user);
+
+	if (AccountRepository::hasError()) {
+		Controller::setError(AccountRepository::getError());
+		goto out;
+	}
+}
+
+out:
+Controller::redirect(Controller::getRequest("redirect"));
+
+?>

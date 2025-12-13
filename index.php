@@ -1,4 +1,12 @@
-<?php include __DIR__ . "/src/config.php"; ?>
+<?php
+
+include __DIR__ . "/src/config.php";
+include __DIR__ . "/src/repositories/products.php";
+
+$newestProducts = ProductRepository::filter(1, PAGINATION_LIMIT, SORT_NEWEST);
+$mostOfferProducts = ProductRepository::filter(1, PAGINATION_LIMIT, SORT_MOST_OFFER);
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -179,36 +187,26 @@
 	<section class="container my-5">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h4 class="fw-bold mb-0">محصولات جدید</h4>
-			<a href="#" class="text-decoration-none text-primary small">مشاهده همه</a>
+			<a href="<?= BASE_URL . "/products/" ?>" class="text-decoration-none text-primary small">مشاهده همه</a>
 		</div>
 
 		<div class="product-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
-			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
-				<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top" alt="محصول ۱">
-				<div class="card-body text-center">
-					<h6 class="card-title fw-semibold text-truncate">گردنبند نقره‌ای</h6>
-					<p class="text-muted mb-2">۳۲۰٬۰۰۰ تومان</p>
-					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
-				</div>
-			</div>
 
+			<?php
+				foreach ($newestProducts as $product) {
+			?>
 			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
-				<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top" alt="محصول ۲">
+				<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="card-img-top" alt="<?= $product->name ?>">
 				<div class="card-body text-center">
-					<h6 class="card-title fw-semibold text-truncate">انگشتر طلایی</h6>
-					<p class="text-muted mb-2">۲۸۰٬۰۰۰ تومان</p>
-					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+					<h6 class="card-title fw-semibold text-truncate"><?= $product->name ?></h6>
+					<p class="text-muted mb-2"><?= number_format((float)$product->price) ?> تومان</p>
+					<a href="<?= BASE_URL ?>/product/<?= urlencode($product->name) ?>/" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
 				</div>
 			</div>
+			<?php
+				}
+			?>
 
-			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
-				<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top" alt="محصول ۳">
-				<div class="card-body text-center">
-					<h6 class="card-title fw-semibold text-truncate">دستبند چرمی</h6>
-					<p class="text-muted mb-2">۱۹۰٬۰۰۰ تومان</p>
-					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
-				</div>
-			</div>
 		</div>
 	</section>
 
@@ -216,36 +214,27 @@
 	<section class="container my-5">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h4 class="fw-bold mb-0">بیشترین تخفیف ها</h4>
-			<a href="#" class="text-decoration-none text-primary small">مشاهده همه</a>
+			<a href="<?= BASE_URL . "/products/?sort=" . SORT_MOST_OFFER ?>" class="text-decoration-none text-primary small">مشاهده همه</a>
 		</div>
 
 		<div class="product-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
-			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
-				<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top" alt="محصول ۱">
-				<div class="card-body text-center">
-					<h6 class="card-title fw-semibold text-truncate">گردنبند نقره‌ای</h6>
-					<p class="text-muted mb-2">۳۲۰٬۰۰۰ تومان</p>
-					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
-				</div>
-			</div>
 
+			<?php
+				foreach ($mostOfferProducts as $product) {
+			?>
 			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
-				<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top" alt="محصول ۲">
+				<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="card-img-top" alt="محصول ۱">
+				<span class="badge bg-danger position-absolute" style="top: 10px; left: 10px;"><?= $product->offer ?>%</span>
 				<div class="card-body text-center">
-					<h6 class="card-title fw-semibold text-truncate">انگشتر طلایی</h6>
-					<p class="text-muted mb-2">۲۸۰٬۰۰۰ تومان</p>
-					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
+					<h6 class="card-title fw-semibold text-truncate"><?= $product->name ?></h6>
+					<p class="text-muted"><?= number_format((float)$product->price) ?> تومان</p>
+					<a href="<?= BASE_URL ?>/product/<?= urlencode($product->name) ?>/" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
 				</div>
 			</div>
+			<?php
+				}
+			?>
 
-			<div class="card product-card me-3 shadow-sm border-0" style="min-width: 220px;">
-				<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top" alt="محصول ۳">
-				<div class="card-body text-center">
-					<h6 class="card-title fw-semibold text-truncate">دستبند چرمی</h6>
-					<p class="text-muted mb-2">۱۹۰٬۰۰۰ تومان</p>
-					<a href="#" class="btn btn-outline-primary btn-sm">مشاهده محصول</a>
-				</div>
-			</div>
 		</div>
 	</section>
 
