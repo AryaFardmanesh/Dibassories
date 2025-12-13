@@ -1,7 +1,7 @@
 <?php
 
 // Global
-define('BASE_URL', '/Dibassories');
+define('BASE_URL', 'https://dibassories.ir');
 define('ASSETS_DIR', BASE_URL . '/assets');
 define('SRC_DIR', BASE_URL . '/src');
 
