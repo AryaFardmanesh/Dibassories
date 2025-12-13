@@ -124,7 +124,12 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 		goto out;
 	}
 
-	$account->wallet_balance += $transaction->amount;
+	if ($transaction->type === TRANSACTION_TYPE_EXCHANGE) {
+		$account->wallet_balance -= $transaction->amount;
+	}else {
+		$account->wallet_balance += $transaction->amount;
+	}
+
 	AccountRepository::update($account);
 
 	if (AccountRepository::hasError()) {
@@ -158,7 +163,12 @@ if ($req === CONTROLLER_TRANSACTION_CHARGE) {
 			goto out;
 		}
 
-		$account->wallet_balance -= $transaction->amount;
+		if ($transaction->type === TRANSACTION_TYPE_EXCHANGE) {
+			$account->wallet_balance += $transaction->amount;
+		}else {
+			$account->wallet_balance -= $transaction->amount;
+		}
+
 		AccountRepository::update($account);
 
 		if (AccountRepository::hasError()) {
