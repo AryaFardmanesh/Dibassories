@@ -724,10 +724,8 @@ class ProductRepository extends BaseRepository {
 	}
 
 	final public static function findColor(string $id): ProductColorModel|null {
-		$models = [];
-
 		if (!ProductRepository::dbConnect()) {
-			goto out;
+			goto failed;
 		}
 
 		$row = Database::query(
@@ -736,7 +734,11 @@ class ProductRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			ProductRepository::setError(Database::getError());
-			goto out;
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
 		}
 
 		$model = new ProductColorModel(
@@ -748,12 +750,15 @@ class ProductRepository extends BaseRepository {
 
 		if ($model->hasError()) {
 			ProductRepository::setError($model->getError());
-			goto out;
+			goto failed;
 		}
 
-		out:
+		Database::close();
+		return $model;
+
+		failed:
 			Database::close();
-			return $model;
+			return null;
 	}
 
 	final public static function findMaterials(string $id): array {
@@ -797,10 +802,8 @@ class ProductRepository extends BaseRepository {
 	}
 
 	final public static function findMaterial(string $id): ProductMaterialModel|null {
-		$models = [];
-
 		if (!ProductRepository::dbConnect()) {
-			goto out;
+			goto failed;
 		}
 
 		$row = Database::query(
@@ -809,7 +812,11 @@ class ProductRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			ProductRepository::setError(Database::getError());
-			goto out;
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
 		}
 
 		$model = new ProductMaterialModel(
@@ -820,12 +827,15 @@ class ProductRepository extends BaseRepository {
 
 		if ($model->hasError()) {
 			ProductRepository::setError($model->getError());
-			goto out;
+			goto failed;
 		}
 
-		out:
+		Database::close();
+		return $model;
+
+		failed:
 			Database::close();
-			return $model;
+			return null;
 	}
 
 	final public static function findSizes(string $id): array {
@@ -869,10 +879,8 @@ class ProductRepository extends BaseRepository {
 	}
 
 	final public static function findSize(string $id): ProductSizeModel|null {
-		$models = [];
-
 		if (!ProductRepository::dbConnect()) {
-			goto out;
+			goto failed;
 		}
 
 		$row = Database::query(
@@ -881,7 +889,11 @@ class ProductRepository extends BaseRepository {
 
 		if (Database::hasError()) {
 			ProductRepository::setError(Database::getError());
-			goto out;
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
 		}
 
 		$model = new ProductSizeModel(
@@ -892,12 +904,15 @@ class ProductRepository extends BaseRepository {
 
 		if ($model->hasError()) {
 			ProductRepository::setError($model->getError());
-			goto out;
+			goto failed;
 		}
 
-		out:
+		Database::close();
+		return $model;
+
+		failed:
 			Database::close();
-			return $model;
+			return null;
 	}
 
 	final public static function filter(
