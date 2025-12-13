@@ -208,7 +208,7 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 
 	<section class="container my-5">
 		<?php
-			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, $name, $type, $minPrice, $maxPrice);
+			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, STATUS_OK, $name, $type, $minPrice, $maxPrice);
 			echo createPagination($pageCount, $page);
 		?>
 	</section>
