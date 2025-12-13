@@ -1,4 +1,44 @@
-<?php include __DIR__ . "/../../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../../src/config.php";
+include __DIR__ . "/../../assets/components/pagination.php";
+include __DIR__ . "/../../src/utils/convert.php";
+include __DIR__ . "/../../src/controllers/controller.php";
+include __DIR__ . "/../../src/repositories/transactions.php";
+include __DIR__ . "/../../src/services/accounts.php";
+
+$account = AccountService::getAccountFromCookie();
+$page = Controller::getRequest("page");
+
+if ($page === null) {
+	$page = 1;
+}
+
+if ($account === null || $account->role !== ROLE_ADMIN) {
+	Controller::redirect(null);
+}
+
+$transactions = TransactionRepository::findAll(1, PHP_INT_MAX);
+$transactionsCount = 0;
+$transactionsTotalAmount = 0;
+$transactionTotalAmountToday = 0;
+foreach ($transactions as $transaction) {
+	$transactionsCount++;
+	if ($transaction->type === TRANSACTION_TYPE_EXCHANGE) {
+		$transactionsTotalAmount -= $transaction->amount;
+	}else {
+		$transactionsTotalAmount += $transaction->amount;
+	}
+	if ($transaction->created_at->format("Y/m/d") === date("Y/m/d")) {
+		if ($transaction->type === TRANSACTION_TYPE_EXCHANGE) {
+			$transactionTotalAmountToday -= $transaction->amount;
+		}else {
+			$transactionTotalAmountToday += $transaction->amount;
+		} 
+	}
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -28,7 +68,7 @@
 				</button>
 				<h4 class="mb-0">داشبورد مدیر - تراکنش ها</h4>
 			</div>
-			<div class="text-muted small">سلام، آریا — امروز <span class="show-time"></span></div>
+			<div class="text-muted small">سلام، <?= $account->fname ?> — امروز <span class="show-time"></span></div>
 		</div>
 
 		<div class="row g-4">
@@ -36,7 +76,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد تراکنش ها</h6>
-						<p class="h4 text-primary mb-0">1,234</p>
+						<p class="h4 text-primary mb-0"><?= number_format((float)$transactionsCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -44,7 +84,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">جمع تراکنش ها</h6>
-						<p class="h4 text-success mb-0">115,780,000</p>
+						<p class="h4 text-<?= $transactionsTotalAmount >= 0 ? "success" : "danger" ?> mb-0"><?= number_format((float)$transactionsTotalAmount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -52,7 +92,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">جمع تراکنش های امروز</h6>
-						<p class="h4 text-warning mb-0">780,000</p>
+						<p class="h4 text-warning mb-0"><?= $transactionTotalAmountToday ?></p>
 					</div>
 				</div>
 			</div>
@@ -80,57 +120,72 @@
 							</thead>
 							<tbody>
 
+								<?php
+									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
+									foreach ($transactions as $transaction) {
+										$i++;
+										$owner = AccountRepository::findById($transaction->wallet);
+								?>
 								<tr>
-									<td>1</td>
-									<td>آریا فردمنش</td>
-									<td>5022-2913-6789-1748</td>
-									<td>IR-3222291367891748</td>
-									<td>14,000,000</td>
-									<td><span class="badge text-bg-success">خرید</span></td>
-									<td><span class="badge text-bg-success">پرداخت شده</span></td>
-									<td>1404/8/19</td>
+									<td><?= $i ?></td>
+									<td><?= $owner->fname . " " . $owner->lname ?></td>
+									<td><?= join("-", str_split($owner->card_number, 4)) ?></td>
+									<td>IR-<?= $owner->card_terminal ?></td>
+									<td><?= number_format((float)$transaction->amount) ?></td>
+									<td><span class="badge text-bg-success"><?= convertTransactionTypeToString($transaction->type) ?></span></td>
+									<td><span class="badge text-bg-<?= convertStatusToColor($transaction->status) ?>"><?= convertStatusToString($transaction->status) ?></span></td>
+									<td><?= $transaction->created_at->format("Y/m/d") ?></td>
 									<td>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">حذف</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">پرداخت شده</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">باز</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">معلق</a>
+										<?php
+											$payBtnText = "پرداخت شده";
+											$payBtnReqCode = CONTROLLER_TRANSACTION_STATUS_PAID;
+											$openBtnDisabled = "";
+											$blockBtnDisabled = "";
+
+											if ($transaction->status === STATUS_PAID) {
+												$payBtnText = "پرداخت نشده";
+												$payBtnReqCode = CONTROLLER_TRANSACTION_STATUS_NOT_PAID;
+											}elseif ($transaction->status === STATUS_OPENED) {
+												$openBtnDisabled = "disabled";
+											}elseif ($transaction->status === STATUS_SUSPENDED) {
+												$blockBtnDisabled = "disabled";
+											}
+
+											$removeLink = Controller::makeControllerUrl("transactions", CONTROLLER_TRANSACTION_REMOVE, [
+												"user" => $account->id,
+												"transaction" => $transaction->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+											$payLink = Controller::makeControllerUrl("transactions", $payBtnReqCode, [
+												"user" => $account->id,
+												"transaction" => $transaction->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+											$openLink = Controller::makeControllerUrl("transactions", CONTROLLER_TRANSACTION_OPEN, [
+												"user" => $account->id,
+												"transaction" => $transaction->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+											$blockLink = Controller::makeControllerUrl("transactions", CONTROLLER_TRANSACTION_STATUS_SUSPENDED, [
+												"user" => $account->id,
+												"transaction" => $transaction->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+										?>
+										<a href="<?= $removeLink ?>" class="btn btn-sm btn-danger w-100 mb-1">حذف</a>
+										<a href="<?= $payLink ?>" class="btn btn-sm btn-danger w-100 mb-1"><?= $payBtnText ?></a>
+										<a href="<?= $openLink ?>" class="btn btn-sm btn-danger w-100 mb-1 <?= $openBtnDisabled ?>">باز</a>
+										<a href="<?= $blockLink ?>" class="btn btn-sm btn-danger w-100 mb-1 <?= $blockBtnDisabled ?>">معلق</a>
 									</td>
 								</tr>
+								<?php } ?>
 
 							</tbody>
 						</table>
 					</div>
 
 					<div class="container-fluid">
-						<nav>
-							<ul class="pagination justify-content-center flex-wrap gap-2">
-								<li class="page-item disabled">
-									<a class="page-link rounded-3" href="#" tabindex="-1" aria-disabled="true">قبلی</a>
-								</li>
-
-								<li class="page-item active" aria-current="page">
-									<a class="page-link rounded-3" href="#">1</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">2</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">3</a>
-								</li>
-
-								<li class="page-item">
-									<span class="page-link border-0 bg-transparent text-muted">...</span>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">10</a>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">بعدی</a>
-								</li>
-							</ul>
-						</nav>
+						<?= createPagination(TransactionRepository::getPageCount(), $page) ?>
 					</div>
 				</div>
 			</div>

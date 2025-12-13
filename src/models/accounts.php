@@ -56,32 +56,32 @@ class AccountModel extends BaseModel {
 			$this->setError("شماره تلفن همراه باید بین 11 تا 12 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(16, 16, $this->pangirno, true)) {
-			$this->setError("کد ملی باید 16 رقمی باشد.");
+		if (!ModelTest::inRange(10, 10, $this->pangirno, true)) {
+			$this->setError("کد ملی باید 10 رقمی باشد.");
 			return false;
 		}
 		if (!ModelTest::inRange(12, 512, $this->address)) {
 			$this->setError("آدرس باید بین 12 تا 512 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(16, 16, $this->zipcode)) {
-			$this->setError("کد پستی باید 16 رقم باشد.");
+		if (!ModelTest::inRange(10, 10, $this->zipcode)) {
+			$this->setError("کد پستی باید 10 رقم باشد.");
 			return false;
 		}
 		if (!ModelTest::inRange(16, 16, $this->card_number, true)) {
 			$this->setError("شماره کارت باید 16 رقم باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(32, 32, $this->card_terminal, true)) {
-			$this->setError("شماره شبا باید 32 رقم باشد.");
+		if (!ModelTest::inRange(24, 24, $this->card_terminal, true)) {
+			$this->setError("شماره شبا باید 24 رقم باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(8, 128, $this->instagram, true)) {
-			$this->setError("لینک استاگرام باید بین 8 تا 128 کاراکتر باشد.");
+		if (!ModelTest::inRange(4, 128, $this->instagram, true)) {
+			$this->setError("لینک استاگرام باید بین 4 تا 128 کاراکتر باشد.");
 			return false;
 		}
-		if (!ModelTest::inRange(8, 128, $this->telegram, true)) {
-			$this->setError("لینک تلگرام باید بین 8 تا 128 کاراکتر باشد.");
+		if (!ModelTest::inRange(4, 128, $this->telegram, true)) {
+			$this->setError("لینک تلگرام باید بین 4 تا 128 کاراکتر باشد.");
 			return false;
 		}
 

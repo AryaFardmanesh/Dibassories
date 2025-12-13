@@ -20,9 +20,17 @@ class Controller {
 		Controller::$error = $err;
 	}
 
+	final static public function fetchError(): string|null {
+		if (isset($_REQUEST["error"])) {
+			return $_REQUEST["error"];
+		}
+
+		return null;
+	}
+
 	final public static function getRequest(string $name, bool $mandatory = false): string|null {
-		if (isset($_GET[$name])) {
-			return testInput($_GET[$name]);
+		if (isset($_REQUEST[$name])) {
+			return testInput($_REQUEST[$name]);
 		}
 
 		if ($mandatory) {
@@ -38,12 +46,16 @@ class Controller {
 			$path = CONTROLLER_REDIRECT_URL;
 		}
 
+		$basename = basename($path);
+		$path = str_replace($basename, urlencode($basename), $path);
+
 		$error = Controller::getError();
 		if ($error !== null) {
 			if (!str_contains($path, "?")) {
 				$path .= "?";
 			}
 
+			$error = urlencode($error);
 			$path .= "error=$error";
 		}
 
@@ -69,6 +81,46 @@ class Controller {
 		}
 
 		return $result;
+	}
+
+	final public static function onSubmit(string $method, callable $callback, array $paramsOptional = [], array $paramsMandatory = []): void {
+		if ($_SERVER["REQUEST_METHOD"] === $method) {
+			$params = [];
+
+			foreach ($paramsOptional as $name) {
+				$value = null;
+
+				if (isset($_REQUEST[$name])) {
+					$value = testInput($_REQUEST[$name]);
+				}
+
+				$params[$name] = $value;
+			}
+
+			foreach ($paramsMandatory as $name) {
+				$value = null;
+
+				if (!isset($_REQUEST[$name])) {
+					Controller::setError("نمیتوان فیلد $name خالی باشد.");
+					Controller::redirect(htmlspecialchars($_SERVER["PHP_SELF"]));
+				}
+
+				$value = testInput($_REQUEST[$name]);
+				$params[$name] = $value;
+			}
+
+			$callback($params);
+		}
+	}
+
+	final public static function makeControllerUrl(string $controller, int $req, array $params): string {
+		$url = SRC_DIR . "/controllers/$controller.php?" . CONTROLLER_REQ_NAME ."=" . $req;
+
+		foreach ($params as $key => $value) {
+			$url .= "&$key=$value";
+		}
+
+		return $url;
 	}
 }
 

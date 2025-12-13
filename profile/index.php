@@ -1,4 +1,22 @@
-<?php include __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/repositories/carts.php";
+include __DIR__ . "/../src/repositories/products.php";
+include __DIR__ . "/../src/repositories/orders.php";
+include __DIR__ . "/../src/repositories/transactions.php";
+include __DIR__ . "/../src/services/accounts.php";
+include __DIR__ . "/../src/controllers/controller.php";
+include __DIR__ . "/../src/utils/convert.php";
+
+$error = Controller::getRequest("error");
+$account = AccountService::getAccountFromCookie();
+
+if ($account === null) {
+	Controller::redirect(null);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -83,6 +101,8 @@
 <body>
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
 
+	<?php if ($error !== null) echo "<div class='alert alert-danger mx-3 mt-3'>$error</div>"; ?>
+
 	<section class="container-fluid my-5">
 		<div class="row justify-content-center">
 			<div class="col-12">
@@ -91,7 +111,11 @@
 						<h4 class="mb-0">پروفایل کاربری</h4>
 					</div>
 					<div class="card-body p-4">
-						<form action="#" method="POST" class="needs-validation" novalidate>
+						<form action="<?= BASE_URL . "/src/controllers/accounts.php" ?>" method="GET" class="needs-validation" novalidate>
+							<input type="hidden" name="req" value="<?= CONTROLLER_ACCOUNT_UPDATE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= $_SERVER["PHP_SELF"] ?>" />
+
 							<div class="row g-3">
 								<div class="col-md-6">
 									<label for="username" class="form-label fw-bold">نام کاربری</label>
@@ -100,7 +124,7 @@
 										id="username"
 										name="username"
 										class="form-control"
-										value="arya_fardmanesh"
+										value="<?= $account->username ?>"
 										autocomplete="off"
 										readonly
 									>
@@ -112,7 +136,7 @@
 										id="email"
 										name="email"
 										class="form-control"
-										value="example@email.com"
+										value="<?= $account->email ?>"
 										autocomplete="off"
 										required
 									>
@@ -124,7 +148,7 @@
 										id="fname"
 										name="fname"
 										class="form-control"
-										value="آریا"
+										value="<?= $account->fname ?>"
 										autocomplete="off"
 										min="4"
 										max="32"
@@ -138,7 +162,7 @@
 										id="lname"
 										name="lname"
 										class="form-control"
-										value="فردمنش"
+										value="<?= $account->lname ?>"
 										autocomplete="off"
 										min="4"
 										max="32"
@@ -152,7 +176,7 @@
 										id="phone"
 										name="phone"
 										class="form-control"
-										value="09121234567"
+										value="<?= $account->phone ?>"
 										autocomplete="off"
 										max="14"
 										required
@@ -165,12 +189,44 @@
 										id="zipcode"
 										name="zipcode"
 										class="form-control"
-										value="1234567890"
+										value="<?= $account->zipcode ?>"
 										autocomplete="off"
 										max="10"
 										required
 									>
 								</div>
+								<?php if ($account->card_number !== null) { ?>
+								<div class="col-md-6">
+									<label for="card_number" class="form-label fw-bold">شماره کارت</label>
+									<input
+										type="text"
+										id="card_number"
+										name="card_number"
+										class="form-control"
+										value="<?= $account->card_number ?>"
+										autocomplete="off"
+										min="16"
+										max="16"
+										required
+									>
+								</div>
+								<?php } ?>
+								<?php if ($account->card_terminal !== null) { ?>
+								<div class="col-md-6">
+									<label for="card_terminal" class="form-label fw-bold">شماره کارت</label>
+									<input
+										type="text"
+										id="card_terminal"
+										name="card_terminal"
+										class="form-control"
+										value="<?= $account->card_terminal ?>"
+										autocomplete="off"
+										min="32"
+										max="32"
+										required
+									>
+								</div>
+								<?php } ?>
 								<div class="col-12">
 									<label for="address" class="form-label fw-bold">آدرس</label>
 									<textarea
@@ -181,7 +237,7 @@
 										max="10"
 										rows="3"
 										required
-									>تهران، خیابان ولیعصر، کوچه مثال، پلاک ۱۲</textarea>
+									><?= $account->address ?></textarea>
 								</div>
 							</div>
 							<div class="text-center mt-4">
@@ -200,89 +256,54 @@
 
 			<div class="d-flex gap-2">
 				<button id="clearCartBtn" class="btn btn-outline-danger">حذف سبد خرید</button>
-				<a href="checkout.php" id="checkoutBtn" class="btn btn-primary">ثبت سفارش</a>
+				<a href="<?= BASE_URL . "/checkout/" ?>" id="checkoutBtn" class="btn btn-primary">ثبت سفارش</a>
 			</div>
 		</div>
 
 		<div class="cart-slider d-flex flex-row flex-nowrap overflow-auto pb-3">
 
-		<a href="/product/gerdanband-tala" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
+		<?php
+			$cart = ShoppingCartRepository::find($account->id);
+			foreach ($cart as $cartInfo) {
+				$cartProduct = ProductRepository::findById($cartInfo->product);
+				if ($cartProduct === null) {
+					continue;
+				}
+		?>
+			<a href="<?= BASE_URL . "/product/" . urlencode($cartProduct->name) ?>" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
 				<div class="position-relative">
-					<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top" alt="گردنبند طلا">
-					<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 2</span>
+					<img src="<?= ASSETS_DIR ?>/img/products/<?= $cartProduct->image[0] ?>" class="card-img-top" alt="<?= $cartProduct->name ?>">
 				</div>
 				<div class="card-body">
-					<h6 class="card-title fw-bold mb-1 text-truncate">گردنبند طلا زنانه مدل A</h6>
-					<div class="d-flex justify-content-center align-items-center my-2">
-						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
-						<span class="form-control form-control-sm mx-2 text-center">1</span>
-						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
-					</div>
+					<h6 class="card-title fw-bold mb-1 text-truncate"><?= $cartProduct->name ?></h6>
+					<span> تعداد: <?= $cartInfo->count ?></span>
 					<div class="d-flex justify-content-between align-items-center">
-						<div>
-							<span class="text-muted text-decoration-line-through small">۴۵۰,۰۰۰</span>
-							<span class="text-danger fw-bold ms-1">۳۵۰,۰۰۰</span>
-						</div>
-						<div>
-							<span class="badge bg-danger">٪۲۲</span>
-							<span class="badge bg-light text-dark border ms-1">تومان</span>
-						</div>
+						<?php if ($cartProduct->offer === 0) { ?>
+						<?php }else { ?>
+							<div>
+								<span class="text-muted text-decoration-line-through small"><?= number_format((float)$cartProduct->price)  ?></span>
+								<span class="text-danger fw-bold ms-1"><?= number_format((float)$cartProduct->price - ($cartProduct->price * $cartProduct->offer / 100)) ?></span>
+							</div>
+							<div>
+								<span class="badge bg-danger">٪<?= $cartProduct->offer ?></span>
+								<span class="badge bg-light text-dark border ms-1">تومان</span>
+							</div>
+						<?php } ?>
 					</div>
 				</div>
 			</a>
-
-			<a href="/product/angoshtr-esteel" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
-				<div class="position-relative">
-					<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top" alt="انگشتر استیل">
-					<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 1</span>
-				</div>
-				<div class="card-body">
-					<h6 class="card-title fw-bold mb-1 text-truncate">انگشتر استیل مردانه</h6>
-					<div class="d-flex justify-content-center align-items-center my-2">
-						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
-						<span class="form-control form-control-sm mx-2 text-center">1</span>
-						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
-					</div>
-					<div class="d-flex justify-content-between align-items-center">
-						<div>
-							<span class="fw-bold text-dark">۱۸۰,۰۰۰</span>
-						</div>
-						<div>
-							<span class="badge bg-light text-dark border ms-1">تومان</span>
-						</div>
-					</div>
-				</div>
-			</a>
-
-			<a href="/product/gooshvare-kelasik" class="card cart-item me-3 text-decoration-none text-dark" style="min-width: 260px;">
-				<div class="position-relative">
-					<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top" alt="گوشواره">
-					<span class="badge bg-dark text-white position-absolute" style="top: 10px; left: 10px;">تعداد: 1</span>
-				</div>
-				<div class="card-body">
-					<h6 class="card-title fw-bold mb-1 text-truncate">گوشواره کلاسیک</h6>
-					<div class="d-flex justify-content-center align-items-center my-2">
-						<button class="btn btn-sm btn-outline-secondary minus-btn">-</button>
-						<span class="form-control form-control-sm mx-2 text-center">1</span>
-						<button class="btn btn-sm btn-outline-secondary plus-btn">+</button>
-					</div>
-					<div class="d-flex justify-content-between align-items-center">
-						<div>
-							<span class="text-muted text-decoration-line-through small">۲۷۰,۰۰۰</span>
-							<span class="text-danger fw-bold ms-1">۲۲۰,۰۰۰</span>
-						</div>
-						<div>
-							<span class="badge bg-danger">٪۱۸</span>
-							<span class="badge bg-light text-dark border ms-1">تومان</span>
-						</div>
-					</div>
-				</div>
-			</a>
+		<?php } ?>
 
 		</div>
 	</section>
 
 	<div class="modal fade" id="confirmClearModal" tabindex="-1" aria-labelledby="confirmClearModalLabel" aria-hidden="true">
+		<?php
+			$emptyCartLink = Controller::makeControllerUrl("carts", CONTROLLER_CART_EMPTY_CART, [
+				"user" => $account->id,
+				"redirect" => pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME)
+			]);
+		?>
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -294,7 +315,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-					<a href="#" id="confirmClearBtn" class="btn btn-danger">بله، حذف کن</a>
+					<a href="<?= $emptyCartLink ?>" id="confirmClearBtn" class="btn btn-danger">بله، حذف کن</a>
 				</div>
 			</div>
 		</div>
@@ -316,7 +337,7 @@
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body text-center py-4">
 						<h4 class="fw-bold text-primary mb-2">موجودی کیف پول شما</h4>
-						<h2 class="fw-bolder text-success mb-3">۲,۴۵۰,۰۰۰ <small class="text-muted fs-5">تومان</small></h2>
+						<h2 class="fw-bolder text-success mb-3"><?= number_format((float)$account->wallet_balance) ?> <small class="text-muted fs-5">تومان</small></h2>
 						<p class="text-muted">از موجودی خود می‌توانید برای خرید یا برداشت وجه استفاده کنید.</p>
 					</div>
 				</div>
@@ -329,7 +350,11 @@
 							(در نسخهٔ آزمایشی، از کد تست برای شارژ بدون پرداخت واقعی می‌توان استفاده کرد.)
 						</p>
 
-						<form id="chargeForm" class="row g-3 align-items-end needs-validation" novalidate>
+						<form action="<?= BASE_URL . "/src/controllers/transactions.php" ?>" method="GET" id="chargeForm" class="row g-3 align-items-end needs-validation" novalidate>
+							<input type="hidden" name="req" value="<?= CONTROLLER_TRANSACTION_CHARGE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME) ?>" />
+
 							<div class="col-12 col-md-6 mb-auto">
 								<label for="chargeAmount" class="form-label fw-semibold">مبلغ (تومان)</label>
 								<input
@@ -349,7 +374,7 @@
 								<input
 									type="text"
 									id="testCode"
-									name="testCode"
+									name="tcode"
 									class="form-control"
 									placeholder="اگر کد تست دارید وارد کنید"
 									autocomplete="off"
@@ -371,18 +396,22 @@
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body">
 						<h5 class="fw-bold mb-3 text-primary">برداشت وجه از کیف پول</h5>
-						<form class="needs-validation" novalidate>
+						<form action="<?= BASE_URL . "/src/controllers/transactions.php" ?>" method="GET" class="needs-validation" novalidate>
+							<input type="hidden" name="req" value="<?= CONTROLLER_TRANSACTION_EXCHANGE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= pathinfo($_SERVER["PHP_SELF"], PATHINFO_DIRNAME) ?>" />
+
 							<div class="mb-3">
 								<label for="withdrawAmount" class="form-label">مبلغ مورد نظر (تومان)</label>
 								<input
 									type="number"
 									class="form-control rounded-3"
 									id="withdrawAmount"
-									name="withdrawAmount"
+									name="amount"
 									placeholder="مثلاً ۵۰۰,۰۰۰"
 									autocomplete="off"
 									min="0"
-									max="2450000"
+									max="<?= $account->wallet_balance ?>"
 									required
 								>
 							</div>
@@ -408,17 +437,24 @@
 									</tr>
 								</thead>
 								<tbody>
+									<?php
+										$orders = OrderRepository::findForOwner($account->id);
+										foreach ($orders as $order) {
+											$product = ProductRepository::findById($order->product);
+											if ($product === null) continue;
+									?>
 									<tr>
 										<td>
-											<a href="#" class="text-decoration-none">
-												<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="rounded shadow-sm" width="40" height="40" alt="Product image" />
+											<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none">
+												<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="rounded shadow-sm" width="40" height="40" alt="<?= $product->name ?>" />
 											</a>
 										</td>
-										<td>1</td>
-										<td>۴۵۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۵</td>
-										<td><span class="badge bg-success">در حال ارسال</span></td>
+										<td><?= $order->count ?></td>
+										<td><?= number_format((float)$order->total) ?></td>
+										<td><?= $order->created_at->format("Y/m/d") ?></td>
+										<td><span class="badge bg-<?= convertStatusToColor($order->status) ?>"><?= convertStatusToString($order->status) ?></span></td>
 									</tr>
+									<?php } ?>
 								</tbody>
 							</table>
 						</div>
@@ -439,24 +475,17 @@
 									</tr>
 								</thead>
 								<tbody>
+									<?php
+										$transactions = TransactionRepository::findOwner($account->id);
+										foreach ($transactions as $transaction) {
+									?>
 									<tr>
-										<td>خرید محصول</td>
-										<td>۴۵۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۵</td>
-										<td><span class="badge bg-success">پرداخت شده</span></td>
+										<td><?= convertTransactionTypeToString($transaction->type) ?></td>
+										<td><?= number_format((float)$transaction->amount) ?></td>
+										<td><?= $transaction->created_at->format("Y/m/d") ?></td>
+										<td><span class="badge bg-<?= convertStatusToColor($transaction->status) ?>"><?= convertStatusToString($transaction->status) ?></span></td>
 									</tr>
-									<tr>
-										<td>برداشت از کیف پول</td>
-										<td>۳۰۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۳</td>
-										<td><span class="badge bg-warning text-dark">در حال تایید</span></td>
-									</tr>
-									<tr>
-										<td>شارژ حساب</td>
-										<td>۱,۰۰۰,۰۰۰</td>
-										<td>۱۴۰۳/۰۸/۱۰</td>
-										<td><span class="badge bg-danger">پرداخت نشده</span></td>
-									</tr>
+									<?php } ?>
 								</tbody>
 							</table>
 						</div>
@@ -467,6 +496,7 @@
 		</div>
 	</section>
 
+	<?php if ($account->role === ROLE_CUSTOMER) { ?>
 	<section class="container-fluid my-4">
 		<div class="card shadow-sm border-0 rounded-4">
 			<div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -477,7 +507,10 @@
 			</div>
 			<div class="collapse" id="sellerRequestCollapse">
 				<div class="card-body">
-					<form id="sellerRequestForm" action="request_seller.php" method="POST" class="row g-3 needs-validation" novalidate>
+					<form action="<?= BASE_URL . "/src/controllers/accounts.php" ?>" method="GET" id="sellerRequestForm" class="row g-3 needs-validation" novalidate>
+						<input type="hidden" name="req" value="<?= CONTROLLER_ACCOUNT_SELLER_REQUEST ?>" />
+						<input type="hidden" name="user" value="<?= $account->id ?>" />
+						<input type="hidden" name="redirect" value="<?= dirname($_SERVER["PHP_SELF"]) ?>" />
 
 						<div class="col-12">
 							<p class="small text-muted mb-0">
@@ -492,7 +525,7 @@
 							<input
 								type="text"
 								id="national_id"
-								name="national_id"
+								name="pangirno"
 								class="form-control"
 								placeholder="مثال: 0012345678"
 								pattern="\d{10}"
@@ -522,16 +555,16 @@
 							<input
 								type="text"
 								id="shaba"
-								name="shaba"
+								name="card_terminal"
 								class="form-control"
-								placeholder="مثال: IR.........................."
-								pattern="IR[0-9A-Za-z]{24}"
+								placeholder="مثال: .........................."
+								pattern="[0-9]{24}"
 								required
 							>
 							<div class="form-text">
-								شماره شبا بانکی را با پیش‌شماره <code>IR</code> وارد کنید. دقت کنید نام صاحب حساب باید با <strong>نام و نام خانوادگی ثبت‌شده در پروفایل</strong> مطابقت داشته باشد.
+								دقت کنید نام صاحب حساب باید با <strong>نام و نام خانوادگی ثبت‌شده در پروفایل</strong> مطابقت داشته باشد.
 							</div>
-							<div class="invalid-feedback">لطفاً یک شماره شبا معتبر وارد کنید (با IR شروع شود).</div>
+							<div class="invalid-feedback">لطفاً یک شماره شبا معتبر وارد کنید.</div>
 						</div>
 
 						<div class="col-12 col-md-6">
@@ -576,6 +609,7 @@
 			</div>
 		</div>
 	</section>
+	<?php } ?>
 
 	<!-- Validating forms -->
 	<script>

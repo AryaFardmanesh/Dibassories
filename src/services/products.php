@@ -5,8 +5,17 @@ include_once __DIR__ . "/../repositories/products.php";
 include_once __DIR__ . "/../config.php";
 
 class ProductService extends BaseService {
-	final public static function find(string $id): ProductDetailModel|null {
-		$productModel = ProductRepository::findById($id);
+	private static function find(string $field, string $id): ProductDetailModel|null {
+		$productModel = null;
+
+		if ($field === "id") {
+			$productModel = ProductRepository::findById($id);
+		}elseif ($field === "slug") {
+			$productModel = ProductRepository::findBySlug($id);
+		}else {
+			ProductService::setError("فیلد $field معتبر نیست.");
+			return null;
+		}
 
 		if (ProductRepository::hasError()) {
 			ProductService::setError(ProductRepository::getError());
@@ -18,9 +27,9 @@ class ProductService extends BaseService {
 			return null;
 		}
 
-		$colorModel = ProductRepository::findColors($id);
-		$materialModel = ProductRepository::findMaterials($id);
-		$sizeModel = ProductRepository::findSizes($id);
+		$colorModel = ProductRepository::findColors($productModel->id);
+		$materialModel = ProductRepository::findMaterials($productModel->id);
+		$sizeModel = ProductRepository::findSizes($productModel->id);
 
 		if (ProductRepository::hasError()) {
 			ProductService::setError(ProductRepository::getError());
@@ -40,6 +49,14 @@ class ProductService extends BaseService {
 		);
 
 		return $model;
+	}
+
+	final public static function findById(string $id): ProductDetailModel|null {
+		return ProductService::find("id", $id);
+	}
+
+	final public static function findBySlug(string $slug): ProductDetailModel|null {
+		return ProductService::find("slug", $slug);
 	}
 
 	final public static function findAll(

@@ -60,10 +60,35 @@ function convertStatusToString(int $status): string {
 	}
 }
 
+function convertStatusToColor(int $status): string {
+	switch ($status) {
+		case STATUS_OK:
+			return "success";
+		case STATUS_SUSPENDED:
+			return "warning";
+		case STATUS_REMOVED:
+			return "danger";
+		case STATUS_NOT_PAID:
+			return "danger";
+		case STATUS_PAID:
+			return "success";
+		case STATUS_OPENED:
+			return "success";
+		case STATUS_CONFIRM:
+			return "success";
+		case STATUS_SEND:
+			return "success";
+		case STATUS_CLOSED:
+			return "danger";
+		default:
+			return "info";
+	}
+}
+
 function convertProductTypesToString(int $types): string {
 	switch ($types) {
 		case PRODUCT_TYPE_RING:
-			return "حلقه";
+			return "انگشتر";
 		case PRODUCT_TYPE_NECKLACE:
 			return "گردنبند";
 		case PRODUCT_TYPE_EARRING:

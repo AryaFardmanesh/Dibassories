@@ -3,13 +3,14 @@
 include_once __DIR__ . "/../config.php";
 
 function uploadFile(string $name, string $address, bool $removeOldFile = false, string $oldPath = ""): string|int {
-	if (!isset($_FILES[$name])) {
+	if (!isset($_FILES[$name]) || $_FILES[$name]["size"] == 0) {
 		return FILE_STATUS_NOT_FOUND;
 	}
 
 	$file = $_FILES[$name];
 	$fileSuffix = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
 	$newFilename = time() . rand(1000, 9999) . "." . $fileSuffix;
+	$newFilename = $address . "/" . $newFilename;
 
 	if (file_exists($newFilename)) {
 		return FILE_STATUS_ALREADY_EXISTS;
@@ -23,15 +24,15 @@ function uploadFile(string $name, string $address, bool $removeOldFile = false, 
 		return FILE_STATUS_INVALID_SUFFIX;
 	}
 
-	if (!move_uploaded_file($file["tmp_name"], $address . $newFilename)) {
+	if (!move_uploaded_file($file["tmp_name"], $newFilename)) {
 		return FILE_STATUS_FAILED;
 	}
 
-	if ($removeOldFile && file_exists($oldPath)) {
-		unlink($oldPath);
+	if ($removeOldFile && file_exists($address . "/" . $oldPath)) {
+		unlink($address . "/" . $oldPath);
 	}
 
-	return $newFilename;
+	return basename($newFilename);
 }
 
 function convertUploadErrorToString(int $error): string {

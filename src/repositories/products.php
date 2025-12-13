@@ -165,6 +165,160 @@ class ProductRepository extends BaseRepository {
 			return null;
 	}
 
+	final public static function addColors(string $product, array $colors): bool {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		foreach ($colors as $color) {
+			$name = $color[0];
+			$hex = $color[1];
+
+			$model = new ProductColorModel(
+				uuid(),
+				$product,
+				$name,
+				$hex
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto failed;
+			}
+
+			// Extract model data
+			$id = $model->id;
+			$product = $model->product;
+			$name = $model->name;
+			$hex = $model->hex;
+
+			// Insert new record
+			Database::query(
+				"INSERT INTO `dibas_products_color` (
+					`id`,
+					`product`,
+					`color_name`,
+					`color_hex`
+				) VALUES (
+					'$id',
+					'$product',
+					'$name',
+					'$hex'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
+	final public static function addMaterials(string $product, array $materials): bool {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		foreach ($materials as $material) {
+			$model = new ProductMaterialModel(
+				uuid(),
+				$product,
+				$material
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto failed;
+			}
+
+			// Extract model data
+			$id = $model->id;
+			$product = $model->product;
+			$material = $model->material;
+
+			// Insert new record
+			Database::query(
+				"INSERT INTO `dibas_products_material` (
+					`id`,
+					`product`,
+					`material`
+				) VALUES (
+					'$id',
+					'$product',
+					'$material'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
+	final public static function addSizes(string $product, array $sizes): bool {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		foreach ($sizes as $size) {
+			$model = new ProductSizeModel(
+				uuid(),
+				$product,
+				$size
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto failed;
+			}
+
+			// Extract model data
+			$id = $model->id;
+			$product = $model->product;
+			$size = $model->size;
+
+			// Insert new record
+			Database::query(
+				"INSERT INTO `dibas_products_size` (
+					`id`,
+					`product`,
+					`size`
+				) VALUES (
+					'$id',
+					'$product',
+					'$size'
+				);"
+			);
+
+			if (Database::hasError()) {
+				ProductRepository::setError(Database::getError());
+				goto failed;
+			}
+		}
+
+		Database::close();
+		return true;
+
+		failed:
+			Database::close();
+			return false;
+	}
+
 	final public static function remove(string $id): bool {
 		if (!ProductRepository::dbConnect()) {
 			goto failed;
@@ -427,6 +581,54 @@ class ProductRepository extends BaseRepository {
 			return false;
 	}
 
+	final public static function findForOwner(string $id): array {
+		$models = [];
+
+		if (!ProductRepository::dbConnect()) {
+			goto out;
+		}
+
+		$rows = Database::query(
+			"SELECT * FROM `dibas_products` WHERE `dibas_products`.`owner` = '$id';"
+		)->fetchAll();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto out;
+		}
+
+		if ($rows === FALSE) {
+			goto out;
+		}
+
+		foreach ($rows as $row) {
+			$model = new ProductModel(
+				$row["id"],
+				$row["owner"],
+				(int)$row["type"],
+				$row["name"],
+				$row["description"],
+				str_getcsv($row["image"], "|"),
+				(int)$row["count"],
+				(int)$row["price"],
+				(int)$row["offer"],
+				(int)$row["status"],
+				new DateTimeImmutable($row["created_at"])
+			);
+
+			if ($model->hasError()) {
+				ProductRepository::setError($model->getError());
+				goto out;
+			}
+
+			array_push($models, $model);
+		}
+
+		out:
+			Database::close();
+			return $models;
+	}
+
 	private static function find(string $field, string $value): ?ProductModel {
 		if (!ProductRepository::dbConnect()) {
 			goto failed;
@@ -521,6 +723,44 @@ class ProductRepository extends BaseRepository {
 			return $models;
 	}
 
+	final public static function findColor(string $id): ProductColorModel|null {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products_color` WHERE `dibas_products_color`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new ProductColorModel(
+			$row["id"],
+			$row["product"],
+			$row["color_name"],
+			$row["color_hex"]
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
+	}
+
 	final public static function findMaterials(string $id): array {
 		$models = [];
 
@@ -559,6 +799,43 @@ class ProductRepository extends BaseRepository {
 		out:
 			Database::close();
 			return $models;
+	}
+
+	final public static function findMaterial(string $id): ProductMaterialModel|null {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products_material` WHERE `dibas_products_material`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new ProductMaterialModel(
+			$row["id"],
+			$row["product"],
+			$row["material"]
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
 	}
 
 	final public static function findSizes(string $id): array {
@@ -601,6 +878,43 @@ class ProductRepository extends BaseRepository {
 			return $models;
 	}
 
+	final public static function findSize(string $id): ProductSizeModel|null {
+		if (!ProductRepository::dbConnect()) {
+			goto failed;
+		}
+
+		$row = Database::query(
+			"SELECT * FROM `dibas_products_size` WHERE `dibas_products_size`.`id` = '$id';"
+		)->fetch();
+
+		if (Database::hasError()) {
+			ProductRepository::setError(Database::getError());
+			goto failed;
+		}
+
+		if ($row === FALSE) {
+			goto failed;
+		}
+
+		$model = new ProductSizeModel(
+			$row["id"],
+			$row["product"],
+			$row["size"]
+		);
+
+		if ($model->hasError()) {
+			ProductRepository::setError($model->getError());
+			goto failed;
+		}
+
+		Database::close();
+		return $model;
+
+		failed:
+			Database::close();
+			return null;
+	}
+
 	final public static function filter(
 		int $page = 1,
 		int $limit = PAGINATION_LIMIT,
@@ -608,7 +922,8 @@ class ProductRepository extends BaseRepository {
 		string|null $name = null,
 		int|null $type = null,
 		int|null $minPrice = null,
-		int|null $maxPrice = null
+		int|null $maxPrice = null,
+		int|null $status = STATUS_OK
 	): array {
 		$models = [];
 
@@ -620,6 +935,9 @@ class ProductRepository extends BaseRepository {
 		$sqlCondition = [];
 		$sqlConditionStr = "";
 
+		if ($status !== null) {
+			array_push($sqlCondition, "`dibas_products`.`status` = $status");
+		}
 		if ($name !== null) {
 			array_push($sqlCondition, "`dibas_products`.`name` LIKE '$name'");
 		}
@@ -707,6 +1025,7 @@ class ProductRepository extends BaseRepository {
 
 	final public static function getPageCount(
 		int $limit = PAGINATION_LIMIT,
+		int|null $status = STATUS_OK,
 		string|null $name = null,
 		int|null $type = null,
 		int|null $minPrice = null,
@@ -721,6 +1040,9 @@ class ProductRepository extends BaseRepository {
 		$sqlCondition = [];
 		$sqlConditionStr = "";
 
+		if ($status !== null) {
+			array_push($sqlCondition, "`dibas_products`.`status` = $status");
+		}
 		if ($name !== null) {
 			array_push($sqlCondition, "`dibas_products`.`name` LIKE '$name'");
 		}

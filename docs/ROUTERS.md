@@ -19,6 +19,7 @@ Some services also require additional identifiers such as the authenticated **us
 * **accounts** — Manages user profile, account state, and role operations.
 * **products** — Handles product lifecycle and seller operations.
 * **carts** — Controls the user’s shopping cart.
+* **orders** — Order management.
 * **transactions** — Manages wallet operations and transaction states.
 * **shopping** — Handles final purchase processing.
 
@@ -76,6 +77,12 @@ Downgrades the user’s role.
 
 Submits a request to upgrade the user role to "seller".
 
+**Required Parameters:**
+`pangirno`, `card_number`, `card_terminal`
+
+**Optional Parameters:**
+`instagram`, `telegram`
+
 ⚠ **Bug:** No authentication validation exists.
 
 ---
@@ -132,6 +139,9 @@ Seller (Owner), Admin
 
 Moves the product to a suspended state.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -140,6 +150,9 @@ Seller (Owner), Admin
 ### **req(CONTROLLER_PRODUCT_REMOVE)**
 
 Deletes the product.
+
+**Required Parameters:**
+`product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -150,6 +163,9 @@ Seller (Owner), Admin
 
 Restores a previously removed or suspended product.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -158,6 +174,9 @@ Seller (Owner), Admin
 ### **req(CONTROLLER_PRODUCT_ACCEPT)**
 
 Marks a product as accepted.
+
+**Required Parameters:**
+`product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -168,6 +187,9 @@ Seller (Owner), Admin
 
 Marks a product as rejected.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -177,6 +199,9 @@ Seller (Owner), Admin
 
 Increases the product stock count.
 
+**Required Parameters:**
+`product (uuid)`
+
 **Allowed Roles:**
 Seller (Owner), Admin
 
@@ -185,6 +210,9 @@ Seller (Owner), Admin
 ### **req(CONTROLLER_PRODUCT_DEC)**
 
 Decreases the product stock count.
+
+**Required Parameters:**
+`product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -229,7 +257,7 @@ Clears all items from the user's cart.
 Increases the count of a product inside the cart.
 
 **Parameters:**
-`product (uuid)`
+`cart (uuid)`, `product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
@@ -241,14 +269,74 @@ Seller (Owner), Admin
 Decreases the count of a product inside the cart.
 
 **Parameters:**
-`product (uuid)`
+`cart (uuid)`, `product (uuid)`
 
 **Allowed Roles:**
 Seller (Owner), Admin
 
 ---
 
-# **4. Transactions Controller**
+# **4. Order**
+
+**Note:** All services require the `user` parameter.
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_CONFIRM)**
+
+Changes the order status to `Confirm`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_OPEN)**
+
+Changes the order status to `Open`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_CLOSE)**
+
+Changes the order status to `Close`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_SENT)**
+
+Changes the order status to `Sent`.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_REMOVE)**
+
+This router removes the product.
+
+**Parameters:**
+`order (uuid)`
+
+---
+
+### **req(CONTROLLER_ORDER_STATUS_UPDATE)**
+
+This router updates the product status.
+
+**Parameters:**
+`order (uuid)`, `status (int)`
+
+---
+
+# **5. Transactions Controller**
 
 **Note:** All services require the `user` parameter.
 
@@ -356,7 +444,7 @@ Owner, Admin
 
 ---
 
-# **5. Shopping Controller**
+# **6. Shopping Controller**
 
 **Note:** Requires the `user` parameter.
 

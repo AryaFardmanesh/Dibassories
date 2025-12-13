@@ -1,4 +1,30 @@
-<?php include __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/controllers/controller.php";
+include __DIR__ . "/../src/repositories/products.php";
+include __DIR__ . "/../src/repositories/orders.php";
+include __DIR__ . "/../src/services/accounts.php";
+
+$account = AccountService::getAccountFromCookie();
+
+if ($account === null || $account->role !== ROLE_ADMIN) {
+	Controller::redirect(null);
+}
+
+$users = AccountRepository::filter(1, PHP_INT_MAX);
+$usersCount = count($users);
+
+$products = ProductRepository::filter(1, PHP_INT_MAX);
+$productsCount = count($products);
+
+$orders = OrderRepository::findAll(1, PHP_INT_MAX);
+$ordersCount = 0;
+foreach ($orders as $order) {
+	if ($order->status !== STATUS_CLOSED) $ordersCount++;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -28,7 +54,7 @@
 				</button>
 				<h4 class="mb-0">داشبورد مدیر</h4>
 			</div>
-			<div class="text-muted small">سلام، آریا — امروز <span class="show-time">۱۴۰۳/۰۸/۲۵</span></div>
+			<div class="text-muted small">سلام، <?= $account->fname ?> — امروز <span class="show-time">۱۴۰۳/۰۸/۲۵</span></div>
 		</div>
 
 		<div class="row g-4">
@@ -36,7 +62,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد کاربران</h6>
-						<p class="h4 text-primary mb-0">1,234</p>
+						<p class="h4 text-primary mb-0"><?= number_format((float)$usersCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -44,7 +70,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">محصولات</h6>
-						<p class="h4 text-success mb-0">356</p>
+						<p class="h4 text-success mb-0"><?= number_format((float)$productsCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -52,7 +78,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">سفارش‌های در انتظار</h6>
-						<p class="h4 text-warning mb-0">12</p>
+						<p class="h4 text-warning mb-0"><?= number_format((float)$ordersCount) ?></p>
 					</div>
 				</div>
 			</div>

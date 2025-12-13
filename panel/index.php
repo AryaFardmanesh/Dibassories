@@ -1,4 +1,46 @@
-<?php include __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/utils/convert.php";
+include __DIR__ . "/../src/services/accounts.php";
+include __DIR__ . "/../src/repositories/orders.php";
+include __DIR__ . "/../src/repositories/products.php";
+include __DIR__ . "/../src/controllers/controller.php";
+
+$account = AccountService::getAccountFromCookie();
+
+if ($account === null) {
+	Controller::redirect(BASE_URL . "/login/");
+}elseif ($account->role === ROLE_CUSTOMER) {
+	Controller::redirect(null);
+}
+
+$error = Controller::getRequest("error");
+$viewMode = Controller::getRequest("view");
+
+$editProductModel = null;
+
+if ($viewMode === 'edit-product') {
+	$editProductModel = ProductRepository::findById(Controller::getRequest("product", true));
+
+	if (ProductRepository::hasError()) {
+		$error = ProductRepository::getError();
+	}
+}
+
+$orders = OrderRepository::findForOwner($account->id);
+
+if (OrderRepository::hasError()) {
+	$error = OrderRepository::getError();
+}
+
+$products = ProductRepository::findForOwner($account->id);
+
+if (ProductRepository::hasError()) {
+	$error = ProductRepository::getError();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -49,8 +91,12 @@
 <body>
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
 
+	<?php if ($error !== null) echo "<div class='alert alert-danger mx-3 mt-4'>$error</div>"; ?>
+
 	<section class="container-fluid my-5">
 		<div class="accordion" id="addProductAccordion">
+
+			<!-- Add/Edit Product -->
 			<div class="accordion-item shadow-sm">
 				<h2 class="accordion-header" id="headingAddProduct">
 					<button
@@ -61,24 +107,34 @@
 						aria-expanded="false"
 						aria-controls="collapseAddProduct"
 					>
-					افزودن محصول جدید
+					<?= $viewMode === "edit-product" ? "ویرایش محصول" : "افزودن محصول جدید" ?>
 					</button>
 				</h2>
 				<div
 					id="collapseAddProduct"
-					class="accordion-collapse collapse"
+					class="accordion-collapse <?= $viewMode === null ? "collapse" : null ?>"
 					aria-labelledby="headingAddProduct"
 					data-bs-parent="#addProductAccordion"
 				>
 					<div class="accordion-body bg-light">
-						<form action="" method="POST" id="addProductForm" class="p-3 rounded bg-white shadow-sm needs-validation" novalidate enctype="multipart/form-data">
+						<form action="<?= BASE_URL . "/src/controllers/products.php" ?>" method="POST" id="addProductForm" class="p-3 rounded bg-white shadow-sm needs-validation" novalidate enctype="multipart/form-data">
+							<input type="hidden" name="req" value="<?= $viewMode === null ? CONTROLLER_PRODUCT_ADD : CONTROLLER_PRODUCT_UPDATE ?>" />
+							<input type="hidden" name="user" value="<?= $account->id ?>" />
+							<input type="hidden" name="redirect" value="<?= dirname($_SERVER["PHP_SELF"]) ?>" />
+
+							<?php
+							$productId = $editProductModel !== null ? $editProductModel->id : null;
+							$inputForEditProduct = $viewMode === 'edit-product' ? "<input type='hidden' name='product' value='$productId' />" : null;
+							echo $inputForEditProduct;
+							?>
+
 							<div class="mb-3">
 								<label for="productType" class="form-label fw-bold">نوع محصول</label>
 								<select id="productType" name="type" class="form-select" required>
-									<option value="" disabled selected>انتخاب نوع محصول...</option>
-									<option value="0">انگشتر</option>
-									<option value="1">گردنبند</option>
-									<option value="2">گوشواره</option>
+									<option disabled selected>انتخاب نوع محصول...</option>
+									<option value="<?= PRODUCT_TYPE_RING ?>" <?= $editProductModel !== null ? ($editProductModel->type === PRODUCT_TYPE_RING ? "selected" : null) : null ?>>انگشتر</option>
+									<option value="<?= PRODUCT_TYPE_NECKLACE ?>" <?= $editProductModel !== null ? ($editProductModel->type === PRODUCT_TYPE_NECKLACE ? "selected" : null) : null ?>>گردنبند</option>
+									<option value="<?= PRODUCT_TYPE_EARRING ?>" <?= $editProductModel !== null ? ($editProductModel->type === PRODUCT_TYPE_EARRING ? "selected" : null) : null ?>>گوشواره</option>
 								</select>
 							</div>
 
@@ -90,6 +146,7 @@
 									name="name"
 									class="form-control"
 									placeholder="مثلاً گردنبند طلایی"
+									value="<?= $editProductModel !== null ? $editProductModel->name : null ?>"
 									autocomplete="off"
 									min="8"
 									max="128"
@@ -109,15 +166,15 @@
 									min="12"
 									max="512"
 									required
-								></textarea>
+								><?= $editProductModel !== null ? $editProductModel->description : null ?></textarea>
 							</div>
 
 							<div class="mb-3">
 								<label for="image_main" class="form-label fw-bold">تصاویر محصول</label>
 								<div class="row g-2">
 									<div class="col-md-3">
-										<input type="file" id="image_main" name="image_main" class="form-control" required />
-										<small class="text-muted">تصویر شاخص (اجباری)</small>
+										<input type="file" id="image_main" name="image_main" class="form-control" <?= $viewMode !== 'edit-product' ? "required" : null ?> />
+										<?= $viewMode !== 'edit-product' ? "<small class='text-muted'>تصویر شاخص (اجباری)</small>" : null ?>
 									</div>
 									<div class="col-md-3">
 										<input type="file" id="image_2" name="image_2" class="form-control" />
@@ -139,6 +196,7 @@
 										id="productPrice"
 										name="price"
 										class="form-control"
+										value="<?= $editProductModel !== null ? $editProductModel->price : null ?>"
 										autocomplete="off"
 										min="1"
 										required
@@ -151,6 +209,7 @@
 										id="productCount"
 										name="count"
 										class="form-control"
+										value="<?= $editProductModel !== null ? $editProductModel->count : null ?>"
 										autocomplete="off"
 										min="1"
 										required
@@ -163,7 +222,7 @@
 										id="productOffer"
 										name="offer"
 										class="form-control"
-										value="0"
+										value="<?= $editProductModel !== null ? $editProductModel->offer : 0 ?>"
 										autocomplete="off"
 										min="0"
 										max="100"
@@ -171,7 +230,7 @@
 									/>
 								</div>
 							</div>
-							<!-- رنگ بندی -->
+
 							<div class="mb-3">
 								<label for="colorName" class="form-label fw-bold">رنگ‌بندی محصول</label>
 								<div class="d-flex align-items-center gap-2 mb-2">
@@ -191,7 +250,24 @@
 									/>
 									<button type="button" id="addColor" class="btn btn-outline-primary btn-sm">افزودن رنگ</button>
 								</div>
-								<div id="colorPreview" class="d-flex flex-wrap gap-2"></div>
+								<div id="colorPreview" class="d-flex flex-wrap gap-2">
+									<?php
+										if ($editProductModel === null) goto skip_edit_color;
+										$editProductColorModel = ProductRepository::findColors($editProductModel->id);
+										$i = -1;
+										foreach ($editProductColorModel as $color) {
+											$i++;
+									?>
+									<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-colors" id="__color_label_<?= $i ?>">
+										<input type="hidden" name="color-<?= $i ?>" value="<?= $color->name ?>,<?= $color->hex ?>" />
+										<span class="me-2" style="width:20px;height:20px;background:#<?= $color->hex ?>;border-radius:50%;display:inline-block;"></span>
+										<small><?= $color->name ?></small>
+										<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__color_label_<?= $i ?>' ).remove()">x</small>
+									</div>
+									<?php } ?>
+
+									<?php skip_edit_color: ?>
+								</div>
 							</div>
 
 							<div class="mb-3">
@@ -208,7 +284,23 @@
 									/>
 									<button type="button" id="addMaterial" class="btn btn-outline-success btn-sm">افزودن جنس</button>
 								</div>
-								<div id="materialPreview" class="d-flex flex-wrap gap-2"></div>
+								<div id="materialPreview" class="d-flex flex-wrap gap-2">
+									<?php
+										if ($editProductModel === null) goto skip_edit_material;
+										$editProductMaterialModel = ProductRepository::findMaterials($editProductModel->id);
+										$i = -1;
+										foreach ($editProductMaterialModel as $material) {
+											$i++;
+									?>
+									<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-mat" id="__mat_label_<?= $i ?>">
+										<input type="hidden" name="material-<?= $i ?>" value="<?= $material->material ?>" />
+										<span><?= $material->material ?></span>
+										<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__mat_label_<?= $i ?>' ).remove()">x</small>
+									</div>
+									<?php } ?>
+
+									<?php skip_edit_material: ?>
+								</div>
 							</div>
 
 							<div class="mb-3">
@@ -225,17 +317,36 @@
 									/>
 									<button type="button" id="addSize" class="btn btn-outline-warning btn-sm">افزودن سایز</button>
 								</div>
-								<div id="sizePreview" class="d-flex flex-wrap gap-2"></div>
+								<div id="sizePreview" class="d-flex flex-wrap gap-2">
+									<?php
+										if ($editProductModel === null) goto skip_edit_size;
+										$editProductSizeModel = ProductRepository::findSizes($editProductModel->id);
+										$i = -1;
+										foreach ($editProductSizeModel as $size) {
+											$i++;
+									?>
+									<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-size" id="__size_label_<?= $i ?>">
+										<input type="hidden" name="size-<?= $i ?>" value="<?= $size->size ?>" />
+										<span><?= $size->size ?></span>
+										<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__size_label_<?= $i ?>' ).remove()">x</small>
+									</div>
+									<?php } ?>
+
+									<?php skip_edit_size: ?>
+								</div>
 							</div>
 
 							<div class="text-center mt-4">
-								<button type="submit" class="btn btn-primary px-4 w-100">افزودن محصول</button>
+								<button type="submit" class="btn btn-primary px-4 w-100">
+									<?= $viewMode === 'edit-product' ? "ویرایش محصول" : "افزودن محصول" ?>
+								</button>
 							</div>
 						</form>
 					</div>
 				</div>
 			</div>
 
+			<!-- Orders History -->
 			<div class="accordion-item shadow-sm">
 				<h2 class="accordion-header" id="headingAddProduct">
 					<button
@@ -272,43 +383,53 @@
 									</tr>
 								</thead>
 								<tbody>
-									<!-- ردیف نمونه -->
+
+									<?php
+										$i = 0;
+										foreach ($orders as $order) {
+											if ($order->status !== STATUS_CLOSED) continue;
+											$i++;
+											$product = ProductRepository::findById($order->product);
+											$material = ProductRepository::findMaterial($order->product_material);
+											$size = ProductRepository::findSize($order->product_size);
+											$color = ProductRepository::findColor($order->product_color);
+											if ($product === null) continue;
+											if ($material === null) continue;
+											if ($size === null) continue;
+											if ($color === null) continue;
+									?>
 									<tr>
-										<th scope="row">1</th>
+										<th scope="row"><?= $i ?></th>
 										<td>
-											<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+											<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" alt="<?= $product->image[0] ?>" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
 										</td>
-										<td class="fw-semibold">گردنبند طلایی</td>
-										<td>2</td>
-										<td>استیل</td>
-										<td>متوسط</td>
+										<td class="fw-semibold"><?= $product->name ?></td>
+										<td><?= $product->count ?></td>
+										<td><?= $material->material ?></td>
+										<td><?= $size->size ?></td>
 										<td>
-											<span class="badge" style="background-color: gold;">طلایی</span>
+											<span class="badge" style="background-color: #<?= $color->hex ?>;"><?= $color->name ?></span>
 										</td>
-										<td class="fw-bold text-success">1,200,000</td>
+										<td class="fw-bold text-success"><?= number_format((float)$order->total) ?></td>
 										<td>
-											<a href="#" class="btn btn-sm btn-success">باز کردن سفارش</a>
-											<a href="#" class="btn btn-sm btn-danger">حذف سفارش</a>
+											<?php
+												$openOrderLink = Controller::makeControllerUrl("orders", CONTROLLER_ORDER_STATUS_OPEN, [
+													"user" => $account->id,
+													"order" => $order->id,
+													"redirect" => dirname($_SERVER["PHP_SELF"])
+												]);
+												$removeOrderLink = Controller::makeControllerUrl("orders", CONTROLLER_ORDER_STATUS_REMOVE, [
+													"user" => $account->id,
+													"order" => $order->id,
+													"redirect" => dirname($_SERVER["PHP_SELF"])
+												]);
+											?>
+											<a href="<?= $openOrderLink ?>" class="btn btn-sm btn-success">باز کردن سفارش</a>
+											<a href="<?= $removeOrderLink ?>" class="btn btn-sm btn-danger">حذف سفارش</a>
 										</td>
 									</tr>
-									<tr>
-										<th scope="row">2</th>
-										<td>
-											<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
-										</td>
-										<td class="fw-semibold">انگشتر نقره‌ای</td>
-										<td>1</td>
-										<td>نقره</td>
-										<td>کوچک</td>
-										<td>
-											<span class="badge" style="background-color: silver;">نقره‌ای</span>
-										</td>
-										<td class="fw-bold text-success">850,000</td>
-										<td>
-											<a href="#" class="btn btn-sm btn-success">باز کردن سفارش</a>
-											<a href="#" class="btn btn-sm btn-danger">حذف سفارش</a>
-										</td>
-									</tr>
+									<?php } ?>
+
 								</tbody>
 							</table>
 						</div>
@@ -316,6 +437,7 @@
 				</div>
 			</div>
 
+			<!-- Removed Products -->
 			<div class="accordion-item shadow-sm">
 				<h2 class="accordion-header" id="headingAddProduct">
 					<button
@@ -347,35 +469,45 @@
 									</tr>
 								</thead>
 								<tbody>
-									<!-- ردیف نمونه -->
+
+									<?php
+										$i = 0;
+										foreach ($products as $product) {
+											if ($product->status !== STATUS_REMOVED) continue;
+											$i++;
+									?>
 									<tr>
-										<th scope="row">1</th>
+										<th scope="row"><?= $i ?></th>
 										<td>
-											<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+											<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" alt="<?= $product->name ?>" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
 										</td>
-										<td class="fw-semibold">گردنبند طلایی</td>
+										<td class="fw-semibold"><?= $product->name ?></td>
 										<td>
-											<a href="#" class="btn btn-sm btn-success">باز گرداندن</a>
-											<a href="#" class="btn btn-sm btn-danger">حذف</a>
+											<?php
+												$productRestoreLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_RESTORE, [
+													"user" => $account->id,
+													"product" => $product->id,
+													"redirect" => dirname($_SERVER["PHP_SELF"])
+												]);
+												$productRemoveLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_REMOVE, [
+													"user" => $account->id,
+													"product" => $product->id,
+													"redirect" => dirname($_SERVER["PHP_SELF"])
+												]);
+											?>
+											<a href="<?= $productRestoreLink ?>" class="btn btn-sm btn-success">باز گرداندن</a>
+											<a href="<?= $productRemoveLink ?>" class="btn btn-sm btn-danger">حذف</a>
 										</td>
 									</tr>
-									<tr>
-										<th scope="row">2</th>
-										<td>
-											<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" alt="محصول" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
-										</td>
-										<td class="fw-semibold">گردنبند طلایی</td>
-										<td>
-											<a href="#" class="btn btn-sm btn-success">باز گرداندن</a>
-											<a href="#" class="btn btn-sm btn-danger">حذف</a>
-										</td>
-									</tr>
+									<?php } ?>
+
 								</tbody>
 							</table>
 						</div>
 					</section>
 				</div>
 			</div>
+
 		</div>
 	</section>
 
@@ -389,7 +521,7 @@
 				if ( name !== '' ) {
 					$( '#colorPreview' ).append( `
 						<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-colors" id="__color_label_${ colorCount }">
-							<input type="hidden" name="color-${ colorCount }" value="${ name },${ color }" />
+							<input type="hidden" name="color-${ colorCount }" value="${ name },${ color.slice(1) }" />
 							<span class="me-2" style="width:20px;height:20px;background:${ color };border-radius:50%;display:inline-block;"></span>
 							<small>${ name }</small>
 							<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__color_label_${ colorCount }' ).remove()">x</small>
@@ -406,7 +538,7 @@
 				if ( mat !== '' ) {
 					$( '#materialPreview' ).append( `
 						<div class="d-flex align-items-center border rounded-pill px-2 py-1 gap-2 dbas-prod-mat" id="__mat_label_${ matCount }">
-							<input type="hidden" name="mat-${ matCount }" value="${ mat }" />
+							<input type="hidden" name="material-${ matCount }" value="${ mat }" />
 							<span>${ mat }</span>
 							<small class="text-danger d-block" style="cursor: pointer;" onclick="$( '#__mat_label_${ matCount }' ).remove()">x</small>
 						</div>
@@ -441,73 +573,58 @@
 			</div>
 			<div class="card-body bg-light" style="max-height: 500px; overflow-y: auto;">
 
+				<?php
+					foreach ($orders as $order) {
+						if ($order->status === STATUS_CLOSED) continue;
+						$product = ProductRepository::findById($order->product);
+						$material = ProductRepository::findMaterial($order->product_material);
+						$size = ProductRepository::findSize($order->product_size);
+						$color = ProductRepository::findColor($order->product_color);
+						if ($product === null) continue;
+						if ($material === null) continue;
+						if ($size === null) continue;
+						if ($color === null) continue;
+				?>
 				<div class="card mb-3 border-0 shadow-sm">
 					<div class="row g-0 align-items-center p-3">
 						<div class="col-md-2 text-center">
-							<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="img-fluid rounded" alt="محصول" style="max-height: 100px; object-fit: cover;">
+							<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="img-fluid rounded" alt="<?= $product->name ?>" style="max-height: 100px; object-fit: cover;">
 						</div>
 
 						<div class="col-md-7">
-							<h6 class="fw-bold mb-1">گردنبند طلایی</h6>
-							<p class="text-muted small mb-1">تعداد درخواستی: <strong>2 عدد</strong></p>
-							<p class="text-muted small mb-1">رنگ: <strong>طلایی</strong></p>
-							<p class="text-muted small mb-1">جنس: <strong>استیل</strong></p>
-							<p class="text-muted small mb-1">سایز: <strong>M</strong></p>
-							<p class="text-muted small mb-1">قیمت نهایی: <strong>1,200,000 تومان</strong></p>
-							<p class="text-muted small mb-1">آدرس: <strong>تهران، خیابان ولیعصر، کوچه بهار</strong></p>
-							<p class="text-muted small mb-1">کد پستی: <strong>1234567890</strong></p>
-							<p class="text-muted small mb-1">شماره تماس: <strong>09123456789</strong></p>
-							<a href="product/گردنبند-طلایی" class="text-decoration-none text-primary small fw-bold">
+							<h6 class="fw-bold mb-1"><?= $product->name ?></h6>
+							<p class="text-muted small mb-1">تعداد درخواستی: <strong><?= $order->count ?> عدد</strong></p>
+							<p class="text-muted small mb-1">رنگ: <strong><?= $color->name ?></strong></p>
+							<p class="text-muted small mb-1">جنس: <strong><?= $material->material ?></strong></p>
+							<p class="text-muted small mb-1">سایز: <strong><?= $size->size ?></strong></p>
+							<p class="text-muted small mb-1">قیمت نهایی: <strong><?= number_format((float)$order->total) ?> تومان</strong></p>
+							<p class="text-muted small mb-1">آدرس: <strong><?= $order->address ?></strong></p>
+							<p class="text-muted small mb-1">کد پستی: <strong><?= $order->zipcode ?></strong></p>
+							<p class="text-muted small mb-1">شماره تماس: <strong><?= $order->phone ?></strong></p>
+							<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none text-primary small fw-bold">
 							مشاهده محصول
 							</a>
 						</div>
 
 						<div class="col-md-3">
-							<form method="post" class="d-flex flex-column gap-2">
+							<form action="<?= BASE_URL . "/src/controllers/orders.php" ?>" method="GET" class="d-flex flex-column gap-2">
+								<input type="hidden" name="req" value="<?= CONTROLLER_ORDER_STATUS_UPDATE ?>" />
+								<input type="hidden" name="user" value="<?= $account->id ?>" />
+								<input type="hidden" name="order" value="<?= $order->id ?>" />
+								<input type="hidden" name="redirect" value="<?= dirname($_SERVER["PHP_SELF"]) ?>" />
+
 								<select name="status" class="form-select form-select-sm">
-									<option value="open">باز</option>
-									<option value="confirmed" selected>تایید</option>
-									<option value="shipping">در حال ارسال</option>
-									<option value="closed">بسته</option>
+									<option value="<?= STATUS_OPENED ?>" <?= $order->status === STATUS_OPENED ? "selected" : null ?>>باز</option>
+									<option value="<?= STATUS_CONFIRM ?>" <?= $order->status === STATUS_CONFIRM ? "selected" : null ?>>تایید</option>
+									<option value="<?= STATUS_SEND ?>" <?= $order->status === STATUS_SEND ? "selected" : null ?>>در حال ارسال</option>
+									<option value="<?= STATUS_CLOSED ?>" <?= $order->status === STATUS_CLOSED ? "selected" : null ?>>بسته</option>
 								</select>
 								<button type="submit" class="btn btn-sm btn-success">اعمال وضعیت</button>
 							</form>
 						</div>
 					</div>
 				</div>
-
-				<div class="card mb-3 border-0 shadow-sm">
-					<div class="row g-0 align-items-center p-3">
-						<div class="col-md-2 text-center">
-							<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="img-fluid rounded" alt="محصول" style="max-height: 100px; object-fit: cover;">
-						</div>
-						<div class="col-md-7">
-							<h6 class="fw-bold mb-1">انگشتر نقره‌ای</h6>
-							<p class="text-muted small mb-1">تعداد درخواستی: <strong>1 عدد</strong></p>
-							<p class="text-muted small mb-1">رنگ: <strong>طلایی</strong></p>
-							<p class="text-muted small mb-1">جنس: <strong>استیل</strong></p>
-							<p class="text-muted small mb-1">سایز: <strong>M</strong></p>
-							<p class="text-muted small mb-1">قیمت نهایی: <strong>850,000 تومان</strong></p>
-							<p class="text-muted small mb-1">آدرس: <strong>تهران، خیابان ولیعصر، کوچه بهار</strong></p>
-							<p class="text-muted small mb-1">کد پستی: <strong>1234567890</strong></p>
-							<p class="text-muted small mb-1">شماره تماس: <strong>09123456789</strong></p>
-							<a href="product/انگشتر-نقره‌ای" class="text-decoration-none text-primary small fw-bold">
-							مشاهده محصول
-							</a>
-						</div>
-						<div class="col-md-3">
-							<form method="post" class="d-flex flex-column gap-2">
-								<select name="status" class="form-select form-select-sm">
-									<option value="open" selected>باز</option>
-									<option value="confirmed">تایید</option>
-									<option value="shipping">در حال ارسال</option>
-									<option value="closed">بسته</option>
-								</select>
-								<button type="submit" class="btn btn-sm btn-success">اعمال وضعیت</button>
-							</form>
-						</div>
-					</div>
-				</div>
+				<?php } ?>
 
 			</div>
 		</div>
@@ -519,70 +636,71 @@
 		<h4 class="mb-4 fw-bold text-center">محصولات من</h4>
 		<div class="row g-4">
 
-			<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+			<?php
+				foreach ($products as $product) {
+					if ($product->status !== STATUS_OK) continue;
+					$description = strlen($product->description) > 35 ? substr($product->description, 0, 35) . "..." : $product->description;
+			?>
+			<div class="col-12 col-sm-6 col-lg-4">
 				<div class="card h-100 shadow-sm border-0">
-					<a href="product.php?id=1" class="text-decoration-none text-dark">
-						<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
+					<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none text-dark">
+						<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="card-img-top rounded-top" alt="<?= $product->name ?>" style="height: 220px; object-fit: cover;">
 					</a>
 					<div class="card-body">
 						<div class="d-flex justify-content-between align-items-center mb-2">
-							<h6 class="card-title mb-0 fw-bold">گردنبند طلایی</h6>
-							<span class="badge bg-primary">گردنبند</span>
+							<h6 class="card-title mb-0 fw-bold"><?= $product->name ?></h6>
+							<span class="badge bg-primary"><?= convertProductTypesToString($product->type) ?></span>
 						</div>
-						<p class="card-text text-muted small mb-2">توضیح کوتاه درباره محصول...</p>
+						<p class="card-text text-muted small mb-2"><?= $description ?></p>
+						<?php if ($product->offer === 0) { ?>
 						<div class="d-flex justify-content-between align-items-center">
-							<span class="fw-bold text-success">960,000 تومان</span>
+							<span class="fw-bold text-muted"><?= number_format((float)$product->price) ?> تومان</span>
+						</div>
+						<?php }else { ?>
+						<div class="d-flex justify-content-between align-items-center">
+							<span class="fw-bold text-success"><?= $product->price - ($product->price * $product->offer / 100) ?> تومان</span>
 							<div>
-								<span class="text-decoration-line-through text-muted small">1,200,000</span>
-								<span class="badge bg-danger ms-1">-20%</span>
+								<span class="text-decoration-line-through text-muted small"><?= number_format((float)$product->price) ?></span>
+								<span class="badge bg-danger ms-1">-<?= $product->offer ?>%</span>
 							</div>
 						</div>
+						<?php } ?>
 					</div>
 					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
-						<a href="product.php?id=1" class="btn btn-outline-primary btn-sm">مشاهده</a>
+						<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="btn btn-outline-primary btn-sm">مشاهده</a>
 						<div class="d-flex gap-2">
-							<a href="edit_product.php?id=1" class="btn btn-warning btn-sm text-white">ویرایش</a>
-							<a href="delete_product.php?id=1" class="btn btn-danger btn-sm">حذف</a>
+							<?php
+							$removeProductLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_REMOVE, [
+								"user" => $account->id,
+								"product" => $product->id,
+								"redirect" => dirname($_SERVER["PHP_SELF"])
+							]);
+							?>
+							<a href="<?= dirname($_SERVER["PHP_SELF"]) . "/?view=edit-product&product=" . $product->id ?>" class="btn btn-warning btn-sm text-white">ویرایش</a>
+							<a href="<?= $removeProductLink ?>" class="btn btn-danger btn-sm">حذف</a>
 						</div>
 					</div>
 					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center gap-2">
-						<a href="#" class="btn btn-warning btn-sm text-white w-100">+</a>
-						<span class="btn btn-dark btn-sm w-100 pe-none">تعداد: 2</span>
-						<a href="#" class="btn btn-danger btn-sm w-100">-</a>
+						<?php
+							$incProductCountLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_INC, [
+								"user" => $account->id,
+								"product" => $product->id,
+								"redirect" => dirname($_SERVER["PHP_SELF"])
+							]);
+							$decProductCountLink = Controller::makeControllerUrl("products", CONTROLLER_PRODUCT_DEC, [
+								"user" => $account->id,
+								"product" => $product->id,
+								"redirect" => dirname($_SERVER["PHP_SELF"])
+							]);
+						?>
+						<a href="<?= $incProductCountLink ?>" class="btn btn-warning btn-sm text-white w-100">+</a>
+						<span class="btn btn-dark btn-sm w-100 pe-none">تعداد: <?= $product->count ?></span>
+						<a href="<?= $decProductCountLink ?>" class="btn btn-danger btn-sm w-100">-</a>
 					</div>
 				</div>
 			</div>
+			<?php } ?>
 
-			<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-				<div class="card h-100 shadow-sm border-0">
-					<a href="product.php?id=2" class="text-decoration-none text-dark">
-						<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top rounded-top" alt="محصول" style="height: 220px; object-fit: cover;">
-					</a>
-					<div class="card-body">
-						<div class="d-flex justify-content-between align-items-center mb-2">
-							<h6 class="card-title mb-0 fw-bold">انگشتر نقره‌ای</h6>
-							<span class="badge bg-primary">انگشتر</span>
-						</div>
-						<p class="card-text text-muted small mb-2">طرح خاص و زیبا مناسب هدیه.</p>
-						<div class="d-flex justify-content-between align-items-center">
-							<span class="fw-bold text-success">850,000 تومان</span>
-						</div>
-					</div>
-					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
-						<a href="product.php?id=2" class="btn btn-outline-primary btn-sm">مشاهده</a>
-						<div class="d-flex gap-2">
-							<a href="edit_product.php?id=2" class="btn btn-warning btn-sm text-white">ویرایش</a>
-							<a href="delete_product.php?id=2" class="btn btn-danger btn-sm">حذف</a>
-						</div>
-					</div>
-					<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center gap-2">
-						<a href="#" class="btn btn-warning btn-sm text-white w-100">+</a>
-						<span class="btn btn-dark btn-sm w-100 pe-none">تعداد: 2</span>
-						<a href="#" class="btn btn-danger btn-sm w-100">-</a>
-					</div>
-				</div>
-			</div>
-		</div>
 	</section>
 
 	<!-- Validating forms -->

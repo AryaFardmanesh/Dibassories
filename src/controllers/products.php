@@ -47,6 +47,8 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	if (gettype($imageMain) === "string") {
 		array_push($images, $imageMain);
 	}elseif ($imageMain !== FILE_STATUS_NOT_FOUND) {
+		echo "OK";
+		die;
 		Controller::setError("تصویر شاخص با موفقیت آپلود نشد.");
 		goto out;
 	}
@@ -96,12 +98,21 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	$offer = (int)Controller::getRequest("offer");
 	$colors = Controller::fetchSerialized("color", CONTROLLER_PRODUCT_LIMIT_COLOR_COUNT, true, ",");
 	$materials = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_MATERIAL_COUNT);
-	$sizes = Controller::fetchSerialized("material", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
+	$sizes = Controller::fetchSerialized("size", CONTROLLER_PRODUCT_LIMIT_SIZE_COUNT);
 
 	$imageMain = uploadFile("image_main", PRODUCT_IMAGE_DIR, true, $product->image[0]);
-	$image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR, true, $product->image[1]);
-	$image3 = uploadFile("image_3", PRODUCT_IMAGE_DIR, true, $product->image[2]);
-	$image4 = uploadFile("image_4", PRODUCT_IMAGE_DIR, true, $product->image[3]);
+
+	$image2 = null;
+	if (isset($product->image[1])) $image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR, true, $product->image[1]);
+	else $image2 = uploadFile("image_2", PRODUCT_IMAGE_DIR);
+
+	$image3 = null;
+	if (isset($product->image[2])) $image3 = uploadFile("image_3", PRODUCT_IMAGE_DIR, true, $product->image[2]);
+	else $image3 = uploadFile("image_3", PRODUCT_IMAGE_DIR);
+
+	$image4 = null;
+	if (isset($product->image[3])) $image4 = uploadFile("image_4", PRODUCT_IMAGE_DIR, true, $product->image[3]);
+	else $image4 = uploadFile("image_3", PRODUCT_IMAGE_DIR);
 
 	$images = [];
 
@@ -110,24 +121,32 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	}elseif ($imageMain !== FILE_STATUS_NOT_FOUND) {
 		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
+	}else {
+		if (isset($product->image[0])) array_push($images, $product->image[0]);
 	}
 	if (gettype($image2) === "string") {
 		array_push($images, $image2);
 	}elseif ($image2 !== FILE_STATUS_NOT_FOUND) {
 		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
+	}else {
+		if (isset($product->image[1])) array_push($images, $product->image[1]);
 	}
 	if (gettype($image3) === "string") {
 		array_push($images, $image3);
 	}elseif ($image3 !== FILE_STATUS_NOT_FOUND) {
 		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
+	}else {
+		if (isset($product->image[2])) array_push($images, $product->image[2]);
 	}
 	if (gettype($image4) === "string") {
 		array_push($images, $image4);
 	}elseif ($image4 !== FILE_STATUS_NOT_FOUND) {
 		Controller::setError(convertUploadErrorToString($imageMain));
 		goto out;
+	}else {
+		if (isset($product->image[3])) array_push($images, $product->image[3]);
 	}
 
 	if ($type !== null) $product->type = $type;
@@ -141,23 +160,41 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 	ProductRepository::update($product);
 	checkError();
 
-	foreach ($colors as $color) {
-		$name = $color[0];
-		$hex = $color[1];
+	// Remove old colors
+	$oldColors = ProductRepository::findColors($productId);
+	checkError();
 
-		ProductRepository::updateColor($productId, $name, $hex);
+	foreach ($oldColors as $color) {
+		ProductRepository::removeColor($color->id);
 		checkError();
 	}
 
-	foreach ($materials as $material) {
-		ProductRepository::updateMaterial($productId, $material);
+	ProductRepository::addColors($productId, $colors);
+	checkError();
+
+	// Remove old materials
+	$oldMaterials = ProductRepository::findMaterials($productId);
+	checkError();
+
+	foreach ($oldMaterials as $material) {
+		ProductRepository::removeMaterial($material->id);
 		checkError();
 	}
 
-	foreach ($sizes as $size) {
-		ProductRepository::updateSize($productId, $size);
+	ProductRepository::addMaterials($productId, $materials);
+	checkError();
+
+	// Remove old sizes
+	$oldSizes = ProductRepository::findSizes($productId);
+	checkError();
+
+	foreach ($oldSizes as $size) {
+		ProductRepository::removeSize($size->id);
 		checkError();
 	}
+
+	ProductRepository::addSizes($productId, $sizes);
+	checkError();
 }elseif ($req === CONTROLLER_PRODUCT_SUSPEND) {
 	$product = getProduct($productId);
 	hasPermission($product->owner, $account->id, $account->role);
@@ -211,17 +248,22 @@ if ($req === CONTROLLER_PRODUCT_ADD) {
 out:
 Controller::redirect(Controller::getRequest("redirect"));
 
-function getProduct(string $id): ProductModel {
+function getProduct(string|null $id): ProductModel {
+	if ($id === null) {
+		Controller::setError("شناسه محصول تنظیم نشده است.");
+		Controller::redirect(Controller::getRequest("redirect"));
+	}
+
 	$product = ProductRepository::findById($id);
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 
 	if ($product === null) {
 		Controller::setError("محصول یافت نشد.");
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 
 	return $product;
@@ -230,14 +272,14 @@ function getProduct(string $id): ProductModel {
 function hasPermission(string $productOwner, string $requestOwner, int $accountRole): void {
 	if ($productOwner !== $requestOwner && $accountRole !== ROLE_ADMIN) {
 		Controller::setError("شما مجوز ایجاد تغییر در این محصول را ندارید.");
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 }
 
 function checkError(): void {
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
-		goto out;
+		Controller::redirect(Controller::getRequest("redirect"));
 	}
 }
 

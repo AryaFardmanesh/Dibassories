@@ -1,4 +1,48 @@
-<?php include_once __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include_once __DIR__ . "/../src/config.php";
+include_once __DIR__ . "/../src/services/accounts.php";
+include_once __DIR__ . "/../src/controllers/controller.php";
+
+if (AccountService::isLogin()) {
+	Controller::redirect(null);
+}
+
+$error = Controller::fetchError();
+
+Controller::onSubmit("POST", function (array $params) {
+	$result = AccountService::signup(
+		$params["username"],
+		$params["password"],
+		$params["password-confirm"],
+		$params["email"],
+		$params["fname"],
+		$params["lname"],
+		$params["phone"],
+		$params["address"],
+		$params["zipcode"]
+	);
+
+	if (!$result || AccountService::hasError()) {
+		Controller::setError(AccountService::getError());
+		Controller::redirect(htmlspecialchars($_SERVER["PHP_SELF"]));
+	}
+
+	Controller::redirect(null);
+
+}, [], [
+	"username",
+	"password",
+	"password-confirm",
+	"email",
+	"fname",
+	"lname",
+	"phone",
+	"address",
+	"zipcode"
+]);
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -14,10 +58,14 @@
 </head>
 <body>
 	<div class="login-card my-4">
+		<?php
+			if ($error) echo "<div class='alert alert-danger' role='alert'>$error</div>";
+		?>
+
 		<div class="logo">دیبا اکسسوری</div>
 		<h5 class="mb-4 fw-bold fs-6 text-secondary">ایجاد حساب کاربری</h5>
 
-		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
+		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
 			<div class="mb-3 text-start">
 				<label for="username" class="form-label">نام کاربری:</label>
 				<input
@@ -67,7 +115,7 @@
 			<div class="mb-3 text-start">
 				<label for="email" class="form-label">ایمیل:</label>
 				<div class="input-group">
-					<span class="input-group-text" id="basic-addon1">@gmail.com</span>
+					<span class="input-group-text" id="basic-addon1">gmail.com@</span>
 					<input
 						type="email"
 						id="email"
@@ -148,8 +196,8 @@
 					placeholder="کد پستی خود را وارد کنید"
 					autocomplete="off"
 					spellcheck="false"
-					min="6"
-					max="64"
+					min="10"
+					max="10"
 					required
 				>
 			</div>

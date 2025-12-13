@@ -1,4 +1,35 @@
-<?php include __DIR__ . "/../../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../../src/config.php";
+include __DIR__ . "/../../assets/components/pagination.php";
+include __DIR__ . "/../../src/utils/convert.php";
+include __DIR__ . "/../../src/controllers/controller.php";
+include __DIR__ . "/../../src/repositories/products.php";
+include __DIR__ . "/../../src/repositories/orders.php";
+include __DIR__ . "/../../src/services/accounts.php";
+
+$account = AccountService::getAccountFromCookie();
+$page = Controller::getRequest("page");
+
+if ($page === null) {
+	$page = 1;
+}
+
+if ($account === null || $account->role !== ROLE_ADMIN) {
+	Controller::redirect(null);
+}
+
+$users = AccountRepository::filter(1, PHP_INT_MAX);
+$usersCount = 0;
+$sellersCount = 0;
+$customersCount = 0;
+foreach ($users as $user) {
+	$usersCount++;
+	if ($user->role === ROLE_SELLER) $sellersCount++;
+	if ($user->role === ROLE_CUSTOMER) $customersCount++;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -28,7 +59,7 @@
 				</button>
 				<h4 class="mb-0">داشبورد مدیر - حساب کاربران</h4>
 			</div>
-			<div class="text-muted small">سلام، آریا — امروز <span class="show-time"></span></div>
+			<div class="text-muted small">سلام، <?= $account->fname ?> — امروز <span class="show-time"></span></div>
 		</div>
 
 		<div class="row g-4">
@@ -36,7 +67,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد کاربران</h6>
-						<p class="h4 text-primary mb-0">1,234</p>
+						<p class="h4 text-primary mb-0"><?= number_format((float)$usersCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -44,7 +75,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد فروشندگان</h6>
-						<p class="h4 text-success mb-0">356</p>
+						<p class="h4 text-success mb-0"><?= number_format((float)$sellersCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -52,7 +83,7 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد خریداران</h6>
-						<p class="h4 text-warning mb-0">12</p>
+						<p class="h4 text-warning mb-0"><?= number_format((float)$customersCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -79,111 +110,63 @@
 							</thead>
 							<tbody>
 
+								<?php
+									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
+									$users = AccountRepository::filter($page);
+									foreach ($users as $users) {
+										$roleColor = "success";
+										if ($user->role === ROLE_ADMIN) $roleColor = "danger";
+										elseif ($user->role !== ROLE_CUSTOMER) $roleColor = "warning";
+										$i++;
+								?>
 								<tr>
-									<td>1</td>
-									<td>آریا فردمنش</td>
-									<td>AryaFardmanesh.1383@gmail.com</td>
-									<td>09024708900</td>
-									<td>14,000,000</td>
-									<td><span class="badge bg-danger">مدیر</span></td>
-									<td><span class="badge bg-success">تایید</span></td>
+									<td><?= $i ?></td>
+									<td><?= $user->fname . " " . $user->lname ?></td>
+									<td><?= $user->email ?></td>
+									<td><?= $user->phone ?></td>
+									<td><?= number_format((float)$user->wallet_balance) ?></td>
+									<td><span class="badge bg-<?= $roleColor  ?>"><?= convertRolesToString($user->role) ?></span></td>
+									<td><span class="badge bg-<?= convertStatusToColor($user->status) ?>"><?= convertStatusToString($user->status) ?></span></td>
 									<td>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">مسدود</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1 disabled">ارتقای نقش</a>
-										<a href="#" class="btn btn-sm btn-danger w-100">تنزل نقش</a>
+										<?php
+											$blockOrUnblock = "مسدود";
+											$blockOrUnblockReqCode = CONTROLLER_ACCOUNT_BLOCK;
+											if ($user->status === STATUS_SUSPENDED) {
+												$blockOrUnblock = "رفع مسدود";
+												$blockOrUnblockReqCode = CONTROLLER_ACCOUNT_UNBLOCK;
+											}
+
+											$upgradeRoleDisabled = "";
+											$downgradeRoleDisabled = "";
+											if ($user->role == ROLE_ADMIN) $upgradeRoleDisabled = "disabled";
+											elseif ($user->role == ROLE_CUSTOMER) $downgradeRoleDisabled = "disabled";
+
+											$blockOrUnblockLink = Controller::makeControllerUrl("accounts", $blockOrUnblockReqCode, [
+												"user" => $user->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+											$upgradeRoleLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_UPGRADE, [
+												"user" => $user->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+											$downgradeRoleLink = Controller::makeControllerUrl("accounts", CONTROLLER_ACCOUNT_DOWNGRADE, [
+												"user" => $user->id,
+												"redirect" => dirname($_SERVER["PHP_SELF"])
+											]);
+										?>
+										<a href="<?= $blockOrUnblockLink ?>" class="btn btn-sm btn-danger w-100 mb-1"><?= $blockOrUnblock ?></a>
+										<a href="<?= $upgradeRoleLink ?>" class="btn btn-sm btn-danger w-100 mb-1 <?= $upgradeRoleDisabled ?>">ارتقای نقش</a>
+										<a href="<?= $downgradeRoleLink ?>" class="btn btn-sm btn-danger w-100 <?= $downgradeRoleDisabled ?>">تنزل نقش</a>
 									</td>
 								</tr>
-								<tr>
-									<td>2</td>
-									<td>آریا فردمنش</td>
-									<td>AryaFardmanesh.1383@gmail.com</td>
-									<td>09024708900</td>
-									<td>14,000,000</td>
-									<td><span class="badge bg-danger">مدیر</span></td>
-									<td><span class="badge bg-success">تایید</span></td>
-									<td>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">مسدود</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1 disabled">ارتقای نقش</a>
-										<a href="#" class="btn btn-sm btn-danger w-100">تنزل نقش</a>
-									</td>
-								</tr>
-								<tr>
-									<td>3</td>
-									<td>آریا فردمنش</td>
-									<td>AryaFardmanesh.1383@gmail.com</td>
-									<td>09024708900</td>
-									<td>14,000,000</td>
-									<td><span class="badge bg-danger">مدیر</span></td>
-									<td><span class="badge bg-success">تایید</span></td>
-									<td>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">مسدود</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1 disabled">ارتقای نقش</a>
-										<a href="#" class="btn btn-sm btn-danger w-100">تنزل نقش</a>
-									</td>
-								</tr>
-								<tr>
-									<td>4</td>
-									<td>آریا فردمنش</td>
-									<td>AryaFardmanesh.1383@gmail.com</td>
-									<td>09024708900</td>
-									<td>14,000,000</td>
-									<td><span class="badge bg-danger">مدیر</span></td>
-									<td><span class="badge bg-success">تایید</span></td>
-									<td>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">مسدود</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1 disabled">ارتقای نقش</a>
-										<a href="#" class="btn btn-sm btn-danger w-100">تنزل نقش</a>
-									</td>
-								</tr>
-								<tr>
-									<td>5</td>
-									<td>آریا فردمنش</td>
-									<td>AryaFardmanesh.1383@gmail.com</td>
-									<td>09024708900</td>
-									<td>14,000,000</td>
-									<td><span class="badge bg-danger">مدیر</span></td>
-									<td><span class="badge bg-success">تایید</span></td>
-									<td>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1">مسدود</a>
-										<a href="#" class="btn btn-sm btn-danger w-100 mb-1 disabled">ارتقای نقش</a>
-										<a href="#" class="btn btn-sm btn-danger w-100">تنزل نقش</a>
-									</td>
-								</tr>
+								<?php } ?>
 
 							</tbody>
 						</table>
 					</div>
 
 					<div class="container-fluid">
-						<nav>
-							<ul class="pagination justify-content-center flex-wrap gap-2">
-								<li class="page-item disabled">
-									<a class="page-link rounded-3" href="#" tabindex="-1" aria-disabled="true">قبلی</a>
-								</li>
-
-								<li class="page-item active" aria-current="page">
-									<a class="page-link rounded-3" href="#">1</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">2</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">3</a>
-								</li>
-
-								<li class="page-item">
-									<span class="page-link border-0 bg-transparent text-muted">...</span>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">10</a>
-								</li>
-
-								<li class="page-item">
-									<a class="page-link rounded-3" href="#">بعدی</a>
-								</li>
-							</ul>
-						</nav>
+						<?php echo createPagination(AccountRepository::getPageCount(), $page); ?>
 					</div>
 				</div>
 			</div>

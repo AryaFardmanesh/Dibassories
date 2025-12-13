@@ -1,4 +1,28 @@
-<?php include __DIR__ . "/../src/config.php"; ?>
+<?php
+
+include __DIR__ . "/../src/config.php";
+include __DIR__ . "/../src/utils/convert.php";
+include __DIR__ . "/../src/repositories/products.php";
+include __DIR__ . "/../src/controllers/controller.php";
+include __DIR__ . "/../assets/components/pagination.php";
+
+$page = Controller::getRequest("page");
+$sort = Controller::getRequest("sort");
+$name = Controller::getRequest("name");
+$type = Controller::getRequest("type");
+$minPrice = Controller::getRequest("min-price");
+$maxPrice = Controller::getRequest("max-price");
+
+$page = ($page !== null && $page !== "") ? (int)$page : 1;
+$sort = ($sort !== null && $sort !== "") ? (int)$sort : SORT_NEWEST;
+$name = ($name !== null && $name !== "") ? $name : null;
+$type = ($type !== null && $type !== "") ? (int)$type : null;
+$minPrice = ($minPrice !== null && $minPrice !== "") ? (int)$minPrice : null;
+$maxPrice = ($maxPrice !== null && $maxPrice !== "") ? (int)$maxPrice : null;
+
+$products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $type, $minPrice, $maxPrice);
+
+?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -93,40 +117,40 @@
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
 
 	<section class="container-fluid my-5">
-		<form action="<?= BASE_URL ?>/products/" method="GET" class="card shadow-sm p-4 border-0 rounded-4 bg-light">
+		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET" class="card shadow-sm p-4 border-0 rounded-4 bg-light">
 			<div class="row g-3 align-items-end">
 
 				<div class="col-12 col-md-4 col-lg-3">
-					<label for="search" class="form-label fw-semibold">جست‌وجوی محصول</label>
-					<input type="text" class="form-control" id="search" name="search" placeholder="نام محصول را وارد کنید...">
+					<label for="name" class="form-label fw-semibold">جست‌وجوی محصول</label>
+					<input type="text" class="form-control" id="name" name="name" value="<?= $name ?>" placeholder="نام محصول را وارد کنید...">
 				</div>
 
 				<div class="col-12 col-md-4 col-lg-3">
-					<label for="category" class="form-label fw-semibold">نوع محصول</label>
-					<select class="form-select" id="category" name="category">
-						<option value="all">همه</option>
-						<option value="necklace">گردنبند</option>
-						<option value="ring">انگشتر</option>
-						<option value="earring">گوشواره</option>
+					<label for="type" class="form-label fw-semibold">نوع محصول</label>
+					<select class="form-select" id="type" name="type">
+						<option <?= $type === null ? "selected" : null ?> value="">همه</option>
+						<option <?= $type === PRODUCT_TYPE_RING ? "selected" : null ?> value="<?= PRODUCT_TYPE_RING ?>">انگشتر</option>
+						<option <?= $type === PRODUCT_TYPE_NECKLACE ? "selected" : null ?> value="<?= PRODUCT_TYPE_NECKLACE ?>">گردنبند</option>
+						<option <?= $type === PRODUCT_TYPE_EARRING ? "selected" : null ?> value="<?= PRODUCT_TYPE_EARRING ?>">گوشواره</option>
 					</select>
 				</div>
 
 				<div class="col-6 col-md-2 col-lg-2">
-					<label for="price_min" class="form-label fw-semibold">حداقل قیمت</label>
-					<input type="number" class="form-control" id="price_min" name="price_min" placeholder="مثلاً 100000">
+					<label for="min-price" class="form-label fw-semibold">حداقل قیمت</label>
+					<input type="number" class="form-control" id="min-price" name="min-price" value="<?= $minPrice ?>" placeholder="مثلاً 100000">
 				</div>
 				<div class="col-6 col-md-2 col-lg-2">
-					<label for="price_max" class="form-label fw-semibold">حداکثر قیمت</label>
-					<input type="number" class="form-control" id="price_max" name="price_max" placeholder="مثلاً 500000">
+					<label for="max-price" class="form-label fw-semibold">حداکثر قیمت</label>
+					<input type="number" class="form-control" id="max-price" name="max-price" value="<?= $maxPrice ?>" placeholder="مثلاً 500000">
 				</div>
 
 				<div class="col-12 col-md-4 col-lg-2">
 					<label for="sort" class="form-label fw-semibold">مرتب‌سازی بر اساس</label>
 					<select class="form-select" id="sort" name="sort">
-						<option value="newest">جدیدترین</option>
-						<option value="cheapest">ارزان‌ترین</option>
-						<option value="expensive">گران‌ترین</option>
-						<option value="discount">بیشترین تخفیف</option>
+						<option <?= $sort === SORT_NEWEST ? "selected" : null ?> value="<?= SORT_NEWEST ?>">جدیدترین</option>
+						<option <?= $sort === SORT_CHEAPEST ? "selected" : null ?> value="<?= SORT_CHEAPEST ?>">ارزان‌ترین</option>
+						<option <?= $sort === SORT_EXPENSIVE ? "selected" : null ?> value="<?= SORT_EXPENSIVE ?>">گران‌ترین</option>
+						<option <?= $sort === SORT_MOST_OFFER ? "selected" : null ?> value="<?= SORT_MOST_OFFER ?>">بیشترین تخفیف</option>
 					</select>
 				</div>
 
@@ -140,109 +164,53 @@
 	<section class="container-fluid my-5 px-3">
 		<div class="row g-3">
 
+			<?php
+				foreach ($products as $product) {
+			?>
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<a href="#" class="text-decoration-none text-dark">
+				<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none text-dark">
 					<div class="card border-0 shadow-sm h-100 product-card">
-						<img src="<?= ASSETS_DIR ?>/img/products/1.jpg" class="card-img-top p-3" alt="گردنبند نقره">
+						<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="card-img-top p-3" alt="<?= $product->name ?>">
 						<div class="card-body pt-0">
 							<div class="d-flex justify-content-between align-items-center mb-2">
-								<h6 class="fw-bold mb-0 text-truncate" title="گردنبند نقره زنانه">گردنبند نقره زنانه</h6>
-								<span class="badge bg-light text-secondary border">گردنبند</span>
+								<h6 class="fw-bold mb-0 text-truncate" title="<?= $product->name ?>"><?= $product->name ?></h6>
+								<span class="badge bg-light text-secondary border"><?= convertProductTypesToString($product->type) ?></span>
 							</div>
 							<div class="d-flex justify-content-between align-items-center">
+								<?php if ($product->offer !== 0) { ?>
 								<div>
-									<span class="text-muted text-decoration-line-through small">۴۵۰,۰۰۰</span>
-									<span class="text-danger fw-bold ms-1">۳۵۰,۰۰۰</span>
+									<span class="text-muted text-decoration-line-through small"><?= number_format((float)$product->price) ?></span>
+									<span class="text-danger fw-bold ms-1"><?= number_format((float)$product->price - ($product->price * $product->offer / 100)) ?></span>
 								</div>
 								<div class="text-end">
-									<span class="badge bg-danger text-white">٪۲۲ تخفیف</span>
+									<span class="badge bg-danger text-white">٪<?= $product->offer ?> تخفیف</span>
 									<span class="badge bg-light text-dark border ms-1">تومان</span>
 								</div>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-
-			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<a href="#" class="text-decoration-none text-dark">
-					<div class="card border-0 shadow-sm h-100 product-card">
-						<img src="<?= ASSETS_DIR ?>/img/products/2.jpg" class="card-img-top p-3" alt="انگشتر استیل">
-						<div class="card-body pt-0">
-							<div class="d-flex justify-content-between align-items-center mb-2">
-								<h6 class="fw-bold mb-0 text-truncate" title="انگشتر استیل مردانه">انگشتر استیل مردانه</h6>
-								<span class="badge bg-light text-secondary border">انگشتر</span>
-							</div>
-							<div class="d-flex justify-content-between align-items-center">
+								<?php }else { ?>
 								<div>
-									<span class="fw-bold text-dark">۱۸۰,۰۰۰</span>
-								</div>
-								<div>
-									<span class="badge bg-light text-dark border">تومان</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-
-			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<a href="#" class="text-decoration-none text-dark">
-					<div class="card border-0 shadow-sm h-100 product-card">
-						<img src="<?= ASSETS_DIR ?>/img/products/3.jpg" class="card-img-top p-3" alt="گوشواره طلایی">
-						<div class="card-body pt-0">
-							<div class="d-flex justify-content-between align-items-center mb-2">
-								<h6 class="fw-bold mb-0 text-truncate" title="گوشواره طلایی مدل کلاسیک">گوشواره طلایی مدل کلاسیک</h6>
-								<span class="badge bg-light text-secondary border">گوشواره</span>
-							</div>
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<span class="text-muted text-decoration-line-through small">۲۷۰,۰۰۰</span>
-									<span class="text-danger fw-bold ms-1">۲۲۰,۰۰۰</span>
+									<span class="text-muted"><?= number_format((float)$product->price) ?></span>
 								</div>
 								<div class="text-end">
-									<span class="badge bg-danger text-white">٪۱۸ تخفیف</span>
 									<span class="badge bg-light text-dark border ms-1">تومان</span>
 								</div>
+								<?php } ?>
 							</div>
 						</div>
 					</div>
 				</a>
 			</div>
+			<?php
+				}
+			?>
 
 		</div>
 	</section>
 
 	<section class="container my-5">
-		<nav aria-label="صفحه‌بندی محصولات">
-			<ul class="pagination justify-content-center flex-wrap gap-2">
-				<li class="page-item disabled">
-					<a class="page-link rounded-3" href="#" tabindex="-1" aria-disabled="true">قبلی</a>
-				</li>
-
-				<li class="page-item active" aria-current="page">
-					<a class="page-link rounded-3" href="#">1</a>
-				</li>
-				<li class="page-item">
-					<a class="page-link rounded-3" href="#">2</a>
-				</li>
-				<li class="page-item">
-					<a class="page-link rounded-3" href="#">3</a>
-				</li>
-
-				<li class="page-item">
-					<span class="page-link border-0 bg-transparent text-muted">...</span>
-				</li>
-
-				<li class="page-item">
-					<a class="page-link rounded-3" href="#">10</a>
-				</li>
-
-				<li class="page-item">
-					<a class="page-link rounded-3" href="#">بعدی</a>
-				</li>
-			</ul>
-		</nav>
+		<?php
+			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, $name, $type, $minPrice, $maxPrice);
+			echo createPagination($pageCount, $page);
+		?>
 	</section>
 
 	<?php include __DIR__ . "/../assets/components/footer.php"; ?>

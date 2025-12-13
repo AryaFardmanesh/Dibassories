@@ -25,8 +25,7 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 	$colorId = Controller::getRequest("color", true);
 	$materialId = Controller::getRequest("material", true);
 	$sizeId = Controller::getRequest("size", true);
-	$count = (int)Controller::getRequest("
-	", true);
+	$count = (int)Controller::getRequest("count", true);
 
 	$product = ProductRepository::findById($productId);
 
@@ -35,8 +34,8 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
+	if ($product->status === STATUS_SUSPENDED) {
+		Controller::setError("این محصول مسدود شده است.");
 		goto out;
 	}
 
@@ -56,11 +55,6 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
-		goto out;
-	}
-
 	ShoppingCartRepository::remove($user, $productId);
 
 	if (ShoppingCartRepository::hasError()) {
@@ -75,46 +69,56 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 }elseif ($req === CONTROLLER_CART_INC_PRODUCT_COUNT) {
-	$productId = Controller::getRequest("product", true);
+	$cart = Controller::getRequest("cart", true);
+	$product = Controller::getRequest("product", true);
 
-	$product = ProductRepository::findById($productId);
+	$cart = ShoppingCartRepository::findById($cart);
+	$product = ProductRepository::findById($product);
+
+	if (ShoppingCartRepository::hasError()) {
+		Controller::setError(ShoppingCartRepository::getError());
+		goto out;
+	}
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
 		goto out;
 	}
 
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
+	if ($cart->count > ($product->count + 1)) {
+		Controller::setError("تعداد محصول کمتر از درخواست شما است.");
 		goto out;
 	}
 
-	ShoppingCartRepository::updateCount($productId, $product->count + 1);
+	ShoppingCartRepository::updateCount($cart->id, $cart->count + 1);
 
 	if (ShoppingCartRepository::hasError()) {
 		Controller::setError(ShoppingCartRepository::getError());
 		goto out;
 	}
 }elseif ($req === CONTROLLER_CART_DEC_PRODUCT_COUNT) {
-	$productId = Controller::getRequest("product", true);
+	$cart = Controller::getRequest("cart", true);
+	$product = Controller::getRequest("product", true);
 
-	$product = ProductRepository::findById($productId);
+	$cart = ShoppingCartRepository::findById($cart);
+	$product = ProductRepository::findById($product);
+
+	if (ShoppingCartRepository::hasError()) {
+		Controller::setError(ShoppingCartRepository::getError());
+		goto out;
+	}
 
 	if (ProductRepository::hasError()) {
 		Controller::setError(ProductRepository::getError());
 		goto out;
 	}
 
-	if ($product->owner !== $user && $account->role !== ROLE_ADMIN) {
-		Controller::setError("شما مجوز ایجاد تغییر در سبد خرید این کاربر را ندارید.");
+	if (($cart->count - 1) <= 0) {
+		Controller::setError("تعداد درخواستی شما کمتر از یک است.");
 		goto out;
 	}
 
-	if ($product->count === 0) {
-		goto out;
-	}
-
-	ShoppingCartRepository::updateCount($productId, $product->count - 1);
+	ShoppingCartRepository::updateCount($cart->id, $cart->count - 1);
 
 	if (ShoppingCartRepository::hasError()) {
 		Controller::setError(ShoppingCartRepository::getError());
