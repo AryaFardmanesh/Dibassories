@@ -27,7 +27,7 @@ class Database {
 
 		try {
 			Database::$connection = new PDO(
-				"mysql:host=$servername;dbname=$dbname",
+				"mysql:host=$servername;dbname=$dbname;charset=utf8mb4",
 				DB_USERNAME,
 				DB_PASSWORD
 			);
