@@ -907,7 +907,8 @@ class ProductRepository extends BaseRepository {
 		string|null $name = null,
 		int|null $type = null,
 		int|null $minPrice = null,
-		int|null $maxPrice = null
+		int|null $maxPrice = null,
+		int|null $status = STATUS_OK
 	): array {
 		$models = [];
 
@@ -919,6 +920,9 @@ class ProductRepository extends BaseRepository {
 		$sqlCondition = [];
 		$sqlConditionStr = "";
 
+		if ($status !== null) {
+			array_push($sqlCondition, "`dibas_products`.`status` = $status");
+		}
 		if ($name !== null) {
 			array_push($sqlCondition, "`dibas_products`.`name` LIKE '$name'");
 		}
@@ -1006,6 +1010,7 @@ class ProductRepository extends BaseRepository {
 
 	final public static function getPageCount(
 		int $limit = PAGINATION_LIMIT,
+		int|null $status = STATUS_OK,
 		string|null $name = null,
 		int|null $type = null,
 		int|null $minPrice = null,
@@ -1020,6 +1025,9 @@ class ProductRepository extends BaseRepository {
 		$sqlCondition = [];
 		$sqlConditionStr = "";
 
+		if ($status !== null) {
+			array_push($sqlCondition, "`dibas_products`.`status` = $status");
+		}
 		if ($name !== null) {
 			array_push($sqlCondition, "`dibas_products`.`name` LIKE '$name'");
 		}
