@@ -34,6 +34,11 @@ if ($req === CONTROLLER_CART_ADD_CART) {
 		goto out;
 	}
 
+	if ($product->status === STATUS_SUSPENDED) {
+		Controller::setError("این محصول مسدود شده است.");
+		goto out;
+	}
+
 	ShoppingCartRepository::add($user, $productId, $colorId, $sizeId, $materialId, $count);
 
 	if (ShoppingCartRepository::hasError()) {

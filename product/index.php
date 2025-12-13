@@ -24,6 +24,10 @@ if ($product === null) {
 	Controller::redirect(BASE_URL . "/products/");
 }
 
+if ($product->product->status === STATUS_SUSPENDED && $account->role === ROLE_CUSTOMER) {
+	Controller::redirect(BASE_URL . "/products/");
+}
+
 $cart = [];
 $prodCart = null;
 $inCart = false;
