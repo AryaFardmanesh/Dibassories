@@ -126,7 +126,7 @@ foreach ($products as $product) {
 									<td><?= $product->name ?></td>
 									<td><?= $product->count ?></td>
 									<td><?= number_format((float)$product->price) ?></td>
-									<td><span class="badge text-bg-warning">50%</span></td>
+									<td><span class="badge text-bg-warning"><?= $product->offer ?>%</span></td>
 									<td><span class="badge bg-<?= convertStatusToColor($product->status) ?>"><?= convertStatusToString($product->status) ?></span></td>
 									<td>
 										<?php
