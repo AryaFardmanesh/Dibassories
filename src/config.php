@@ -7,9 +7,9 @@ define('SRC_DIR', BASE_URL . '/src');
 
 // Database Config
 define('DB_SERVERNAME', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'dibassories');
+define('DB_USERNAME', 'dibassor_dibassor');
+define('DB_PASSWORD', 'arya_1383');
+define('DB_NAME', 'dibassor_dibassories');
 
 // Database Enumerations
 define('ROLE_CUSTOMER', 10);
