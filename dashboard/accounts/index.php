@@ -113,7 +113,7 @@ foreach ($users as $user) {
 								<?php
 									$i = ($page * PAGINATION_LIMIT) - PAGINATION_LIMIT;
 									$users = AccountRepository::filter($page);
-									foreach ($users as $users) {
+									foreach ($users as $user) {
 										$roleColor = "success";
 										if ($user->role === ROLE_ADMIN) $roleColor = "danger";
 										elseif ($user->role !== ROLE_CUSTOMER) $roleColor = "warning";
