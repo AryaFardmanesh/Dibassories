@@ -28,7 +28,7 @@ if ($viewMode === 'edit-product') {
 	}
 }
 
-$orders = OrderRepository::findForOwner($account->id);
+$orders = OrderRepository::findForProvider($account->id);
 
 if (OrderRepository::hasError()) {
 	$error = OrderRepository::getError();
