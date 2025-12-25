@@ -10,17 +10,13 @@ $page = Controller::getRequest("page");
 $sort = Controller::getRequest("sort");
 $name = Controller::getRequest("name");
 $type = Controller::getRequest("type");
-$minPrice = Controller::getRequest("min-price");
-$maxPrice = Controller::getRequest("max-price");
 
 $page = ($page !== null && $page !== "") ? (int)$page : 1;
 $sort = ($sort !== null && $sort !== "") ? (int)$sort : SORT_NEWEST;
 $name = ($name !== null && $name !== "") ? $name : null;
 $type = ($type !== null && $type !== "") ? (int)$type : null;
-$minPrice = ($minPrice !== null && $minPrice !== "") ? (int)$minPrice : null;
-$maxPrice = ($maxPrice !== null && $maxPrice !== "") ? (int)$maxPrice : null;
 
-$products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $type, $minPrice, $maxPrice);
+$products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $type);
 
 ?>
 <!DOCTYPE html>
@@ -33,7 +29,7 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - محصولات</title>
+	<title><?= PROJ_NAME ?> - محصولات</title>
 	<style>
 	/* Products Filters */
 	form.card {
@@ -135,15 +131,6 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 					</select>
 				</div>
 
-				<div class="col-6 col-md-2 col-lg-2">
-					<label for="min-price" class="form-label fw-semibold">حداقل قیمت</label>
-					<input type="number" class="form-control" id="min-price" name="min-price" value="<?= $minPrice ?>" placeholder="مثلاً 100000">
-				</div>
-				<div class="col-6 col-md-2 col-lg-2">
-					<label for="max-price" class="form-label fw-semibold">حداکثر قیمت</label>
-					<input type="number" class="form-control" id="max-price" name="max-price" value="<?= $maxPrice ?>" placeholder="مثلاً 500000">
-				</div>
-
 				<div class="col-12 col-md-4 col-lg-2">
 					<label for="sort" class="form-label fw-semibold">مرتب‌سازی بر اساس</label>
 					<select class="form-select" id="sort" name="sort">
@@ -208,7 +195,7 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 
 	<section class="container my-5">
 		<?php
-			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, STATUS_OK, $name, $type, $minPrice, $maxPrice);
+			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, STATUS_OK, $name, $type);
 			echo createPagination($pageCount, $page);
 		?>
 	</section>

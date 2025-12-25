@@ -1,6 +1,7 @@
 <?php
 
 // Global
+define('PROJ_NAME', 'زیبا اکسسوری');
 define('BASE_URL', '/Dibassories');
 define('ASSETS_DIR', BASE_URL . '/assets');
 define('SRC_DIR', BASE_URL . '/src');

@@ -54,7 +54,7 @@ Controller::onSubmit("POST", function (array $params) {
 	<link rel="stylesheet" href="./../assets/css/login.css" />
 	<script src="./../assets/libs/jquery.min.js"></script>
 	<script src="./../assets/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - ثبت نام</title>
+	<title><?= PROJ_NAME ?> - ثبت نام</title>
 </head>
 <body>
 	<div class="login-card my-4">
@@ -62,7 +62,7 @@ Controller::onSubmit("POST", function (array $params) {
 			if ($error) echo "<div class='alert alert-danger' role='alert'>$error</div>";
 		?>
 
-		<div class="logo">دیبا اکسسوری</div>
+		<div class="logo"><?= PROJ_NAME ?></div>
 		<h5 class="mb-4 fw-bold fs-6 text-secondary">ایجاد حساب کاربری</h5>
 
 		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">

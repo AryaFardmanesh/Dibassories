@@ -12,7 +12,7 @@ if ($account !== null) {
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white navbar-custom shadow-sm">
 	<div class="container">
-		<a class="navbar-brand" href="<?= BASE_URL ?>">دیبا اکسسوری</a>
+		<a class="navbar-brand" href="<?= BASE_URL ?>"><?= PROJ_NAME ?></a>
 
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
 			<span class="navbar-toggler-icon"></span>

@@ -42,7 +42,7 @@ foreach ($orders as $order) {
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/scripts/slidebar.js"></script>
-	<title>دیبا اکسسوری - داشبورد - سفارشات</title>
+	<title><?= PROJ_NAME ?> - داشبورد - سفارشات</title>
 </head>
 <body>
 	<?php include __DIR__ . "/../../assets/components/navbar.php"; ?>
@@ -68,22 +68,6 @@ foreach ($orders as $order) {
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد سفارشات</h6>
 						<p class="h4 text-primary mb-0"><?= number_format((float)$ordersTotal) ?></p>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card shadow-sm">
-					<div class="card-body">
-						<h6 class="mb-1 fw-bold">تعداد سفارشات جاری</h6>
-						<p class="h4 text-success mb-0"><?= number_format((float)$ordersOpenTotal) ?></p>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card shadow-sm">
-					<div class="card-body">
-						<h6 class="mb-1 fw-bold">تعداد سفارشات ارسال شده</h6>
-						<p class="h4 text-warning mb-0"><?= number_format((float)$orderSentTotal) ?></p>
 					</div>
 				</div>
 			</div>

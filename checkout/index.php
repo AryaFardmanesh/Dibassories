@@ -34,7 +34,7 @@ if (count($cart) === 0) {
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - پرداخت</title>
+	<title><?= PROJ_NAME ?> - پرداخت</title>
 	<style>
 	.product-card {
 		border-radius: 1rem;

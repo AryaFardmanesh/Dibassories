@@ -17,7 +17,7 @@ $mostOfferProducts = ProductRepository::filter(1, PAGINATION_LIMIT, SORT_MOST_OF
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>Homepage</title>
+	<title><?= PROJ_NAME ?></title>
 	<style>
 	/* Header Slider */
 	.carousel-caption h3 {

@@ -37,7 +37,7 @@ foreach ($orders as $order) {
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/scripts/slidebar.js"></script>
-	<title>دیبا اکسسوری - داشبورد</title>
+	<title><?= PROJ_NAME ?> - داشبورد</title>
 </head>
 <body>
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
@@ -91,7 +91,7 @@ foreach ($orders as $order) {
 				<div class="card-body p-4 p-md-5">
 					<h2 class="fw-bold text-center mb-4 text-primary">درباره پروژه</h2>
 					<p class="text-muted lh-lg mb-4 text-justify">
-						این وب‌سایت با عنوان <strong>دیبا اکسسوری (Dibassories)</strong> به‌عنوان یک پروژه دانشگاهی طراحی و توسعه داده شده است. هدف اصلی این پروژه، پیاده‌سازی یک سامانه فروش آنلاین برای اکسسوری‌ها مانند گردنبند، دستبند، انگشتر و گوشواره است تا مفاهیم طراحی رابط کاربری، پایگاه داده، منطق سمت سرور و تعامل کاربر با سیستم به‌صورت عملی نمایش داده شوند.
+						این وب‌سایت با عنوان <strong><?= PROJ_NAME ?></strong> به‌عنوان یک پروژه دانشگاهی طراحی و توسعه داده شده است. هدف اصلی این پروژه، پیاده‌سازی یک سامانه فروش آنلاین برای اکسسوری‌ها مانند گردنبند، دستبند، انگشتر و گوشواره است تا مفاهیم طراحی رابط کاربری، پایگاه داده، منطق سمت سرور و تعامل کاربر با سیستم به‌صورت عملی نمایش داده شوند.
 					</p>
 					<p class="text-muted lh-lg mb-4 text-justify">
 						در این پروژه تلاش شده است با استفاده از فناوری‌های پایه و استاندارد وب، یک ساختار تمیز، قابل‌فهم و کاربردی ایجاد شود که نه‌تنها برای اهداف آموزشی، بلکه به‌عنوان یک نمونه‌ی واقعی از پیاده‌سازی سیستم‌های فروشگاهی ساده نیز قابل استفاده باشد.
@@ -127,10 +127,7 @@ foreach ($orders as $order) {
 					</div>
 					<div class="text-center mt-4">
 						<p class="fw-bold mb-1 text-dark">توسعه‌دهنده پروژه:</p>
-						<p class="text-muted mb-0">آریا فردمنش</p>
-						<span class="badge bg-light text-secondary border mt-2 px-3 py-2">
-						مخزن گیت هاب: <a href="https://github.com/AryaFardmanesh/Dibassories/">GitHub</a>
-						</span>
+						<p class="text-muted mb-0">علی محجوب</p>
 						<span class="badge bg-light text-secondary border mt-2 px-3 py-2">
 						مجوز پروژه: MIT License
 						</span>

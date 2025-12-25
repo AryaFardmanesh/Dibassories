@@ -51,7 +51,7 @@ if (ProductRepository::hasError()) {
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - پنل</title>
+	<title><?= PROJ_NAME ?> - پنل</title>
 	<style>
 	.card-body::-webkit-scrollbar {
 		width: 8px;

@@ -41,7 +41,7 @@ foreach ($products as $product) {
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/scripts/slidebar.js"></script>
-	<title>دیبا اکسسوری - داشبورد - محصولات</title>
+	<title><?= PROJ_NAME ?> - داشبورد - محصولات</title>
 </head>
 <body>
 	<?php include __DIR__ . "/../../assets/components/navbar.php"; ?>
@@ -75,14 +75,6 @@ foreach ($products as $product) {
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات تایید شده</h6>
 						<p class="h4 text-success mb-0"><?= number_format((float)$productsOkCount) ?></p>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card shadow-sm">
-					<div class="card-body">
-						<h6 class="mb-1 fw-bold">تعداد محصولات معلق</h6>
-						<p class="h4 text-warning mb-0"><?= number_format((float)$productsBlockCount) ?></p>
 					</div>
 				</div>
 			</div>

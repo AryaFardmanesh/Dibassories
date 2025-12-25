@@ -51,7 +51,7 @@ foreach ($transactions as $transaction) {
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/scripts/slidebar.js"></script>
-	<title>دیبا اکسسوری - داشبورد - تراکنش ها</title>
+	<title><?= PROJ_NAME ?> - داشبورد - تراکنش ها</title>
 </head>
 <body>
 	<?php include __DIR__ . "/../../assets/components/navbar.php"; ?>
@@ -77,22 +77,6 @@ foreach ($transactions as $transaction) {
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد تراکنش ها</h6>
 						<p class="h4 text-primary mb-0"><?= number_format((float)$transactionsCount) ?></p>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card shadow-sm">
-					<div class="card-body">
-						<h6 class="mb-1 fw-bold">جمع تراکنش ها</h6>
-						<p class="h4 text-<?= $transactionsTotalAmount >= 0 ? "success" : "danger" ?> mb-0"><?= number_format((float)$transactionsTotalAmount) ?></p>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card shadow-sm">
-					<div class="card-body">
-						<h6 class="mb-1 fw-bold">جمع تراکنش های امروز</h6>
-						<p class="h4 text-warning mb-0"><?= $transactionTotalAmountToday ?></p>
 					</div>
 				</div>
 			</div>

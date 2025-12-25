@@ -24,12 +24,12 @@
 			<h6 class="fw-bold mb-3 text-primary">شبکه‌های اجتماعی</h6>
 			<ul class="list-inline">
 				<li class="list-inline-item">
-					<a href="https://github.com/AryaFardmanesh" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
+					<a href="https://github.com" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
 						<img src="<?= ASSETS_DIR ?>/img/icons/github.png" width="30" height="30" alt="GitHub Logo">
 					</a>
 				</li>
 				<li class="list-inline-item">
-					<a href="https://t.me/AryaFardmanesh" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
+					<a href="https://t.me/Ali1383z" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
 						<img src="<?= ASSETS_DIR ?>/img/icons/telegram.png" width="38" height="38" alt="Telegram Logo">
 					</a>
 				</li>
@@ -41,7 +41,7 @@
 		<hr class="border-secondary my-4">
 
 		<div class="text-center small">
-			<span>© 2025 - طراحی و توسعه توسط <strong>آریا فردمنش</strong></span>
+			<span>© 2025 - طراحی و توسعه توسط <strong>علی محجوب</strong></span>
 			<br>
 			<span class="text-secondary">مجوز: MIT</span>
 		</div>

@@ -27,7 +27,7 @@ if ($account === null) {
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - پروفایل</title>
+	<title><?= PROJ_NAME ?> - پروفایل</title>
 	<style>
 	.cart-slider {
 		scroll-behavior: smooth;
@@ -108,7 +108,7 @@ if ($account === null) {
 			<div class="col-12">
 				<div class="card shadow-lg border-0 rounded-4">
 					<div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
-						<h4 class="mb-0">پروفایل کاربری</h4>
+						<h4 class="mb-0">پروفایل کاربر</h4>
 					</div>
 					<div class="card-body p-4">
 						<form action="<?= BASE_URL . "/src/controllers/accounts.php" ?>" method="GET" class="needs-validation" novalidate>

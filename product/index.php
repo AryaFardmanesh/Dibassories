@@ -70,7 +70,7 @@ if ($account !== null) {
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - محصول</title>
+	<title><?= PROJ_NAME ?> - محصول</title>
 	<style>
 	.btn-check:checked + .btn {
 		border-color: #0d6efd !important;
