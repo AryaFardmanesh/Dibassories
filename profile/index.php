@@ -27,7 +27,7 @@ if ($account === null) {
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - پروفایل</title>
+	<title><?= PROJ_NAME ?> - پروفایل</title>
 	<style>
 	.cart-slider {
 		scroll-behavior: smooth;
@@ -105,10 +105,10 @@ if ($account === null) {
 
 	<section class="container-fluid my-5">
 		<div class="row justify-content-center">
-			<div class="col-12">
+			<div class="col-12 col-md-10 col-lg-8">
 				<div class="card shadow-lg border-0 rounded-4">
-					<div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
-						<h4 class="mb-0">پروفایل کاربری</h4>
+					<div class="card-header bg-info text-white text-center py-3 rounded-top-4">
+						<h4 class="mb-0">اطلاعات حساب کاربری</h4>
 					</div>
 					<div class="card-body p-4">
 						<form action="<?= BASE_URL . "/src/controllers/accounts.php" ?>" method="GET" class="needs-validation" novalidate>
@@ -123,7 +123,7 @@ if ($account === null) {
 										type="text"
 										id="username"
 										name="username"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->username ?>"
 										autocomplete="off"
 										readonly
@@ -135,7 +135,7 @@ if ($account === null) {
 										type="email"
 										id="email"
 										name="email"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->email ?>"
 										autocomplete="off"
 										required
@@ -147,7 +147,7 @@ if ($account === null) {
 										type="text"
 										id="fname"
 										name="fname"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->fname ?>"
 										autocomplete="off"
 										min="4"
@@ -161,7 +161,7 @@ if ($account === null) {
 										type="text"
 										id="lname"
 										name="lname"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->lname ?>"
 										autocomplete="off"
 										min="4"
@@ -175,7 +175,7 @@ if ($account === null) {
 										type="tel"
 										id="phone"
 										name="phone"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->phone ?>"
 										autocomplete="off"
 										max="14"
@@ -188,7 +188,7 @@ if ($account === null) {
 										type="text"
 										id="zipcode"
 										name="zipcode"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->zipcode ?>"
 										autocomplete="off"
 										max="10"
@@ -202,7 +202,7 @@ if ($account === null) {
 										type="text"
 										id="card_number"
 										name="card_number"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->card_number ?>"
 										autocomplete="off"
 										min="16"
@@ -218,7 +218,7 @@ if ($account === null) {
 										type="text"
 										id="card_terminal"
 										name="card_terminal"
-										class="form-control"
+										class="form-control form-control-sm"
 										value="<?= $account->card_terminal ?>"
 										autocomplete="off"
 										min="32"
@@ -232,7 +232,7 @@ if ($account === null) {
 									<textarea
 										id="address"
 										name="address"
-										class="form-control"
+										class="form-control form-control-sm"
 										autocomplete="off"
 										max="10"
 										rows="3"
@@ -241,7 +241,7 @@ if ($account === null) {
 								</div>
 							</div>
 							<div class="text-center mt-4">
-								<button type="submit" class="btn btn-success px-5 py-2 fw-bold w-100 rounded-pill shadow-sm">بروزرسانی اطلاعات</button>
+								<button type="submit" class="btn btn-sm btn-danger px-5 py-2 fw-bold w-100 shadow-sm">بروزرسانی اطلاعات</button>
 							</div>
 						</form>
 					</div>
@@ -251,12 +251,12 @@ if ($account === null) {
 	</section>
 
 	<section class="container-fluid my-5">
-		<div class="d-flex justify-content-between align-items-center mb-3">
+		<div class="d-flex align-items-center gap-3 mb-3">
 			<h4 class="fw-bold mb-0">سبد خرید شما</h4>
 
 			<div class="d-flex gap-2">
-				<button id="clearCartBtn" class="btn btn-outline-danger">حذف سبد خرید</button>
-				<a href="<?= BASE_URL . "/checkout/" ?>" id="checkoutBtn" class="btn btn-primary">ثبت سفارش</a>
+				<button id="clearCartBtn" class="btn btn-sm btn-danger">حذف سبد خرید</button>
+				<a href="<?= BASE_URL . "/checkout/" ?>" id="checkoutBtn" class="btn btn-sm btn-success">ثبت سفارش</a>
 			</div>
 		</div>
 
@@ -279,6 +279,10 @@ if ($account === null) {
 					<span> تعداد: <?= $cartInfo->count ?></span>
 					<div class="d-flex justify-content-between align-items-center">
 						<?php if ($cartProduct->offer === 0) { ?>
+							<div>
+								<span class="text-muted small"><?= number_format((float)$cartProduct->price)  ?></span>
+								<span class="badge bg-light text-dark border ms-1">تومان</span>
+							</div>
 						<?php }else { ?>
 							<div>
 								<span class="text-muted text-decoration-line-through small"><?= number_format((float)$cartProduct->price)  ?></span>
@@ -314,7 +318,7 @@ if ($account === null) {
 					آیا از حذف کامل سبد خرید خود مطمئن هستید؟ این عمل قابل بازگشت نیست.
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+					<button type="button" class="btn btn-info text-white" data-bs-dismiss="modal">انصراف</button>
 					<a href="<?= $emptyCartLink ?>" id="confirmClearBtn" class="btn btn-danger">بله، حذف کن</a>
 				</div>
 			</div>
@@ -332,11 +336,11 @@ if ($account === null) {
 
 	<section class="container-fluid my-5">
 		<div class="row justify-content-center">
-			<div class="col-lg-8 col-md-10">
+			<div class="col-lg-10 col-md-12">
 
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body text-center py-4">
-						<h4 class="fw-bold text-primary mb-2">موجودی کیف پول شما</h4>
+						<h4 class="fw-bold text-info mb-2">موجودی کیف پول شما</h4>
 						<h2 class="fw-bolder text-success mb-3"><?= number_format((float)$account->wallet_balance) ?> <small class="text-muted fs-5">تومان</small></h2>
 						<p class="text-muted">از موجودی خود می‌توانید برای خرید یا برداشت وجه استفاده کنید.</p>
 					</div>
@@ -344,7 +348,7 @@ if ($account === null) {
 
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body">
-						<h5 class="fw-bold mb-3 text-primary">شارژ کیف پول</h5>
+						<h5 class="fw-bold mb-3 text-info">شارژ کیف پول</h5>
 						<p class="text-muted small mb-3">
 							می‌توانید مبلغ مورد نظر را وارد کرده و با انتخاب روش پرداخت، کیف پول خود را شارژ کنید.
 							(در نسخهٔ آزمایشی، از کد تست برای شارژ بدون پرداخت واقعی می‌توان استفاده کرد.)
@@ -359,7 +363,7 @@ if ($account === null) {
 								<label for="chargeAmount" class="form-label fw-semibold">مبلغ (تومان)</label>
 								<input
 									type="number"
-									class="form-control"
+									class="form-control form-control-sm"
 									id="chargeAmount"
 									name="amount"
 									placeholder="مثلاً ۵۰۰۰۰"
@@ -375,7 +379,7 @@ if ($account === null) {
 									type="text"
 									id="testCode"
 									name="tcode"
-									class="form-control"
+									class="form-control form-control-sm"
 									placeholder="اگر کد تست دارید وارد کنید"
 									autocomplete="off"
 									min="6"
@@ -387,7 +391,7 @@ if ($account === null) {
 							</div>
 
 							<div class="col-12 d-flex gap-2 justify-content-start">
-								<button type="submit" class="btn btn-success w-100">پرداخت و شارژ</button>
+								<button type="submit" class="btn btn-info text-white w-100">پرداخت و شارژ</button>
 							</div>
 						</form>
 					</div>
@@ -395,7 +399,7 @@ if ($account === null) {
 
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body">
-						<h5 class="fw-bold mb-3 text-primary">برداشت وجه از کیف پول</h5>
+						<h5 class="fw-bold mb-3 text-info">برداشت وجه از کیف پول</h5>
 						<form action="<?= BASE_URL . "/src/controllers/transactions.php" ?>" method="GET" class="needs-validation" novalidate>
 							<input type="hidden" name="req" value="<?= CONTROLLER_TRANSACTION_EXCHANGE ?>" />
 							<input type="hidden" name="user" value="<?= $account->id ?>" />
@@ -405,7 +409,7 @@ if ($account === null) {
 								<label for="withdrawAmount" class="form-label">مبلغ مورد نظر (تومان)</label>
 								<input
 									type="number"
-									class="form-control rounded-3"
+									class="form-control form-control-sm rounded-3"
 									id="withdrawAmount"
 									name="amount"
 									placeholder="مثلاً ۵۰۰,۰۰۰"
@@ -416,7 +420,7 @@ if ($account === null) {
 								>
 							</div>
 							<div class="text-end">
-								<button type="submit" class="btn btn-success w-100 px-4 rounded-3">درخواست برداشت</button>
+								<button type="submit" class="btn btn-info text-white w-100 px-4">درخواست برداشت</button>
 							</div>
 						</form>
 					</div>
@@ -424,9 +428,9 @@ if ($account === null) {
 
 				<div class="card shadow-sm mb-4 border-0 rounded-4">
 					<div class="card-body">
-						<h5 class="fw-bold mb-3 text-primary">تاریخچه سفارشات</h5>
+						<h5 class="fw-bold mb-3 text-info">تاریخچه سفارشات</h5>
 						<div class="table-responsive">
-							<table class="table align-middle text-center">
+							<table class="table table-striped align-middle text-center">
 								<thead class="table-light">
 									<tr>
 										<th>تصویر</th>
@@ -463,9 +467,9 @@ if ($account === null) {
 
 				<div class="card shadow-sm border-0 rounded-4">
 					<div class="card-body">
-						<h5 class="fw-bold mb-3 text-primary">تاریخچه تراکنش‌ها</h5>
+						<h5 class="fw-bold mb-3 text-info">تاریخچه تراکنش‌ها</h5>
 						<div class="table-responsive">
-							<table class="table align-middle text-center">
+							<table class="table table-striped align-middle text-center">
 								<thead class="table-light">
 									<tr>
 										<th>عنوان تراکنش</th>
@@ -500,8 +504,8 @@ if ($account === null) {
 	<section class="container-fluid my-4">
 		<div class="card shadow-sm border-0 rounded-4">
 			<div class="card-header bg-light d-flex justify-content-between align-items-center">
-				<h5 class="mb-0 fw-bold">درخواست ارتقاء به فروشنده</h5>
-				<button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#sellerRequestCollapse" aria-expanded="false" aria-controls="sellerRequestCollapse">
+				<h5 class="mb-0 fw-bold text-info">درخواست ارتقاء به فروشنده</h5>
+				<button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#sellerRequestCollapse" aria-expanded="false" aria-controls="sellerRequestCollapse">
 					ارسال درخواست
 				</button>
 			</div>
@@ -526,7 +530,7 @@ if ($account === null) {
 								type="text"
 								id="national_id"
 								name="pangirno"
-								class="form-control"
+								class="form-control form-control-sm"
 								placeholder="مثال: 0012345678"
 								pattern="\d{10}"
 								required
@@ -541,7 +545,7 @@ if ($account === null) {
 								type="text"
 								id="card_number"
 								name="card_number"
-								class="form-control"
+								class="form-control form-control-sm"
 								placeholder="16 رقم شماره کارت"
 								pattern="\d{16}"
 								required
@@ -556,7 +560,7 @@ if ($account === null) {
 								type="text"
 								id="shaba"
 								name="card_terminal"
-								class="form-control"
+								class="form-control form-control-sm"
 								placeholder="مثال: .........................."
 								pattern="[0-9]{24}"
 								required
@@ -573,7 +577,7 @@ if ($account === null) {
 								type="text"
 								id="instagram"
 								name="instagram"
-								class="form-control"
+								class="form-control form-control-sm"
 								placeholder="@your_instagram"
 								max="128"
 							>
@@ -586,7 +590,7 @@ if ($account === null) {
 								type="text"
 								id="telegram"
 								name="telegram"
-								class="form-control"
+								class="form-control form-control-sm"
 								placeholder="@your_telegram"
 								max="128"
 							>
@@ -602,7 +606,7 @@ if ($account === null) {
 						</div>
 
 						<div class="col-12 text-center">
-							<button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">ارسال درخواست</button>
+							<button type="submit" class="btn btn-info text-white w-100 px-4 py-2 fw-semibold">ارسال درخواست</button>
 						</div>
 					</form>
 				</div>

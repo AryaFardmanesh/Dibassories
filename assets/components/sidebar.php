@@ -12,7 +12,7 @@ if (isset($setActiveLinkForSidebar)) {
 <aside class="app-sidebar" id="appSidebar" aria-label="Main Sidebar">
 	<div class="sidebar-brand d-flex align-items-center justify-content-center px-2">
 		<div class="d-flex align-items-center">
-			<span class="brand-title ms-2 nav-text">Dibassories Admin</span>
+			<span class="brand-title ms-2 nav-text">Admin Panel</span>
 		</div>
 	</div>
 

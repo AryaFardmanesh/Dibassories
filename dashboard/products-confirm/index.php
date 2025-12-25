@@ -41,7 +41,7 @@ foreach ($products as $product) {
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/scripts/slidebar.js"></script>
-	<title>دیبا اکسسوری - داشبورد - تایید محصولات</title>
+	<title><?= PROJ_NAME ?> - داشبورد - تایید محصولات</title>
 </head>
 <body>
 	<?php include __DIR__ . "/../../assets/components/navbar.php"; ?>
@@ -56,33 +56,33 @@ foreach ($products as $product) {
 				<button class="btn btn-outline-primary d-lg-none p-0" aria-controls="appSidebar" aria-expanded="false">
 					<img id="mobileSidebarBtn" src="<?= ASSETS_DIR ?>/img/icons/hamburger-button.png" alt="دکمه نوار کناری" width="25" />
 				</button>
-				<h4 class="mb-0">داشبورد مدیر - تایید محصولات</h4>
+				<h4 class="mb-0">داشبورد</h4>
 			</div>
-			<div class="text-muted small">سلام، <?= $account->fname ?> — امروز <span class="show-time"></span></div>
+			<div class="text-muted small">سلام <?= $account->fname ?></div>
 		</div>
 
-		<div class="row g-4">
+		<div class="row g-1">
 			<div class="col-md-4">
-				<div class="card shadow-sm">
+				<div class="card bg-info text-white shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات</h6>
-						<p class="h4 text-primary mb-0"><?= number_format((float)$productsCount) ?></p>
+						<p class="h4 mb-0"><?= number_format((float)$productsCount) ?></p>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="card shadow-sm">
+				<div class="card bg-info text-white shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات تایید شده</h6>
-						<p class="h4 text-success mb-0"><?= number_format((float)$productsOkCount) ?></p>
+						<p class="h4 mb-0"><?= number_format((float)$productsOkCount) ?></p>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="card shadow-sm">
+				<div class="card bg-info text-white shadow-sm">
 					<div class="card-body">
 						<h6 class="mb-1 fw-bold">تعداد محصولات معلق</h6>
-						<p class="h4 text-warning mb-0"><?= number_format((float)$productsBlockCount) ?></p>
+						<p class="h4 mb-0"><?= number_format((float)$productsBlockCount) ?></p>
 					</div>
 				</div>
 			</div>
@@ -94,7 +94,7 @@ foreach ($products as $product) {
 			<div class="card shadow-sm border-0 rounded-4">
 				<div class="card-body p-4 p-md-5">
 					<div class="table-responsive">
-						<table class="table align-middle text-center">
+						<table class="table table table-striped table-hover align-middle text-center">
 							<thead class="table-light">
 								<tr>
 									<th>#</th>

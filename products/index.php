@@ -8,19 +8,15 @@ include __DIR__ . "/../assets/components/pagination.php";
 
 $page = Controller::getRequest("page");
 $sort = Controller::getRequest("sort");
-$name = Controller::getRequest("name");
-$type = Controller::getRequest("type");
 $minPrice = Controller::getRequest("min-price");
 $maxPrice = Controller::getRequest("max-price");
 
 $page = ($page !== null && $page !== "") ? (int)$page : 1;
 $sort = ($sort !== null && $sort !== "") ? (int)$sort : SORT_NEWEST;
-$name = ($name !== null && $name !== "") ? $name : null;
-$type = ($type !== null && $type !== "") ? (int)$type : null;
 $minPrice = ($minPrice !== null && $minPrice !== "") ? (int)$minPrice : null;
 $maxPrice = ($maxPrice !== null && $maxPrice !== "") ? (int)$maxPrice : null;
 
-$products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $type, $minPrice, $maxPrice);
+$products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, null, null, $minPrice, $maxPrice);
 
 ?>
 <!DOCTYPE html>
@@ -33,51 +29,51 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - محصولات</title>
+	<title><?= PROJ_NAME ?> - محصولات</title>
 	<style>
 	/* Products Filters */
 	form.card {
-		border-radius: 1rem;
+		border-radius: 1.2rem;
 	}
 
 	form label {
-		color: #333;
-		font-size: 0.9rem;
+		color: #666;
+		font-size: 0.8rem;
 	}
 
 	form input,
 	form select {
 		border-radius: 0.6rem;
-		border: 1px solid #ccc;
+		border: 1px solid #969393ff;
 	}
 
 	form input:focus,
 	form select:focus {
-		border-color: #0d6efd;
-		box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+		border-color: #8fb9f8ff;
+		box-shadow: 0 0 0 0.15rem rgba(85, 144, 233, 0.15);
 	}
 
 	button.btn-dark {
-		border-radius: 0.6rem;
-		transition: all 0.2s ease-in-out;
+		border-radius: 0.8rem;
+		transition: all 0.4s ease-in-out;
 	}
 
 	button.btn-dark:hover {
-		background-color: #212529;
-		transform: translateY(-2px);
+		background-color: #474d53ff;
+		transform: translateY(-3px);
 	}
 
 	/* Products card */
 	.product-card {
-		transition: all 0.2s ease-in-out;
-		border-radius: 0.75rem;
+		transition: all 0.4s ease-in-out;
+		border-radius: 0.8rem;
 	}
 	.product-card:hover {
 		transform: translateY(-5px);
-		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+		box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.2);
 	}
 	.card-img-top {
-		height: 180px;
+		height: 200px;
 		object-fit: contain;
 	}
 
@@ -117,34 +113,10 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 	<?php include __DIR__ . "/../assets/components/navbar.php"; ?>
 
 	<section class="container-fluid my-5">
-		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET" class="card shadow-sm p-4 border-0 rounded-4 bg-light">
+		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET" class="card shadow p-4 border-0 rounded-4 bg-light">
 			<div class="row g-3 align-items-end">
 
-				<div class="col-12 col-md-4 col-lg-3">
-					<label for="name" class="form-label fw-semibold">جست‌وجوی محصول</label>
-					<input type="text" class="form-control" id="name" name="name" value="<?= $name ?>" placeholder="نام محصول را وارد کنید...">
-				</div>
-
-				<div class="col-12 col-md-4 col-lg-3">
-					<label for="type" class="form-label fw-semibold">نوع محصول</label>
-					<select class="form-select" id="type" name="type">
-						<option <?= $type === null ? "selected" : null ?> value="">همه</option>
-						<option <?= $type === PRODUCT_TYPE_RING ? "selected" : null ?> value="<?= PRODUCT_TYPE_RING ?>">انگشتر</option>
-						<option <?= $type === PRODUCT_TYPE_NECKLACE ? "selected" : null ?> value="<?= PRODUCT_TYPE_NECKLACE ?>">گردنبند</option>
-						<option <?= $type === PRODUCT_TYPE_EARRING ? "selected" : null ?> value="<?= PRODUCT_TYPE_EARRING ?>">گوشواره</option>
-					</select>
-				</div>
-
-				<div class="col-6 col-md-2 col-lg-2">
-					<label for="min-price" class="form-label fw-semibold">حداقل قیمت</label>
-					<input type="number" class="form-control" id="min-price" name="min-price" value="<?= $minPrice ?>" placeholder="مثلاً 100000">
-				</div>
-				<div class="col-6 col-md-2 col-lg-2">
-					<label for="max-price" class="form-label fw-semibold">حداکثر قیمت</label>
-					<input type="number" class="form-control" id="max-price" name="max-price" value="<?= $maxPrice ?>" placeholder="مثلاً 500000">
-				</div>
-
-				<div class="col-12 col-md-4 col-lg-2">
+				<div class="col-12">
 					<label for="sort" class="form-label fw-semibold">مرتب‌سازی بر اساس</label>
 					<select class="form-select" id="sort" name="sort">
 						<option <?= $sort === SORT_NEWEST ? "selected" : null ?> value="<?= SORT_NEWEST ?>">جدیدترین</option>
@@ -154,20 +126,29 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 					</select>
 				</div>
 
-				<div class="col-12 col-md-3 col-lg-2 text-center mt-3 mt-md-2">
-					<button type="submit" class="btn btn-dark w-100 py-2 fw-semibold">فیلتر کن</button>
+				<div class="col-6">
+					<label for="min-price" class="form-label fw-semibold">حداقل قیمت</label>
+					<input type="number" class="form-control" id="min-price" name="min-price" value="<?= $minPrice ?>" placeholder="مثلاً 100000">
+				</div>
+				<div class="col-6">
+					<label for="max-price" class="form-label fw-semibold">حداکثر قیمت</label>
+					<input type="number" class="form-control" id="max-price" name="max-price" value="<?= $maxPrice ?>" placeholder="مثلاً 500000">
+				</div>
+
+				<div class="col-12 text-center mt-3 mt-md-2">
+					<button type="submit" class="btn btn-info text-white w-100 py-2 fw-semibold">فیلتر کن</button>
 				</div>
 			</div>
 		</form>
 	</section>
 
 	<section class="container-fluid my-5 px-3">
-		<div class="row g-3">
+		<div class="row g-2">
 
 			<?php
 				foreach ($products as $product) {
 			?>
-			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+			<div class="col-12 col-md-6 col-lg-4">
 				<a href="<?= BASE_URL . "/product/" . urlencode($product->name) ?>" class="text-decoration-none text-dark">
 					<div class="card border-0 shadow-sm h-100 product-card">
 						<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->image[0] ?>" class="card-img-top p-3" alt="<?= $product->name ?>">
@@ -208,7 +189,7 @@ $products = ProductRepository::filter($page, PAGINATION_LIMIT, $sort, $name, $ty
 
 	<section class="container my-5">
 		<?php
-			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, STATUS_OK, $name, $type, $minPrice, $maxPrice);
+			$pageCount = $pageCount = ProductRepository::getPageCount(PAGINATION_LIMIT, STATUS_OK, null,  null, $minPrice, $maxPrice);
 			echo createPagination($pageCount, $page);
 		?>
 	</section>

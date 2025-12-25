@@ -10,12 +10,13 @@ body {
 .login-card {
 	background: #fff;
 	border-radius: 16px;
-	box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+	box-shadow: 1px 6px 5px rgba(0, 0, 0, 0.08);
 	padding: 1.4rem;
-	max-width: 400px;
+	margin: 1.4rem;
+	max-width: 450px;
 	width: 100%;
 	text-align: center;
-	transition: all 0.3s ease;
+	transition: all 0.6s ease;
 }
 
 .login-card:hover {
@@ -28,7 +29,7 @@ body {
 	padding: 0.65rem 0.5rem;
 }
 
-.btn-primary {
+.btn-info {
 	border-radius: 12px;
 	font-weight: 600;
 	padding: 0.6rem;
@@ -50,9 +51,8 @@ body {
 }
 
 .logo {
-	font-size: 1.8rem;
+	font-size: 2rem;
 	font-weight: bold;
-	color: #0d6efd;
 	margin-bottom: 1rem;
 }
 

@@ -40,7 +40,7 @@ Controller::onSubmit("POST", function (array $params) {
 	<link rel="stylesheet" href="./../assets/css/login.css" />
 	<script src="./../assets/libs/jquery.min.js"></script>
 	<script src="./../assets/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - ورود</title>
+	<title><?= PROJ_NAME ?> - ورود</title>
 </head>
 <body>
 	<div class="login-card">
@@ -48,8 +48,8 @@ Controller::onSubmit("POST", function (array $params) {
 			if ($error) echo "<div class='alert alert-danger' role='alert'>$error</div>";
 		?>
 
-		<div class="logo">دیبا اکسسوری</div>
-		<h5 class="mb-4 fw-bold fs-6 text-secondary">ورود به حساب کاربری</h5>
+		<div class="logo text-info fs-2"><?= PROJ_NAME ?></div>
+		<h5 class="mb-4 fw-bold fs-5 text-muted">ورود به حساب کاربری</h5>
 
 		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="POST">
 			<div class="mb-3 text-start">
@@ -58,7 +58,7 @@ Controller::onSubmit("POST", function (array $params) {
 					type="text"
 					id="username"
 					name="username"
-					class="form-control form-control-sm"
+					class="form-control form-control"
 					placeholder="نام کاربری خود را وارد کنید"
 					autocomplete="off"
 					spellcheck="false"
@@ -74,7 +74,7 @@ Controller::onSubmit("POST", function (array $params) {
 					type="password"
 					id="password"
 					name="password"
-					class="form-control form-control-sm"
+					class="form-control form-control"
 					placeholder="رمز عبور خود را وارد کنید"
 					autocomplete="off"
 					min="6"
@@ -83,11 +83,11 @@ Controller::onSubmit("POST", function (array $params) {
 				>
 			</div>
 
-			<button type="submit" class="btn btn-sm btn-primary w-100">ورود</button>
+			<button type="submit" class="btn btn-sm btn-info text-white w-100">ورود</button>
 
 			<div class="footer-text">
 				<span>حساب کاربری ندارید؟</span>
-				<a href="<?= BASE_URL ?>/signup/">یکی ایجاد کنید.</a>
+				<a href="<?= BASE_URL ?>/signup/" class="text-info">یکی ایجاد کنید.</a>
 			</div>
 		</form>
 	</div>

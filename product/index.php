@@ -70,10 +70,10 @@ if ($account !== null) {
 	<link rel="stylesheet" href="<?= ASSETS_DIR ?>/fonts/font.patch.css" />
 	<script src="<?= ASSETS_DIR ?>/libs/jquery.min.js"></script>
 	<script src="<?= ASSETS_DIR ?>/libs/bootstrap.bundle.min.js"></script>
-	<title>دیبا اکسسوری - محصول</title>
+	<title><?= PROJ_NAME ?> - محصول</title>
 	<style>
 	.btn-check:checked + .btn {
-		border-color: #0d6efd !important;
+		border-color: #888 !important;
 		background-color: #e7f1ff;
 		color: #0d6efd !important;
 	}
@@ -114,14 +114,8 @@ if ($account !== null) {
 	<section class="container my-5">
 		<div class="row align-items-start">
 
-			<div class="col-lg-5 col-md-6 text-center">
-				<div class="border rounded-4 p-3 shadow-sm bg-white">
-					<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->product->image[0] ?>" alt="تصویر محصول" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain;">
-				</div>
-			</div>
-
 			<div class="col-lg-7 col-md-6">
-				<form action="<?= $shoppingLink ?>" method="GET" class="border rounded-4 p-4 shadow-sm bg-white">
+				<form action="<?= $shoppingLink ?>" method="GET" class="border rounded-4 p-4 shadow bg-white">
 					<?php if ($error !== null) echo "<div class='alert alert-danger'>$error</div>" ?>
 
 					<input type="hidden" name="req" value="<?= CONTROLLER_CART_ADD_CART ?>" />
@@ -139,8 +133,8 @@ if ($account !== null) {
 					<p class="text-muted mb-4"><?= $product->product->description ?></p>
 
 					<div class="d-flex flex-wrap gap-3 mb-3">
-						<span class="badge bg-primary px-3 py-2">نوع: <?= convertProductTypesToString($product->product->type) ?></span>
-						<span class="badge bg-success px-3 py-2">موجودی: <?= $product->product->count ?> عدد</span>
+						<span class="badge bg-info px-3 py-2">نوع: <?= convertProductTypesToString($product->product->type) ?></span>
+						<span class="badge bg-info px-3 py-2">موجودی: <?= $product->product->count ?> عدد</span>
 					</div>
 
 					<div class="mb-4">
@@ -233,6 +227,13 @@ if ($account !== null) {
 					</div>
 				</form>
 			</div>
+
+			<div class="col-lg-5 col-md-6 text-center">
+				<div class="border rounded-4 p-3 shadow bg-white">
+					<img src="<?= ASSETS_DIR ?>/img/products/<?= $product->product->image[0] ?>" alt="تصویر محصول" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain;">
+				</div>
+			</div>
+
 		</div>
 	</section>
 
